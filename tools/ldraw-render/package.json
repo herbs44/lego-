@@ -1,0 +1,6 @@
+{
+  "name": "ldraw-render",
+  "private": true,
+  "description": "Headless-Renderer fuer LDraw/MPD-Dateien (three.js LDrawLoader + Playwright/Chromium)",
+  "dependencies": { "three": "0.170.0" }
+}
