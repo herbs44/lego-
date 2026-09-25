@@ -33,8 +33,8 @@ Konzertfotos der echten Bühne.
 
 ## Kennzahlen
 
-- **8.274 Teile**, 194 Positionen (Teil × Farbe), keine Minifiguren
-- **LED-Kanal** im LED-Ring für einen echten LED-Streifen (ca. 1,2 m)
+- **8.349 Teile**, 197 Positionen (Teil × Farbe), keine Minifiguren
+- **Echte Beleuchtung vorbereitet**: LED-Kanal im LED-Ring (Streifen ca. 1,2 m) und 24 Scheinwerfer mit LED, gemeinsame USB-Versorgung
 - **Grundfläche** 64 × 64 Noppen (4 Baseplates 32 × 32, ca. 51 × 51 cm)
 - **Höhe** ca. 44 Noppen (ca. 35 cm)
 - **Kuppel** Ø 48 Noppen, 14 Lagen, Erd-Mosaik (orthografische Projektion auf Nordafrika/Europa, Afrika zeigt zur Front)
@@ -53,9 +53,9 @@ Konzertfotos der echten Bühne.
 9. **Kuppel-Rundung**: ausschließlich 1 × 1-Teile (Cheese-Slopes, Platten, Fliesen) auf jeder Stufe, dazu eine kleine Kappe auf dem Plateau (siehe unten)
 10. **Nebel** – 2 × 2-Kuppelsteine + „Swirl“-Platten auf dem LED-Ring
 11. **Projektionsschirm** – Rahmen aus 2 kreuzweisen Plattenlagen, darauf 7 Lagen Wand
-12. **Lichtvorhang** – 24 Säulen aus trans-klaren 1 × 1-Rundsteinen (tragen Schirm + Truss)
+12. **Lichtvorhang** – 24 Säulen aus trans-klaren 1 × 1-Rundsteinen (tragen Schirm + Truss), eine davon ist die Kabelsäule
 13. **Truss-Ring** Ø 59 – schmaler Plattenring, Technic-Lochsteine als Gitterträger, Obergurt mit Sprossen
-14. **Scheinwerfer** – 24 hängende Lampen unter dem Truss
+14. **Scheinwerfer** – 24 hängende Lampen unter dem Truss, jeweils mit LED (siehe „LED-Beleuchtung“)
 
 ## Kuppel-Rundung
 
@@ -80,6 +80,11 @@ Fliesen der Oberfläche.
 
 ## LED-Beleuchtung
 
+Beide Lichtquellen sind für echte LEDs vorbereitet und hängen an **einer** USB-Versorgung (5 V),
+deren Kabel hinten durch Schacht und Tunnel nach außen geht.
+
+### LED-Ring
+
 Der LED-Ring ist für einen echten LED-Streifen vorbereitet:
 
 | | |
@@ -102,6 +107,29 @@ und steht deshalb nicht in Stückliste und BrickLink-Liste.
 | Kanal im Schnitt (obere Lage ausgeblendet) | Kanal nah | LED-Ring von außen | Kabeltunnel hinten |
 |---|---|---|---|
 | ![Schnitt](renders/led_kanal_schnitt.png) | ![Nah](renders/led_kanal_schnitt_nah.png) | ![Ring](renders/kuppel_led_ring.png) | ![Tunnel](renders/kuppel_kabeltunnel.png) |
+
+### Scheinwerfer am Truss
+
+| | |
+|---|---|
+| **Lampe** | Gehäuse = schwarzer 1 × 1-Rundstein (hohl), darin eine kleine LED (z. B. „Dot Light“ aus einem LEGO-Beleuchtungsset, 5 V), Linse = trans-klare 1 × 1-Rundplatte darunter |
+| **Draht an der Lampe** | direkt neben jeder Lampe ist ein 1 × 1-Loch durch beide Truss-Plattenlagen. Der Draht geht seitlich aus der Lampe (zwischen Gehäuse und Linse) und durch das Loch nach oben |
+| **Truss-Kanal** | zwischen innerer und äußerer Technic-Wand verläuft ringsum ein ca. 1 Noppe breiter Hohlraum. Dort werden die 24 Drähte gesammelt (z. B. mit Verteiler-Platinen des Lichtsets) |
+| **Kabelsäule** | die Lichtvorhang-Säule hinten rechts (neben der Mitte) ist zusammen mit Schirm-Rahmen, Schirmwand und Truss-Platten an dieser Stelle durchgehend aus hohlen Rundteilen (1 × 1-Rundsteine, 1 × 1-Rundplatten mit offener Noppe). Die Sammelleitung läuft innen nach unten, die Innenwand des Truss ist dort offen |
+| **Anschluss** | am Säulenfuß läuft der Draht unter den Laufsteg-Fliesen (zwischen den Noppen ist Platz), durch eine Lücke in der trans-klaren Reihe in den LED-Kanal und wird dort an die Versorgung des Streifens angeschlossen |
+
+**Statik:** Die Löcher sind einzelne Zellen in zwei kreuzweise verbauten Plattenlagen; der
+Ring bleibt durchgehend verbunden. Die Kabelsäule steht wie die anderen Säulen auf dem Laufsteg
+und ist oben mit Schirm und Truss verbunden. Der Generator prüft neben der Statik auch den
+Kabelweg: alle 24 Löcher frei, Kabelsäule durchgehend hohl, Lücke zum LED-Kanal offen.
+
+**Einbau:** LEDs und Drähte einsetzen, bevor die Technic-Wände und der Obergurt des Truss
+aufgesetzt werden. Die Sammelleitung vor dem Aufsetzen von Schirm und Truss durch die
+Kabelsäule ziehen.
+
+| Truss-Kanal im Schnitt (Wände/Obergurt ausgeblendet) | Scheinwerfer von unten | Kabelsäule im Schirm |
+|---|---|---|
+| ![Kanal](renders/truss_kanal_schnitt.png) | ![Unten](renders/globe_stage_scheinwerfer_unten.png) | ![Säule](renders/globe_stage_kabelsaeule.png) |
 
 ## Statik & Prüfung
 
@@ -126,7 +154,7 @@ Alle Parameter (Kuppelprofil, Kartenmitte, Wolken, Säulenzahl, Farben) stehen o
 
 ## Hinweise & Grenzen
 
-- **Schräge Spotlight-Strahlen** aus der Skizze lassen sich nicht sinnvoll aus Steinen bauen. Stattdessen hängen Scheinwerfer (trans-gelb) unter dem Truss.
+- **Schräge Spotlight-Strahlen** aus der Skizze lassen sich nicht aus Steinen bauen. Stattdessen hängen 24 Scheinwerfer mit echten LEDs unter dem Truss.
 - **Projektionsbild** auf dem Schirm ist nicht enthalten. Möglich sind bedruckte Fliesen oder ein Sticker auf den weißen Schirmsteinen.
 - **Kosten** grob geschätzt 500–750 € über BrickLink (Cheese-Slopes und 1 × 1-Platten sind günstig). Die größten Posten sind:
   - 4 schwarze 32 × 32-Baseplates

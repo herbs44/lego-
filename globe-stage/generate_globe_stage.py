@@ -248,6 +248,21 @@ layers[4] = layers[4] - CHANNEL
 for _g in range(0, 4): layers[_g] = layers[_g] - {SHAFT}
 layers[0] = layers[0] - TUNNEL
 
+# ---- Kabelweg der Scheinwerfer-LEDs: eine Lichtvorhang-Saeule hinten dient als Kabelsaeule ----
+def column_cells():
+    out = []
+    for j in range(24):
+        a = 2 * math.pi * (j + 0.5) / 24
+        out.append((math.floor(26.7 * math.cos(a)), math.floor(26.7 * math.sin(a))))
+    return out
+CABLE_COL = min((c for c in column_cells() if c[0] >= 0 and c[1] < 0),
+                key=lambda c: abs(math.atan2(c[1] + 0.5, c[0] + 0.5) + math.pi / 2))
+_d = sector(CABLE_COL); _q = (CABLE_COL[0] - _d[0], CABLE_COL[1] - _d[1]); CABLE_PATH = []
+while _q not in B8_LED:
+    CABLE_PATH.append(_q); _q = (_q[0] - _d[0], _q[1] - _d[1])
+LED_GAP = _q                                   # Luecke in der trans-klaren Reihe -> Draht in den LED-Kanal
+layers[4] = layers[4] - {LED_GAP}
+
 
 def outer_r(g):
     if g < 2: return 31.5
@@ -491,29 +506,46 @@ plates("03_laufsteg", {c: DBG for c in E_T1 - COLS}, -BH * 4 - PH, 0, table=TILE
 # ---- Schirm-Rahmen: 2 Plattenlagen kreuzweise (traegt den Schirm zwischen den Saeulen) ----
 RIM = {c for r in radial_runs({c for c in ALL if 25.6 < dist(c) <= 28.6}) if set(r) & SCREEN for c in r}
 y_rim = -BH * (G_COL_TOP + 1)        # -600
-for p in plates("11_projektionsschirm", {c: LBG for c in RIM}, y_rim - PH, 0, tangential=True):
+for p in plates("11_projektionsschirm", {c: LBG for c in RIM - {CABLE_COL}}, y_rim - PH, 0, tangential=True):
     p.hang = True                    # Teile ohne Saeule haengen an der Kreuzlage darueber
-place_runs("11_projektionsschirm", radial_runs(RIM), LBG, y_rim - 2 * PH)
+place_runs("11_projektionsschirm", radial_runs(RIM - {CABLE_COL}), LBG, y_rim - 2 * PH)
+def open_round_plate(sub, c, col, ytop):   # 1x1 Rundplatte mit offener Noppe = Kabeldurchfuehrung
+    add(Part(sub, "85861", col, ctr(c[0]), ytop, ctr(c[1]), 0, {c}, ytop, ytop + PH))
+for L in range(2):
+    open_round_plate("11_projektionsschirm", CABLE_COL, LBG, y_rim - PH * (L + 1))
 
 # ---- Projektionsschirm: 7 Brick-Lagen, 1 Noppe stark ----
 y0 = y_rim - 2 * PH
 for L in range(7):
     col = LBG if L in (0, 6) else WHITE
-    pack("11_projektionsschirm", {c: col for c in SCREEN}, BRICK, y0 - BH * (L + 1), BH, L % 2)
+    pack("11_projektionsschirm", {c: col for c in SCREEN - {CABLE_COL}}, BRICK, y0 - BH * (L + 1), BH, L % 2)
+    yt = y0 - BH * (L + 1)
+    add(Part("11_projektionsschirm", "3062b", col, ctr(CABLE_COL[0]), yt, ctr(CABLE_COL[1]), 0, {CABLE_COL}, yt, yt + BH))
 y_scr_top = y0 - BH * 7
 
 # ---- Truss-Ring (Gittertraeger) ----
 R_TRUSS = 29.5                       # Aussenradius Truss (schmaler Ring, ca. 3 Noppen breit)
 TRUSS = SCREEN | (disk(R_TRUSS) - D_T1)
-y = y_scr_top - PH
-place_runs("13_truss_ring", radial_runs(TRUSS), DBG, y, hang=True)  # haengt teils an der Kreuzlage darueber
-y -= PH
-plates("13_truss_ring", {c: DBG for c in TRUSS}, y, 1)
 OUTW = boundary8(disk(R_TRUSS))
 INW = {c for c in TRUSS if any((c[0] + a, c[1] + b) not in TRUSS and dist((c[0] + a, c[1] + b)) < 27 for a, b in N8)}
+DUCT = TRUSS - OUTW - INW            # Kabelkanal zwischen den Technic-Waenden
+# 24 Scheinwerfer: Loch H im Kanal, Lampe direkt aussen daneben (Draht durch H in den Kanal)
+LAMPS, HOLES = [], set()
+for j in range(24):
+    a = 2 * math.pi * (j + 0.25) / 24
+    h = min(DUCT, key=lambda c: abs(math.remainder(math.atan2(c[1] + 0.5, c[0] + 0.5) - a, 2 * math.pi)))
+    sd = sector(h); lamp = (h[0] + sd[0], h[1] + sd[1])
+    assert lamp in TRUSS and lamp not in SCREEN and lamp not in DUCT, lamp
+    LAMPS.append(lamp); HOLES.add(h)
+y = y_scr_top - PH
+place_runs("13_truss_ring", radial_runs(TRUSS - HOLES - {CABLE_COL}), DBG, y, hang=True)  # haengt teils an der Kreuzlage
+open_round_plate("13_truss_ring", CABLE_COL, DBG, y)
+y -= PH
+plates("13_truss_ring", {c: DBG for c in TRUSS - HOLES - {CABLE_COL}}, y, 1)
+open_round_plate("13_truss_ring", CABLE_COL, DBG, y)
 for L in range(2):
     ytop = y - BH * (L + 1)
-    pack("13_truss_ring", {c: BLACK for c in OUTW | INW}, TECHNIC, ytop, BH, L % 2)
+    pack("13_truss_ring", {c: BLACK for c in (OUTW | INW) - {CABLE_COL}}, TECHNIC, ytop, BH, L % 2)
 y = y - 2 * BH - PH
 # Obergurt: radiale Sprossen (jede 4. Reihe, inkl. Wandzellen) + Plattenring auf den Waenden
 rungs = [r for r in radial_runs(TRUSS) if ((r[0][1] if sector(r[0])[0] else r[0][0]) % 4 == 0)]
@@ -521,15 +553,10 @@ place_runs("13_truss_ring", rungs, DBG, y)
 rung_cells = {c for r in rungs for c in r}
 plates("13_truss_ring", {c: DBG for c in (OUTW | INW) - rung_cells}, y, 0)
 
-# Lampen unter dem Truss (haengend)
-lamp_cells = set()
-for j in range(24):
-    a = 2 * math.pi * (j + 0.25) / 24
-    c = (math.floor(28.7 * math.cos(a)), math.floor(28.7 * math.sin(a)))
-    assert c in TRUSS and c not in SCREEN, c
-    lamp_cells.add(c)
+# Scheinwerfer unter dem Truss (haengend): Gehaeuse = hohler Rundstein (LED innen), Linse = trans-klare Rundplatte
+for c in LAMPS:
     add(Part("14_scheinwerfer", "3062b", BLACK, ctr(c[0]), y_scr_top, ctr(c[1]), 0, {c}, y_scr_top, y_scr_top + BH, hang=True))
-    add(Part("14_scheinwerfer", "6141", TYELLOW, ctr(c[0]), y_scr_top + BH, ctr(c[1]), 0, {c}, y_scr_top + BH, y_scr_top + BH + PH, hang=True, studs=True))
+    add(Part("14_scheinwerfer", "6141", TCLEAR, ctr(c[0]), y_scr_top + BH, ctr(c[1]), 0, {c}, y_scr_top + BH, y_scr_top + BH + PH, hang=True, studs=True))
 
 # ---- Basis-Rand: Fliesen statt offener Noppen ----
 E_T0 = top_exposed(1)
@@ -598,7 +625,7 @@ TITLES = {"01_baseplates": "Arena-Boden (4x Baseplate 32x32)", "02_basis": "Basi
           "07_kuppel_oben": "Kuppel oben", "08_innenstuetzen": "Innenstuetzen (Hohlraum)",
           "09_kuppel_slopes": "Kuppel Rundung (1x1 Cheese-Slopes, Platten, Fliesen)", "10_nebel": "Nebel / Wolken am LED-Ring",
           "11_projektionsschirm": "Projektionsschirm Oe56", "12_lichtvorhang": "Lichtvorhang (trans-clear Saeulen)",
-          "13_truss_ring": "Truss-Ring Oe64", "14_scheinwerfer": "Scheinwerfer am Truss",
+          "13_truss_ring": "Truss-Ring Oe64", "14_scheinwerfer": "Scheinwerfer am Truss (echte LEDs)",
           }
 
 
@@ -606,7 +633,13 @@ NOTES = {"04_led_ring": [
     "0 // LED-Kanal: hinter der trans-klaren Reihe (untere Lage) ringsum 1 Noppe tief, 1 Stein hoch.",
     "0 // Empfehlung: 5-mm-COB-LED-Streifen (5 V/USB), ca. 1,2 m, auf die Innenwand kleben, Licht nach aussen.",
     "0 // Kabel: Schacht hinten Mitte (x=10, z=-470) senkrecht nach unten, dann Tunnel in der untersten Basis-Lage nach aussen.",
-    "0 // Streifen einlegen, BEVOR die obere Lage (radiale 1x4-Steine) aufgesetzt wird."]}
+    "0 // Streifen einlegen, BEVOR die obere Lage (radiale 1x4-Steine) aufgesetzt wird.",
+    "0 // Luecke in der trans-klaren Reihe hinten: hier kommt der Draht der Scheinwerfer von der Kabelsaeule herein."],
+  "14_scheinwerfer": [
+    "0 // Echte LEDs: je eine LED (Lichtset-'Dot Light', 5 V) im hohlen Rundstein, Licht durch die trans-klare Linse.",
+    "0 // Draht neben der Lampe durch das Loch in beiden Truss-Plattenlagen in den Kanal zwischen den Technic-Waenden.",
+    "0 // Sammelleitung: durch die Kabelsaeule (hohle Rundteile in Truss, Schirm, Rahmen und Saeule) nach unten,",
+    "0 // am Saeulenfuss unter den Laufsteg-Fliesen durch die Luecke in der trans-klaren Reihe in den LED-Kanal."]}
 
 
 def export():
