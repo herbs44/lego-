@@ -18,3 +18,16 @@ das Ziel wird in LDraw-Koordinaten angegeben (y zeigt nach unten).
 
 `ldbbox.py <teil> ...` gibt Titel und Bounding-Box eines Teils aus – nützlich, um Ursprung und
 Ausrichtung vor dem Platzieren zu prüfen.
+
+## Schritt-Renderer (Bauanleitungen)
+
+`steps.html` + `steps.js` laden ein MPD **einmal** und rendern dann viele Aufträge: Jedes direkte Untermodell
+(z. B. `step_001.ldr`) wird pro Auftrag normal, blass oder unsichtbar geschaltet.
+
+```bash
+node steps.js anleitung.mpd jobs.json ausgabe/
+```
+
+Auftrag: `{"name", "show": [...], "fade": [...], "frame": [...], "az", "el", "w", "h", "radius"?, "target"?}` –
+`frame` bestimmt den Bildausschnitt, `radius`/`target` (LDraw-Koordinaten) setzen ihn direkt.
+

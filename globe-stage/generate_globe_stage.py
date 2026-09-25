@@ -171,6 +171,48 @@ def place_runs(sub, runs, color, ytop, table=PLATE, height=PH, hang=False, studs
     return res
 
 
+def bond_layer(sub, cells, lower, ytop, color, max_len=6):
+    """Plattenlage, die die Teile 'lower' (Lage darunter) sicher zu EINEM Stueck verbindet:
+    Kruskal-artig - zuerst Platten, die die meisten noch getrennten Stuecke ueberbruecken,
+    danach Rest auffuellen. Liefert (Teile, Anzahl Stuecke danach)."""
+    owner = {c: k for k, p in enumerate(lower) for c in p.cells if c in cells}
+    par = list(range(len(lower)))
+    def find(a):
+        while par[a] != a: par[a] = par[par[a]]; a = par[a]
+        return a
+    free = set(cells)
+    sizes = [(1, n) for n in (1, 2, 3, 4, 6) if n <= max_len] + [(2, 2), (2, 3), (2, 4)]
+    cand = []
+    for c in cells:
+        for (w, l) in sizes:
+            for (xs, zs) in {(l, w), (w, l)}:
+                rect = tuple((c[0] + a, c[1] + b) for a in range(xs) for b in range(zs))
+                if all(q in free for q in rect): cand.append(rect)
+    placed = []
+    while True:
+        best = None
+        for rect in cand:
+            if not all(q in free for q in rect): continue
+            comps = {find(owner[q]) for q in rect if q in owner}
+            if len(comps) < 2: continue
+            key = (len(comps), -len(rect))           # viele Stuecke verbinden, dabei moeglichst kleine Platte
+            if best is None or key > best[0]: best = (key, rect, comps)
+        if best is None: break
+        _, rect, comps = best
+        comps = list(comps)
+        for k in comps[1:]: par[find(k)] = find(comps[0])
+        free -= set(rect); placed.append(rect)
+    res = []
+    for rect in placed:
+        xs = {q[0] for q in rect}; zs = {q[1] for q in rect}
+        key = (min(len(xs), len(zs)), max(len(xs), len(zs)))
+        cx = sum(ctr(q[0]) for q in rect) / len(rect); cz = sum(ctr(q[1]) for q in rect) / len(rect)
+        res.append(add(Part(sub, PLATE[key], color, cx, ytop, cz, 0 if len(xs) >= len(zs) else 90, rect, ytop, ytop + PH)))
+    res += plates(sub, {c: color for c in free}, ytop, 1, tangential=True)
+    n_comp = len({find(k) for k in range(len(lower))})
+    return res, n_comp
+
+
 # ---------------- Erd-Textur (orthografische Draufsicht) ----------------
 from global_land_mask import globe
 LAT0, LON0 = math.radians(32), math.radians(16)
@@ -549,7 +591,8 @@ y = y_scr_top - PH
 place_runs("13_truss_ring", radial_runs(TRUSS - HOLES), DBG, y, hang=True)  # haengt teils an der Kreuzlage
 TRUSS_BOTTOM = [p for p in parts if p.sub == "13_truss_ring"]
 y -= PH
-plates("13_truss_ring", {c: DBG for c in TRUSS - HOLES}, y, 1)
+_l2, _nc = bond_layer("13_truss_ring", TRUSS - HOLES, TRUSS_BOTTOM, y, DBG)   # verbindet die radialen Platten
+assert _nc == 1, f"Truss-Bodenplatten zerfallen in {_nc} Stuecke"
 for L in range(2):
     ytop = y - BH * (L + 1)
     pack("13_truss_ring", {c: BLACK for c in OUTW | INW}, BRICK, ytop, BH, L % 2)

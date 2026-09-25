@@ -8,6 +8,9 @@ das Album-Cover als Mosaik aus 3.600 Fliesen 1 × 1. Vorlage ist die Konzeptskiz
 [`reference/konzept-skizze.png`](reference/konzept-skizze.png), abgeglichen mit
 Konzertfotos der echten Bühne.
 
+**Bauanleitung:** [`Bauanleitung_Globe_Stage.pdf`](Bauanleitung_Globe_Stage.pdf) – 249 geprüfte Schritte
+mit Teile-Kästen, Mosaik-Plan und Stückliste (siehe [Bauanleitung](#bauanleitung)).
+
 ![Hero](renders/globe_stage_hero.png)
 
 | Dach-Mosaik (von oben) | Dach schräg |
@@ -36,12 +39,14 @@ Konzertfotos der echten Bühne.
 | `preview_nocage.mpd` | Vorschau ohne Ecktürme, Dach, Truss und Scheinwerfer (zum Anschauen der Kuppel) |
 | `bully_mosaik_60x60.txt` | Raster des Dach-Mosaiks, 60 Zeilen × 60 Zeichen (K = Schwarz, D = Dark Bluish Gray, L = Light Bluish Gray, W = Weiß), Zeile 1 = hinten, von vorne gelesen |
 | `bully_mosaik_60x60_pearl.txt` | Alternative mit 5 Farben (+ P = Pearl Dark Gray), feinere Hauttöne – `MOSAIC_FILE=… python3 generate_globe_stage.py` |
+| `Bauanleitung_Globe_Stage.pdf` | Bauanleitung (A4 quer): Vorbereitung, Prüfbericht, 249 Schritte, Mosaik-Plan, Stückliste |
+| `anleitung/` | Skripte für die Anleitung: `plan_steps.py` (Schritte planen + prüfen), `make_pdf.py` (PDF bauen) |
 | `generate_globe_stage.py` | Generator, der alle drei Dateien erzeugt |
 | `renders/` | Renderings der aktuellen Version |
 
 ## Kennzahlen
 
-- **10.835 Teile**, 179 Positionen (Teil × Farbe), keine Minifiguren – davon 3.600 Fliesen im Dach-Mosaik
+- **10.876 Teile**, 179 Positionen (Teil × Farbe), keine Minifiguren – davon 3.600 Fliesen im Dach-Mosaik
 - **Echte Beleuchtung vorbereitet**: LED-Kanal im LED-Ring (Streifen ca. 1,2 m) und 24 Scheinwerfer mit LED, gemeinsame USB-Versorgung
 - **Grundfläche** 64 × 64 Noppen (4 Baseplates 32 × 32, ca. 51 × 51 cm)
 - **Höhe** ca. 41 cm (bis Oberkante Dach)
@@ -63,7 +68,7 @@ Konzertfotos der echten Bühne.
 9. **Kuppel-Rundung**: ausschließlich 1 × 1-Teile (Cheese-Slopes, Platten, Fliesen) auf jeder Stufe, dazu eine kleine Kappe auf dem Plateau (siehe unten)
 10. **Nebel** – 2 × 2-Kuppelsteine + „Swirl“-Platten auf dem LED-Ring
 12. **Ecktürme** – 4 Türme an den Ecken der Baseplate, je 4 Ebenen aus 2 Gitterträgern 95347 (2 × 2 × 10) auf der Diagonale, dazwischen Platten 4 × 4
-13. **Truss-Ring** Ø 59 – schmaler Plattenring, zwei Wände aus normalen schwarzen Steinen (2 Lagen), Obergurt aus 2 Plattenlagen, liegt in den Seilschlingen
+13. **Truss-Ring** Ø 59 – schmaler Plattenring (untere Lage radial, obere Lage als Verbund gelegt, sodass der Boden schon ohne Wände ein Stück ist), zwei Wände aus normalen schwarzen Steinen (2 Lagen), Obergurt aus 2 Plattenlagen, liegt in den Seilschlingen
 14. **Scheinwerfer** – 24 hängende Lampen unter dem Truss, jeweils mit LED (siehe „LED-Beleuchtung“)
 15. **Seile** – 8 Schnüre 63142 (String with End Studs 30L) als Schlingen zwischen Decke und Truss
 16. **Dach** 64 × 64 – Decke und Dachplatten (um 8 Noppen versetzt verlegt), umlaufende Attika 1 Stein hoch, Kabel-Clips unter der Decke
@@ -225,11 +230,50 @@ Der Generator prüft das Modell nach jedem Lauf automatisch:
 Die Renderings entstehen mit dem Headless-Renderer in [`../tools/ldraw-render`](../tools/ldraw-render)
 (three.js LDrawLoader + Chromium, echte LDraw-Teilegeometrie).
 
+## Bauanleitung
+
+[`Bauanleitung_Globe_Stage.pdf`](Bauanleitung_Globe_Stage.pdf) ist aus dem Modell generiert und in fünf
+Abschnitte gegliedert:
+
+| | Abschnitt | Inhalt |
+|---|---|---|
+| A | Basis und Kuppel | Lage für Lage von unten, große Lagen in Vierteln/Achteln, Innenstützen, LED-Kanal mit Kabel und Streifen |
+| B | Ecktürme | 4 Ebenen Gitterträger |
+| C | Truss-Ring | Baugruppe auf dem Tisch: Boden in Achteln, Wände, Scheinwerfer mit LEDs von unten, Drähte, Obergurt |
+| D | Dach mit Mosaik | Baugruppe: Decke + versetzte Dachplatten, Attika, Mosaik in 6 Streifen mit Legeplan |
+| E | Endmontage | Hilfsstützen, Ring einsetzen, Dach aufsetzen, Clips, Seile, Kabel |
+
+Jeder Schritt zeigt die neuen Teile farbig und die bereits verbauten blass, dazu einen Kasten mit allen
+Teilen des Schritts. Arbeitsschritte ohne Steine (LEDs, Kabel, Montage) sind gelb markiert.
+
+**Prüfung der Bauschritte** ([`anleitung/plan_steps.py`](anleitung/plan_steps.py)) – vor dem Erstellen
+wird jeder Schritt gegen das Modell geprüft:
+
+- **Vollständigkeit** – jedes Teil genau einmal
+- **Verbindung** – nach jedem Schritt hängt alles zusammen (Hauptmodell an den Grundplatten,
+  Baugruppen in sich), es gibt keinen Zwischenstand mit losen Teilen
+- **Einsetzbarkeit** – jedes Teil lässt sich von oben aufstecken (darüber ist noch nichts), nur Teile an
+  Unterseiten (Scheinwerfer, Clips, Seile) werden von unten eingesteckt
+- **Endmontage** – Ring passt zwischen den Türmen durch und hängt frei über der Kuppel, Dach lässt
+  sich aufsetzen, Seil-Enden sind erreichbar, Hilfsstützen stehen eben
+
+Dabei gefunden und behoben: Die zwei Bodenplatten-Lagen des Truss-Rings lagen teilweise parallel und
+hielten ohne die Wände nicht zusammen – beim Bauen wäre der Ring in 15 Stücke zerfallen. Die obere Lage
+wird jetzt mit einer Verbund-Packung gelegt (`bond_layer`), die alle Platten der unteren Lage zu einem
+Stück verbindet; der Generator prüft das.
+
 ## Neu erzeugen
 
 ```bash
 pip install numpy global-land-mask     # Landmaske für das Erd-Mosaik
 python3 globe-stage/generate_globe_stage.py
+
+# Bauanleitung (braucht den Renderer aus tools/ldraw-render und reportlab)
+python3 globe-stage/anleitung/plan_steps.py build            # Schritte planen + prüfen
+node tools/ldraw-render/steps.js anleitung.mpd build/steps_jobs.json build/shots
+node tools/ldraw-render/steps.js thumbs.mpd build/thumbs_jobs.json build/thumbs
+node tools/ldraw-render/steps.js anleitung.mpd build/extra_jobs.json build/shots
+python3 globe-stage/anleitung/make_pdf.py build globe-stage/Bauanleitung_Globe_Stage.pdf
 ```
 
 Alle Parameter (Kuppelprofil, Kartenmitte, Wolken, Seil- und Lampenpositionen, Turm-Variante, Farben) stehen im Skript.

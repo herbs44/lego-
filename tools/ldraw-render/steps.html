@@ -1,0 +1,72 @@
+<!doctype html><html><head><style>body{margin:0;background:#fff}</style>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+</head><body><script type="module">
+// Schritt-Renderer: laedt ein MPD einmal; jedes direkte Untermodell (z. B. step_001.ldr) ist eine Gruppe,
+// die pro Auftrag normal, blass oder unsichtbar geschaltet wird. Koordinaten in Auftraegen: LDraw (y nach unten).
+import * as THREE from 'three';
+import {LDrawLoader} from 'three/addons/loaders/LDrawLoader.js';
+import {LDrawConditionalLineMaterial} from 'three/addons/materials/LDrawConditionalLineMaterial.js';
+const q=new URLSearchParams(location.search);
+const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(1);document.body.appendChild(renderer.domElement);
+const scene=new THREE.Scene();
+scene.add(new THREE.AmbientLight(0xffffff,1.25));
+const dl=new THREE.DirectionalLight(0xffffff,2.1);dl.position.set(0.8,2,1.4);scene.add(dl);
+const dl2=new THREE.DirectionalLight(0xffffff,0.8);dl2.position.set(-1.5,0.4,-1);scene.add(dl2);
+const dl3=new THREE.DirectionalLight(0xffffff,0.5);dl3.position.set(0,-1,0.3);scene.add(dl3);
+const cam=new THREE.PerspectiveCamera(25,1,1,200000);
+const loader=new LDrawLoader();loader.setConditionalLineMaterial(LDrawConditionalLineMaterial);
+loader.setPartsLibraryPath('/ldraw/');
+window.errors=[];
+await loader.preloadMaterials('/ldraw/LDConfig.ldr');
+const txt=await (await fetch(q.get('m'))).text();
+const FADE=new THREE.Color(0xeef1f4);
+const fadeCache=new Map();
+function faded(m){
+  if(fadeCache.has(m.uuid)) return fadeCache.get(m.uuid);
+  let f=m;
+  if(m.color){ f=m.clone(); f.color=m.color.clone().lerp(FADE,0.62);
+    if('emissive' in f && f.emissive) f.emissive=new THREE.Color(0,0,0);
+    if(f.transparent){f.opacity=Math.min(1,(m.opacity||1)*0.5);} }
+  fadeCache.set(m.uuid,f); return f;
+}
+loader.parse(txt,g=>{
+  g.rotation.x=Math.PI;scene.add(g);g.updateMatrixWorld(true);
+  const groups={};
+  for(const c of g.children){ if(c.name){ const objs=[];
+      c.traverse(o=>{ if(o.material){ o.userData.orig=o.material; objs.push(o);} });
+      groups[c.name]={g:c,objs}; } }
+  window.groupNames=Object.keys(groups);
+  function state(name,mode){ const G=groups[name]; if(!G) return;
+    G.g.visible=(mode!=='hide');
+    for(const o of G.objs){ const isCond=o.isLineSegments && o.material && o.material.isLDrawConditionalLineMaterial;
+      if(mode==='fade'){ if(isCond){o.visible=false;} else { o.visible=true;
+          o.material=Array.isArray(o.userData.orig)?o.userData.orig.map(faded):faded(o.userData.orig);} }
+      else { o.visible=true; o.material=o.userData.orig; } } }
+  function boxOf(names){ const b=new THREE.Box3(); for(const n of names){ if(groups[n]) b.expandByObject(groups[n].g);} return b; }
+  window.job=(J)=>{
+    renderer.setSize(J.w||1100,J.h||800); cam.aspect=(J.w||1100)/(J.h||800);
+    renderer.setClearColor(new THREE.Color(J.bg||'#ffffff'));
+    for(const n of Object.keys(groups)) state(n,'hide');
+    for(const n of (J.fade||[])) state(n,'fade');
+    for(const n of (J.show||[])) state(n,'show');
+    g.updateMatrixWorld(true);
+    let c=new THREE.Vector3(), r=J.radius||0;
+    if(!J.radius){ const b=boxOf(J.frame&&J.frame.length?J.frame:(J.show||[]));
+      b.getCenter(c); r=b.getSize(new THREE.Vector3()).length()/2; r=Math.max(r,J.minR||0); }
+    r*=(J.margin||1.1);
+    if(J.target) c.set(J.target[0],-J.target[1],-J.target[2]);
+    const az=(J.az||0)*Math.PI/180, el=(J.el||30)*Math.PI/180, fov=J.fov||25;
+    cam.fov=fov; cam.updateProjectionMatrix();
+    const vf=fov*Math.PI/180, hf=2*Math.atan(Math.tan(vf/2)*cam.aspect);
+    const d=r/Math.sin(Math.min(vf,hf)/2);
+    // LDraw-Richtung (sin az, cos az) in x/z -> three: z negiert
+    const dir=new THREE.Vector3(Math.cos(el)*Math.sin(az), Math.sin(el), -Math.cos(el)*Math.cos(az));
+    cam.position.copy(c).addScaledVector(dir,d);
+    // Draufsicht: vorne (LDraw +z) unten im Bild; Untersicht: vorne oben
+    if(Math.abs(J.el||30)>=89.9) cam.up.set(-Math.sin(az)*(J.el>0?1:-1),0,Math.cos(az)*(J.el>0?1:-1)); else cam.up.set(0,1,0);
+    cam.near=Math.max(1,d-r*3); cam.far=d+r*6; cam.updateProjectionMatrix();
+    cam.lookAt(c); renderer.render(scene,cam); return true; };
+  window.done=true;
+},e=>{window.errors.push(String(e));window.done=true;});
+</script></body></html>
