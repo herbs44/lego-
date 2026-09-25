@@ -7,6 +7,7 @@ import math, random, os, sys
 from collections import defaultdict, Counter
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.dirname(os.path.abspath(__file__))
+TOWER_STYLE = os.environ.get("TOWER_STYLE", "diag")   # "slim" (2x2), "diag" (4x4, 2 Traeger diagonal), "full" (4x4, 4 Traeger)
 NAME = "globe_stage"
 random.seed(7)
 
@@ -37,7 +38,8 @@ PLATE = {(1, 1): "3024", (1, 2): "3023", (1, 3): "3623", (1, 4): "3710", (1, 6):
          (16, 16): "91405"}
 TILE = {(1, 1): "3070b", (1, 2): "3069b", (1, 4): "2431", (1, 6): "6636", (1, 8): "4162",
         (2, 2): "3068b", (2, 4): "87079"}
-BL_ID = {"3070b": "3070", "3069b": "3069", "3068b": "3068", "6141": "4073", "3815c01": "970c00"}
+BL_ID = {"3070b": "3070", "3069b": "3069", "3068b": "3068", "6141": "4073", "3815c01": "970c00", "63142": "x127c30pb01"}
+NAME_OVERRIDE = {"63142": "String with End Studs 30L overall (63142 / 14225)"}
 
 
 class Part:
@@ -480,8 +482,14 @@ plates("10_nebel", {c: WHITE for c in E_LED - cloud_cells}, ledtop_y - PH, 0, ta
 # ---- Laufsteg-Oberflaeche ----
 plates("03_laufsteg", {c: DBG for c in E_T1}, -BH * 4 - PH, 0, table=TILE, studs=False)
 
-# Hoehe der Truss-Unterkante (frueher Oberkante des Projektionsschirms, der entfallen ist)
-y_scr_top = -808
+# ---- Hoehen: Decke = Oberkante der Ecktuerme, Truss haengt an Seilschlingen darunter ----
+GIRDER_H = 240
+TOWER_LEVELS = 4
+CEIL_H = TOWER_LEVELS * GIRDER_H + (0 if TOWER_STYLE == "slim" else (TOWER_LEVELS - 1) * PH)
+y_ceiling = -CEIL_H
+# Seil 63142: 30L gesamt = 600 LDU; Endnoppe je 12 LDU (Noppe 4 + Koerper 8) -> 576 LDU Schnur
+ROPE_TOTAL, KNOB_STUD, KNOB_BODY, ROPE_R = 600, 4, 8, 1.25
+ROPE_FREE = ROPE_TOTAL - 2 * (KNOB_STUD + KNOB_BODY)
 
 # ---- Truss-Ring (Gittertraeger) ----
 R_TRUSS = 29.5                       # Aussenradius Truss (schmaler Ring, ca. 3 Noppen breit)
@@ -506,20 +514,37 @@ for j in range(24):
     assert lamp in TRUSS and lamp not in SCREEN and lamp not in DUCT, lamp
     LAMPS.append(lamp); HOLES.add(h)
 
-# Kettenzuege: 8 Aufhaengepunkte (2x2) auf dem Truss, alle 45 Grad; einer (hinten rechts) fuehrt das Kabel
-N_HANG = 8
-HANGERS = []
-for k in range(N_HANG):
+# ---- Seilschlingen: 8 Seile 63142, alle 45 Grad; beide Endnoppen stecken unten in der Decke, ----
+# ---- das Seil laeuft radial aussen am Truss herunter, unter dem Truss durch und innen wieder hoch ----
+def truss_run(a, t):
+    """radialer Truss-Lauf in Reihe/Spalte t im Sektor von Winkel a -> (Zellen innen->aussen, Richtung)"""
+    d = (1 if math.cos(a) > 0 else -1, 0) if abs(math.cos(a)) >= abs(math.sin(a)) else (0, 1 if math.sin(a) > 0 else -1)
+    cells = sorted((c for c in TRUSS if sector(c) == d and (c[1] if d[0] else c[0]) == t),
+                   key=lambda c: c[0] * d[0] + c[1] * d[1])
+    return cells, d
+SLINGS = []                                   # (innerer Knopf, aeusserer Knopf, Truss-Zellen, Richtung)
+for k in range(8):
     a = math.radians(22.5 + 45 * k)
-    cands = [(X, Z) for X in range(-31, 32) for Z in range(-31, 32)
-             if block(X, Z) <= TRUSS and block(X, Z) & DUCT]
-    HANGERS.append(min(cands, key=lambda t: adiff(math.atan2(t[1], t[0]), a)))
-assert len(set(HANGERS)) == N_HANG
-CABLE_HANGER = min(HANGERS, key=lambda t: adiff(math.atan2(t[1], t[0]), math.radians(-45)))
-OG_HOLE = max(block(*CABLE_HANGER) & DUCT, key=lambda c: c[0] - c[1])     # Loch im Obergurt (ueber dem Kanal)
+    best = None
+    for t in range(-31, 32):
+        run, d = truss_run(a, t)
+        if len(run) != 3 or set(run) & (set(LAMPS) | HOLES): continue
+        if any(abs(run[i + 1][0] - run[i][0]) + abs(run[i + 1][1] - run[i][1]) != 1 for i in range(2)): continue
+        ci = (run[0][0] - d[0], run[0][1] - d[1]); co = (run[-1][0] + d[0], run[-1][1] + d[1])
+        err = adiff(angle_of(run[1]), a)
+        if best is None or err < best[0]: best = (err, ci, co, run, d)
+    SLINGS.append(best[1:])
+W_SLING = 80
+assert all(abs(ci[0] - co[0]) * LDU + abs(ci[1] - co[1]) * LDU == W_SLING for ci, co, _, _ in SLINGS)
+L_LEG = (ROPE_FREE - W_SLING) // 2                    # senkrechte Seillaenge je Seite
+y_scr_top = y_ceiling + KNOB_BODY + L_LEG             # Unterkante Truss = Seil liegt darunter
+CABLE_SLING = min(range(8), key=lambda i: adiff(angle_of(SLINGS[i][2][1]), math.radians(-22.5)))
+_ci, _co, _run, _d = SLINGS[CABLE_SLING]
+OG_HOLE = next(c for c in _run if c in DUCT)          # Loch im Obergurt: Kabel aus dem Kanal nach oben
 
 y = y_scr_top - PH
 place_runs("13_truss_ring", radial_runs(TRUSS - HOLES), DBG, y, hang=True)  # haengt teils an der Kreuzlage
+TRUSS_BOTTOM = [p for p in parts if p.sub == "13_truss_ring"]
 y -= PH
 plates("13_truss_ring", {c: DBG for c in TRUSS - HOLES}, y, 1)
 for L in range(2):
@@ -530,69 +555,94 @@ y = y - 2 * BH - PH
 place_runs("13_truss_ring", radial_runs(TRUSS - {OG_HOLE}), DBG, y)
 y -= PH
 plates("13_truss_ring", {c: DBG for c in TRUSS - {OG_HOLE}}, y, 0, tangential=True)
-y_truss_top = y                                   # -888
+y_truss_top = y
 
 # Scheinwerfer unter dem Truss (haengend): Gehaeuse = hohler Rundstein (LED innen), Linse = trans-klare Rundplatte
 for c in LAMPS:
     add(Part("14_scheinwerfer", "3062b", BLACK, ctr(c[0]), y_scr_top, ctr(c[1]), 0, {c}, y_scr_top, y_scr_top + BH, hang=True))
     add(Part("14_scheinwerfer", "6141", TCLEAR, ctr(c[0]), y_scr_top + BH, ctr(c[1]), 0, {c}, y_scr_top + BH, y_scr_top + BH + PH, hang=True, studs=True))
 
-# ---- Ecktuerme: 4x4 aus je 4 Gittertraegern 95347, 4 Ebenen, dazwischen Platten 4x4 ----
-GIRDER_H = 240
-TOWER_LEVELS = 4
-CORNERS = [(sx * 30, sz * 30) for sx in (-1, 1) for sz in (-1, 1)]   # Gitterpunkt = Turmmitte, Zellen +-2
+# ---- Ecktuerme aus Gittertraegern 95347 ----
+if TOWER_STYLE == "slim":
+    CORNERS = [(sx * 31, sz * 31) for sx in (-1, 1) for sz in (-1, 1)]
+    GIRDERS = lambda X, Z: [(X, Z)]
+else:
+    CORNERS = [(sx * 30, sz * 30) for sx in (-1, 1) for sz in (-1, 1)]
+    if TOWER_STYLE == "diag":   # aussen + innen auf der Diagonale -> von der Buehne aus hintereinander
+        GIRDERS = lambda X, Z: [(X + (1 if X > 0 else -1), Z + (1 if Z > 0 else -1)), (X - (1 if X > 0 else -1), Z - (1 if Z > 0 else -1))]
+    else:
+        GIRDERS = lambda X, Z: [(X + dx, Z + dz) for dx in (-1, 1) for dz in (-1, 1)]
 TOWER_CELLS = set()
 yy = 0
 for lev in range(TOWER_LEVELS):
     yy -= GIRDER_H
     for (X, Z) in CORNERS:
-        for dx in (-1, 1):
-            for dz in (-1, 1):
-                gx, gz = X + dx, Z + dz                                  # Mitte des 2x2-Traegers
-                rot = 0 if dz < 0 else 180                               # flache Seite nach aussen (z)
-                add(Part("12_ecktuerme", "95347", LBG, gx * LDU, yy, gz * LDU, rot, block(gx, gz), yy, yy + GIRDER_H))
-                TOWER_CELLS |= block(gx, gz)
-    if lev < TOWER_LEVELS - 1:
+        for (gx, gz) in GIRDERS(X, Z):
+            rot = 0 if gz < 0 else 180                                   # flache Seite nach aussen (z)
+            add(Part("12_ecktuerme", "95347", LBG, gx * LDU, yy, gz * LDU, rot, block(gx, gz), yy, yy + GIRDER_H))
+            TOWER_CELLS |= block(gx, gz)
+    if lev < TOWER_LEVELS - 1 and TOWER_STYLE != "slim":
         yy -= PH
         for (X, Z) in CORNERS:
             add(Part("12_ecktuerme", "3031", DBG, X * LDU, yy, Z * LDU, 0, block(X, Z, 4), yy, yy + PH))
-y_roof_bottom = yy                                # -984
+assert yy == y_ceiling, (yy, y_ceiling)
 assert all(c not in D_T0 for c in TOWER_CELLS)
+TOWER_FOOT = {c for (X, Z) in CORNERS for g in GIRDERS(X, Z) for c in block(*g)}
 
-# ---- Kettenzuege: je 4 Rundsteine 2x2 (3941, durchgehende Achsbohrung) vom Truss bis unter die Decke ----
-N_HOIST = (y_truss_top - y_roof_bottom) // BH
-assert y_truss_top - N_HOIST * BH == y_roof_bottom, (y_truss_top, y_roof_bottom)
-for (X, Z) in HANGERS:
-    for n in range(N_HOIST):
-        yt = y_truss_top - BH * (n + 1)
-        add(Part("15_kettenzuege", "3941", BLACK, X * LDU, yt, Z * LDU, 0, block(X, Z), yt, yt + BH))
-
-# ---- Dach (Flaeche wie der Boden, 64x64): Decke + Traegerrost + Dachplatten ----
+# ---- Dach 64x64: Decke + Dachplatten (versetzt verlegt) + Attika 1 Stein ----
 ROOF = {(i, k) for i in range(-32, 32) for k in range(-32, 32)}
-C1_HOLE = max(block(*CABLE_HANGER), key=lambda c: c[0] - c[1])          # Loch in der Decke ueber dem Kabel-Kettenzug
-LINES = {-32, -31, -24, -16, -8, -1, 0, 7, 15, 23, 30, 31}              # Traeger (1 Noppe breit) + Rand 2 breit
-BEAMS = {c for c in ROOF if c[0] in LINES or c[1] in LINES} | TOWER_CELLS
-BEAMS |= {c for h in HANGERS for c in block(*h)}                       # Lastbloecke ueber den Kettenzuegen
-# Kabelweg im Traegerrost: vom Deckenloch nach hinten, dann nach rechts bis neben den Eckturm, dann zum Dachrand
-_x0, _z0 = C1_HOLE; _row = -28; _col = 27
-CORRIDOR = ([(_x0, k) for k in range(_z0, _row - 1, -1)] + [(i, _row) for i in range(_x0 + 1, _col + 1)]
-            + [(_col, k) for k in range(_row - 1, -33, -1)])
-assert not set(CORRIDOR) & TOWER_CELLS, CORRIDOR
-assert all(abs(a[0] - b[0]) + abs(a[1] - b[1]) == 1 for a, b in zip(CORRIDOR, CORRIDOR[1:]))
-BEAMS -= set(CORRIDOR)
-y = y_roof_bottom - PH
-for p in plates("16_dach", {c: BLACK for c in ROOF - {C1_HOLE}}, y, 0):
-    p.hang = True                                  # Decke haengt am Traegerrost darueber
-y -= BH
-pack("16_dach", {c: BLACK for c in BEAMS}, BRICK_CORE, y, BH, 1)
-y -= PH
-plates("16_dach", {c: DBG for c in ROOF}, y, 1)
-# Attika: umlaufender Randtraeger (2 Noppen breit, 2 Steine hoch, im Verband) = steifer Dachrand
 ATTIKA = {c for c in ROOF if max(abs(c[0] + 0.5), abs(c[1] + 0.5)) > 30}
-for L in range(2):
-    y -= BH
-    pack("16_dach", {c: BLACK for c in ATTIKA}, BRICK_CORE, y, BH, L % 2)
+# Kabelweg: am aeusseren Seil der Kabel-Schlinge hoch, Deckenloch daneben (innen), auf dem Dach unter
+# einer Fliesenreihe zur Attika-Luecke direkt neben dem Eckturm hinten rechts
+CEIL_HOLE = (_co[0] - _d[0], _co[1] - _d[1]) if (_co[0] - _d[0], _co[1] - _d[1]) not in ATTIKA else None
+if CEIL_HOLE is None or CEIL_HOLE in ATTIKA:
+    CEIL_HOLE = next(c for c in ((_co[0] - 2 * _d[0], _co[1] - 2 * _d[1]),) if c not in ATTIKA)
+_tx = min(c[0] for c in TOWER_CELLS if c[0] > 0 and c[1] == -32) - 1       # Spalte links neben dem Traeger an der Dachkante
+_row = -30                                                                  # erste Reihe innerhalb der Attika
+PATH = ([(CEIL_HOLE[0], k) for k in range(CEIL_HOLE[1], _row - 1, -1)]
+        + [(i, _row) for i in range(CEIL_HOLE[0] - 1, _tx - 1, -1)] + [(i, _row) for i in range(CEIL_HOLE[0] + 1, _tx + 1)]
+        + [(_tx, -31), (_tx, -32)])
+assert all(abs(a[0] - b[0]) + abs(a[1] - b[1]) == 1 for a, b in zip(PATH, PATH[1:])), PATH
+y = y_ceiling - PH
+for p in plates("16_dach", {c: BLACK for c in ROOF - {CEIL_HOLE}}, y, 0):
+    p.hang = True                                  # Decke haengt an den Dachplatten darueber
+y -= PH
+# Dachplatten um 8 Noppen versetzt, damit sie alle Stoesse der Decke ueberbruecken
+EDGES = [-32, -24, -8, 8, 24, 32]
+for i0, i1 in zip(EDGES, EDGES[1:]):
+    for k0, k1 in zip(EDGES, EDGES[1:]):
+        rect = {(i, k) for i in range(i0, i1) for k in range(k0, k1)} - {CEIL_HOLE}
+        plates("16_dach", {c: DBG for c in rect}, y, 0)
+y_roof_plates = y
+plates("16_dach", {c: BLACK for c in set(PATH) - ATTIKA}, y - PH, 0, table=TILE, studs=False)  # Kabelkanal
+y -= BH
+pack("16_dach", {c: BLACK for c in ATTIKA - set(PATH)}, BRICK_CORE, y, BH, 0)
 y_roof_top = y
+
+# ---- Seile (eigenes Untermodell seil_63142.ldr, gleiche Form fuer alle 8 Schlingen) ----
+ROT_OF_DIR = {(1, 0): 0, (-1, 0): 180, (0, 1): 90, (0, -1): 270}
+def rope_file():
+    hw = W_SLING / 2; yh = KNOB_BODY + L_LEG + ROPE_R
+    L = ["0 Seil 63142 (String with End Studs 30L) als Schlinge - Noppen oben in die Decke",
+         "0 // Endnoppen: Noppe + Zylinder; Schnur: duenne Zylinder (Primitive)"]
+    for sx in (-hw, hw):
+        L += [f"1 16 {fmt(sx)} 0 0 1 0 0 0 1 0 0 0 1 stud.dat",
+              f"1 16 {fmt(sx)} 0 0 6 0 0 0 1 0 0 0 6 4-4disc.dat",
+              f"1 16 {fmt(sx)} 0 0 6 0 0 0 {KNOB_BODY} 0 0 0 6 4-4cyli.dat",
+              f"1 16 {fmt(sx)} {KNOB_BODY} 0 6 0 0 0 1 0 0 0 6 4-4disc.dat",
+              f"1 16 {fmt(sx)} {KNOB_BODY} 0 {ROPE_R} 0 0 0 {fmt(L_LEG + ROPE_R)} 0 0 0 {ROPE_R} 4-4cyli.dat"]
+    L += [f"1 16 {fmt(-hw)} {fmt(yh)} 0 0 {W_SLING} 0 {ROPE_R} 0 0 0 0 {ROPE_R} 4-4cyli.dat"]
+    return L
+CUSTOM_FILES = {"seil_63142.ldr": rope_file()}
+SLING_PARTS = []
+for (ci, co, run, d) in SLINGS:
+    mx = (ctr(ci[0]) + ctr(co[0])) / 2; mz = (ctr(ci[1]) + ctr(co[1])) / 2
+    line = f"1 0 {fmt(mx)} {fmt(y_ceiling)} {fmt(mz)} {ROT[ROT_OF_DIR[d]]} seil_63142.ldr"
+    SLING_PARTS.append(add(Part("15_seile", "63142", BLACK, mx, y_ceiling, mz, ROT_OF_DIR[d], {ci, co},
+                                y_ceiling, y_ceiling + KNOB_BODY, studs=True, hang=True, extra=[line])))
+# Truss liegt in den Schlingen: Verbindung Seil <-> untere Truss-Platten in der Seilreihe
+SLING_LINKS = [(sp, tp) for sp, (ci, co, run, d) in zip(SLING_PARTS, SLINGS) for tp in TRUSS_BOTTOM if tp.cells & set(run)]
+assert all(any(l[0] is sp for l in SLING_LINKS) for sp in SLING_PARTS)
 
 # ---- Basis-Rand: Fliesen statt offener Noppen ----
 E_T0 = top_exposed(1)
@@ -615,6 +665,9 @@ def checks():
     adj = defaultdict(set)
     for n in below:
         for m in below[n]: adj[n].add(m); adj[m].add(n)
+    pid = {id(p): n for n, p in enumerate(parts)}
+    for a, b in SLING_LINKS:                     # Truss liegt in den Seilschlingen
+        adj[pid[id(a)]].add(pid[id(b)]); adj[pid[id(b)]].add(pid[id(a)])
     while stack:
         n = stack.pop()
         for m in adj[n]:
@@ -660,9 +713,9 @@ TITLES = {"01_baseplates": "Arena-Boden (4x Baseplate 32x32)", "02_basis": "Basi
           "05_kuppel_unten": "Kuppel unten + Deck 1", "06_kuppel_mitte": "Kuppel Mitte + Deck 2",
           "07_kuppel_oben": "Kuppel oben", "08_innenstuetzen": "Innenstuetzen (Hohlraum)",
           "09_kuppel_slopes": "Kuppel Rundung (1x1 Cheese-Slopes, Platten, Fliesen)", "10_nebel": "Nebel / Wolken am LED-Ring",
-          "12_ecktuerme": "Ecktuerme 4x4 (Gittertraeger 95347)",
+          "12_ecktuerme": "Ecktuerme (Gittertraeger 95347)",
           "13_truss_ring": "Truss-Ring Oe59 (haengt am Dach)", "14_scheinwerfer": "Scheinwerfer am Truss (echte LEDs)",
-          "15_kettenzuege": "Kettenzuege (Truss-Aufhaengung)", "16_dach": "Dach 64x64 (Decke, Traegerrost, Dachplatten, Attika)",
+          "15_seile": "Seilschlingen 63142 (Truss-Aufhaengung)", "16_dach": "Dach 64x64 (Decke, Dachplatten, Attika)",
           }
 
 
@@ -674,9 +727,9 @@ NOTES = {"04_led_ring": [
   "14_scheinwerfer": [
     "0 // Echte LEDs: je eine LED (Lichtset-'Dot Light', 5 V) im hohlen Rundstein, Licht durch die trans-klare Linse.",
     "0 // Draht neben der Lampe durch das Loch in beiden Truss-Plattenlagen in den Kanal zwischen den beiden Truss-Waenden.",
-    "0 // Sammelleitung: durch das Loch im Obergurt in den Kabel-Kettenzug hinten rechts (Achsbohrung der Rundsteine),",
-    "0 // durch das Loch in der Decke in den Kabelkanal im Traegerrost, zum hinteren Dachrand direkt neben dem Eckturm",
-    "0 // hinten rechts und am Turm entlang nach unten (gleiches USB-Netzteil wie der LED-Streifen)."]}
+    "0 // Sammelleitung: durch das Loch im Obergurt (Seilreihe hinten rechts) auf den Truss, am aeusseren Seil hoch,",
+    "0 // durch das Loch in der Decke aufs Dach, unter der Fliesenreihe zur Attika-Luecke neben dem Eckturm hinten rechts",
+    "0 // und am Turm entlang nach unten (gleiches USB-Netzteil wie der LED-Streifen)."]}
 
 
 def export():
@@ -686,6 +739,7 @@ def export():
     try:
         lb = importlib.util.module_from_spec(spec); spec.loader.exec_module(lb)
         for nm in {p.name for p in parts}:
+            if nm in NAME_OVERRIDE: names[nm] = NAME_OVERRIDE[nm]; continue
             try: names[nm] = lb.find(nm + ".dat").splitlines()[0][2:].strip().lstrip("~=")
             except Exception: names[nm] = nm
     except Exception:
@@ -699,10 +753,12 @@ def export():
     out += ["0 NOFILE"]
     for s in order:
         out += [f"0 FILE {s}.ldr", f"0 {TITLES.get(s, s)}", f"0 Name: {s}.ldr"] + NOTES.get(s, []) + bysub[s] + ["0 NOFILE"]
+    for fn, body in CUSTOM_FILES.items():
+        out += [f"0 FILE {fn}", f"0 Name: {fn}"] + body + ["0 NOFILE"]
     os.makedirs(OUT, exist_ok=True)
     open(os.path.join(OUT, f"{NAME}.mpd"), "w").write("\n".join(out) + "\n")
     prev = [l for l in out if not any(f"{x}.ldr" in l and l.startswith("1 ") for x in
-            ("12_ecktuerme", "13_truss_ring", "14_scheinwerfer", "15_kettenzuege", "16_dach"))]
+            ("12_ecktuerme", "13_truss_ring", "14_scheinwerfer", "15_seile", "16_dach"))]
     open(os.path.join(OUT, "preview_nocage.mpd"), "w").write("\n".join(prev) + "\n")
     bom = Counter((p.name, p.color) for p in parts)
     rows = ["LDraw Part,BrickLink ID,Name,Farbe,Menge"]; xml = ["<INVENTORY>"]
@@ -718,25 +774,68 @@ def export():
 
 
 def check_cable():
-    """Kabelweg: Lampenloecher frei, Obergurt-Loch frei, Kabel-Kettenzug hohl, Deckenloch frei,
-    Kanal im Traegerrost frei bis zum Dachrand, LED-Kanal und Schacht leer."""
+    """Kabelweg: Lampenloecher frei, Obergurt-Loch frei, Deckenloch frei, Fliesen-Kanal auf dem Dach
+    durchgehend bis zur Attika-Luecke neben dem Eckturm, LED-Kanal und Schacht leer."""
     def at(c, y): return [p for p in parts if c in p.cells and p.ytop <= y < p.ybot]
     errs = 0
     y_p1 = y_scr_top - 2 * PH
     errs += sum(1 for h in HOLES if any(at(h, yy) for yy in range(y_p1 - 2 * BH, y_scr_top, 2)))
     errs += sum(1 for l in LAMPS if not any((l[0] + a, l[1] + b) in HOLES for a, b in ((1, 0), (-1, 0), (0, 1), (0, -1))))
     if OG_HOLE not in DUCT or any(at(OG_HOLE, yy) for yy in range(y_truss_top, y_p1 - 2 * BH, 2)): errs += 1
-    hz = [p for p in parts if p.sub == "15_kettenzuege" and p.cells == frozenset(block(*CABLE_HANGER))]
-    if len(hz) != N_HOIST or any(p.name != "3941" for p in hz): errs += 1
-    if any(at(C1_HOLE, yy) for yy in range(y_roof_bottom - PH, y_roof_bottom, 2)): errs += 1
-    if CORRIDOR[0] != C1_HOLE or CORRIDOR[-1][1] != -32 or (CORRIDOR[-1][0] + 1, -32) not in TOWER_CELLS: errs += 1
-    errs += sum(1 for c in CORRIDOR for yy in range(y_roof_bottom - PH - BH, y_roof_bottom - PH, 2) if at(c, yy))
+    if any(at(CEIL_HOLE, yy) for yy in range(y_roof_plates, y_ceiling, 2)): errs += 1
+    tiles = {c for p in parts if p.sub == "16_dach" and p.ytop == y_roof_plates - PH for c in p.cells}
+    if any(c not in tiles for c in PATH if c not in ATTIKA): errs += 1
+    if any(at(c, y_roof_plates - 2) for c in PATH if c in ATTIKA): errs += 1
+    if PATH[0] != CEIL_HOLE or PATH[-1][1] != -32 or (PATH[-1][0] + 1, -32) not in TOWER_CELLS: errs += 1
     if any(at(c, -BH * 5 + 10) for c in CHANNEL): errs += 1
     if any(at(SHAFT, yy) for yy in range(-BH * 4, 0, 2)): errs += 1
     print("cable path errors:", errs)
     return errs
 
 
+# ---------------- Statik-Abschaetzung (grob, konservativ) ----------------
+G = 9.81
+F_STUD = 1.5          # N, Klemmkraft einer Noppe auf Zug (konservativ; neue Teile eher 2-3 N)
+E_ABS = 2.3e9         # Pa
+JOINT_EFF = 0.5       # Abminderung der Biegesteifigkeit durch Fugen
+def mass_g(p):
+    special = {"95347": 3.5, "3062b": 0.3, "6141": 0.1, "63142": 0.8, "3031": 1.9}
+    if p.name in special: return special[p.name]
+    h = p.ybot - p.ytop
+    return len(p.cells) * (0.29 if h >= 20 else 0.11)
+def statik():
+    m = lambda subs: sum(mass_g(p) for p in parts if p.sub in subs) / 1000.0
+    m_truss, m_roof, m_rope, m_tow = m(("13_truss_ring", "14_scheinwerfer")), m(("16_dach",)), m(("15_seile",)), m(("12_ecktuerme",))
+    knob = m_truss * G / (2 * len(SLINGS))
+    P = ((m_roof + m_truss + m_rope) / 4 + m_tow / 8) * G
+    # Kippmoment einer Traegerfuge: Noppen-Zug x Abstand zur Kippkante (schwaechste Achse)
+    foot = [c for c in TOWER_FOOT if c[0] > 0 and c[1] > 0]
+    xs = sorted({c[0] for c in foot}); x0 = min(xs)
+    M_j = F_STUD * sum((c[0] - x0 + 0.5) * 8e-3 for c in foot)          # je Zelle eine Noppe
+    h = CEIL_H * 0.4e-3
+    H_max = 4 * 2 * M_j / h
+    d_crit = 2 * M_j / P * 1000
+    # Dachrand als Traeger zwischen den Tuermen: 2 Plattenlagen + Attika (2 Noppen breit)
+    span = (64 - (4 if TOWER_STYLE != "slim" else 2)) * 8e-3
+    hb = (2 * PH + BH) * 0.4e-3; b = 16e-3
+    EI = JOINT_EFF * E_ABS * b * hb ** 3 / 12
+    q = (m_roof + m_truss) * G / 4 / span
+    w = 5 * q * span ** 4 / (384 * EI) * 1000
+    rows = [("Truss + Scheinwerfer", f"{m_truss*1000:.0f} g"), ("Dach", f"{m_roof*1000:.0f} g"),
+            ("Kraft je Seil-Endnoppe", f"{knob:.2f} N ({knob/F_STUD*100:.0f} % der Noppen-Klemmkraft)"),
+            ("Last je Eckturm", f"{P:.1f} N"),
+            ("Kippmoment je Traegerfuge", f"{M_j*1000:.0f} Nmm"),
+            ("seitliche Kraft am Dach bis zum Nachgeben", f"{H_max:.1f} N (~{H_max/G*1000:.0f} g)"),
+            ("Schiefstellung bis Instabilitaet (P-Delta)", f"{d_crit:.0f} mm"),
+            ("Durchbiegung Dachrand (Feldmitte)", f"{w:.2f} mm")]
+    ok = knob / F_STUD < 0.5 and H_max >= 2.0 and d_crit >= 40 and w < 1.5
+    print(f"STATIK ({TOWER_STYLE}):")
+    for k, v in rows: print(f"  {k}: {v}")
+    print("  Bewertung:", "OK" if ok else "KRITISCH")
+    return rows, ok
+
+
 bad = checks() + check_cable()
+STATIK_ROWS, STATIK_OK = statik()
 export()
 print("CHECK", "OK" if bad == 0 else f"FEHLER ({bad})")
