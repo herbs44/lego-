@@ -27,22 +27,20 @@ LDraw Part,BrickLink ID,Name,Farbe,Menge
 3003.dat,3003,"Brick  2 x  2",White,5
 3003.dat,3003,"Brick  2 x  2",Tan,2
 3003.dat,3003,"Brick  2 x  2",Dark Tan,1
-3004.dat,3004,"Brick  1 x  2",Black,108
+3004.dat,3004,"Brick  1 x  2",Black,242
 3004.dat,3004,"Brick  1 x  2",Blue,145
 3004.dat,3004,"Brick  1 x  2",Green,80
-3004.dat,3004,"Brick  1 x  2",White,230
+3004.dat,3004,"Brick  1 x  2",White,80
 3004.dat,3004,"Brick  1 x  2",Tan,19
 3004.dat,3004,"Brick  1 x  2",Dark Tan,10
-3004.dat,3004,"Brick  1 x  2",Light Bluish Gray,60
 3004.dat,3004,"Brick  1 x  2",Dark Bluish Gray,70
-3005.dat,3005,"Brick  1 x  1",Black,363
+3005.dat,3005,"Brick  1 x  1",Black,371
 3005.dat,3005,"Brick  1 x  1",Blue,78
 3005.dat,3005,"Brick  1 x  1",Green,75
-3005.dat,3005,"Brick  1 x  1",White,89
+3005.dat,3005,"Brick  1 x  1",White,84
 3005.dat,3005,"Brick  1 x  1",Tan,12
 3005.dat,3005,"Brick  1 x  1",Dark Tan,19
 3005.dat,3005,"Brick  1 x  1",Trans-Clear,8
-3005.dat,3005,"Brick  1 x  1",Light Bluish Gray,2
 3005.dat,3005,"Brick  1 x  1",Dark Bluish Gray,14
 3006.dat,3006,"Brick  2 x 10",Black,145
 3007.dat,3007,"Brick  2 x  8",Black,50
@@ -52,31 +50,25 @@ LDraw Part,BrickLink ID,Name,Farbe,Menge
 3008.dat,3008,"Brick  1 x  8",Black,114
 3008.dat,3008,"Brick  1 x  8",Blue,18
 3008.dat,3008,"Brick  1 x  8",Green,4
-3008.dat,3008,"Brick  1 x  8",White,33
+3008.dat,3008,"Brick  1 x  8",White,13
 3008.dat,3008,"Brick  1 x  8",Tan,5
-3008.dat,3008,"Brick  1 x  8",Light Bluish Gray,8
 3008.dat,3008,"Brick  1 x  8",Dark Bluish Gray,8
 3009.dat,3009,"Brick  1 x  6",Black,165
 3009.dat,3009,"Brick  1 x  6",Blue,17
 3009.dat,3009,"Brick  1 x  6",Green,6
-3009.dat,3009,"Brick  1 x  6",White,26
+3009.dat,3009,"Brick  1 x  6",White,6
 3009.dat,3009,"Brick  1 x  6",Tan,3
-3009.dat,3009,"Brick  1 x  6",Light Bluish Gray,8
 3009.dat,3009,"Brick  1 x  6",Dark Bluish Gray,6
-3010.dat,3010,"Brick  1 x  4",Black,96
+3010.dat,3010,"Brick  1 x  4",Black,142
 3010.dat,3010,"Brick  1 x  4",Blue,60
 3010.dat,3010,"Brick  1 x  4",Green,30
-3010.dat,3010,"Brick  1 x  4",White,183
+3010.dat,3010,"Brick  1 x  4",White,143
 3010.dat,3010,"Brick  1 x  4",Tan,7
-3010.dat,3010,"Brick  1 x  4",Light Bluish Gray,16
 3010.dat,3010,"Brick  1 x  4",Dark Bluish Gray,18
 3020.dat,3020,"Plate  2 x  4",Black,6
-3020.dat,3020,"Plate  2 x  4",Light Bluish Gray,1
 3020.dat,3020,"Plate  2 x  4",Dark Bluish Gray,11
-3021.dat,3021,"Plate  2 x  3",Light Bluish Gray,2
 3021.dat,3021,"Plate  2 x  3",Dark Bluish Gray,3
 3022.dat,3022,"Plate  2 x  2",Black,28
-3022.dat,3022,"Plate  2 x  2",Light Bluish Gray,6
 3022.dat,3022,"Plate  2 x  2",Dark Bluish Gray,1
 3023.dat,3023,"Plate  1 x  2",Black,18
 3023.dat,3023,"Plate  1 x  2",Blue,63
@@ -84,14 +76,12 @@ LDraw Part,BrickLink ID,Name,Farbe,Menge
 3023.dat,3023,"Plate  1 x  2",White,22
 3023.dat,3023,"Plate  1 x  2",Tan,9
 3023.dat,3023,"Plate  1 x  2",Dark Tan,3
-3023.dat,3023,"Plate  1 x  2",Light Bluish Gray,135
 3023.dat,3023,"Plate  1 x  2",Dark Bluish Gray,147
 3024.dat,3024,"Plate  1 x  1",Blue,152
 3024.dat,3024,"Plate  1 x  1",Green,87
 3024.dat,3024,"Plate  1 x  1",White,48
 3024.dat,3024,"Plate  1 x  1",Tan,12
 3024.dat,3024,"Plate  1 x  1",Dark Tan,20
-3024.dat,3024,"Plate  1 x  1",Light Bluish Gray,38
 3024.dat,3024,"Plate  1 x  1",Dark Bluish Gray,114
 3034.dat,3034,"Plate  2 x  8",Tan,1
 3035.dat,3035,"Plate  4 x  8",Black,3
@@ -122,21 +112,18 @@ LDraw Part,BrickLink ID,Name,Farbe,Menge
 3460.dat,3460,"Plate  1 x  8",Black,12
 3460.dat,3460,"Plate  1 x  8",Blue,2
 3460.dat,3460,"Plate  1 x  8",White,3
-3460.dat,3460,"Plate  1 x  8",Light Bluish Gray,7
 3460.dat,3460,"Plate  1 x  8",Dark Bluish Gray,4
-3622.dat,3622,"Brick  1 x  3",Black,49
+3622.dat,3622,"Brick  1 x  3",Black,125
 3622.dat,3622,"Brick  1 x  3",Blue,75
 3622.dat,3622,"Brick  1 x  3",Green,51
-3622.dat,3622,"Brick  1 x  3",White,132
+3622.dat,3622,"Brick  1 x  3",White,27
 3622.dat,3622,"Brick  1 x  3",Tan,5
 3622.dat,3622,"Brick  1 x  3",Dark Tan,4
-3622.dat,3622,"Brick  1 x  3",Light Bluish Gray,42
 3622.dat,3622,"Brick  1 x  3",Dark Bluish Gray,38
 3623.dat,3623,"Plate  1 x  3",Blue,21
 3623.dat,3623,"Plate  1 x  3",Green,8
 3623.dat,3623,"Plate  1 x  3",White,12
 3623.dat,3623,"Plate  1 x  3",Tan,2
-3623.dat,3623,"Plate  1 x  3",Light Bluish Gray,20
 3623.dat,3623,"Plate  1 x  3",Dark Bluish Gray,112
 3666.dat,3666,"Plate  1 x  6",Black,12
 3666.dat,3666,"Plate  1 x  6",Blue,7
@@ -144,21 +131,16 @@ LDraw Part,BrickLink ID,Name,Farbe,Menge
 3666.dat,3666,"Plate  1 x  6",White,2
 3666.dat,3666,"Plate  1 x  6",Tan,2
 3666.dat,3666,"Plate  1 x  6",Dark Bluish Gray,10
-3700.dat,3700,"Technic Brick  1 x  2 with Hole",Black,238
-3701.dat,3701,"Technic Brick  1 x  4 with Holes",Black,36
-3702.dat,3702,"Technic Brick  1 x  8 with Holes",Black,22
 3710.dat,3710,"Plate  1 x  4",Black,12
 3710.dat,3710,"Plate  1 x  4",Blue,13
 3710.dat,3710,"Plate  1 x  4",Green,4
 3710.dat,3710,"Plate  1 x  4",White,6
 3710.dat,3710,"Plate  1 x  4",Tan,6
-3710.dat,3710,"Plate  1 x  4",Light Bluish Gray,20
 3710.dat,3710,"Plate  1 x  4",Dark Bluish Gray,134
 3795.dat,3795,"Plate  2 x  6",White,1
 3795.dat,3795,"Plate  2 x  6",Dark Bluish Gray,2
 3811.dat,3811,"Baseplate 32 x 32",Black,4
 3832.dat,3832,"Plate  2 x 10",Tan,1
-3894.dat,3894,"Technic Brick  1 x  6 with Holes",Black,10
 4162.dat,4162,"Tile  1 x  8",Black,34
 4162.dat,4162,"Tile  1 x  8",Green,1
 4162.dat,4162,"Tile  1 x  8",Dark Bluish Gray,10
@@ -172,12 +154,10 @@ LDraw Part,BrickLink ID,Name,Farbe,Menge
 54200.dat,54200,"Slope Brick 31  1 x  1 x  0.667",Dark Tan,42
 60479.dat,60479,"Plate  1 x 12",Black,90
 60479.dat,60479,"Plate  1 x 12",White,1
-60479.dat,60479,"Plate  1 x 12",Light Bluish Gray,3
 60479.dat,60479,"Plate  1 x 12",Dark Bluish Gray,7
 6111.dat,6111,"Brick  1 x 10",Black,90
-6112.dat,6112,"Brick  1 x 12",Black,418
+6112.dat,6112,"Brick  1 x 12",Black,434
 6141.dat,4073,"Plate  1 x  1 Round",Trans-Clear,24
-6541.dat,6541,"Technic Brick  1 x  1 with Hole",Black,24
 6636.dat,6636,"Tile  1 x  6",Black,24
 6636.dat,6636,"Tile  1 x  6",Blue,1
 6636.dat,6636,"Tile  1 x  6",Green,1

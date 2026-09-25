@@ -1,8 +1,8 @@
 # Globe Stage – Konzertbühne mit Erdkugel-Kuppel (LEGO MOC)
 
 Stadion-Konzertbühne im Minifig-Maßstab: eine große, glatt gerundete Erdkugel-Kuppel,
-LED-Ring mit Nebel, Projektionsschirm und ein schmaler Truss-Ring mit Scheinwerfern,
-getragen von 8 Truss-Türmen aus Gitterträgern. Vorlage ist die Konzeptskizze in
+LED-Ring mit Nebel und ein schmaler Truss-Ring mit Scheinwerfern, getragen von
+8 Truss-Türmen aus Gitterträgern. Vorlage ist die Konzeptskizze in
 [`reference/konzept-skizze.png`](reference/konzept-skizze.png), abgeglichen mit
 Konzertfotos der echten Bühne.
 
@@ -24,16 +24,16 @@ Konzertfotos der echten Bühne.
 
 | Datei | Inhalt |
 |---|---|
-| `globe_stage.mpd` | Das Modell (LDraw Multi-Part, 14 Bauabschnitte als Submodelle) – in Stud.io, LeoCAD, LDView, BrickLink Studio öffnen |
+| `globe_stage.mpd` | Das Modell (LDraw Multi-Part, 13 Bauabschnitte als Submodelle) – in Stud.io, LeoCAD, LDView, BrickLink Studio öffnen |
 | `globe_stage_bom.csv` | Stückliste (LDraw-ID, BrickLink-ID, Name, Farbe, Menge) |
 | `globe_stage_bricklink.xml` | BrickLink Wanted List – direkt unter *Wanted → Upload* importierbar |
-| `preview_nocage.mpd` | Vorschau ohne Schirm/Türme/Truss (zum Anschauen der Kuppel) |
+| `preview_nocage.mpd` | Vorschau ohne Türme/Truss/Scheinwerfer (zum Anschauen der Kuppel) |
 | `generate_globe_stage.py` | Generator, der alle drei Dateien erzeugt |
 | `renders/` | Renderings der aktuellen Version |
 
 ## Kennzahlen
 
-- **7.822 Teile**, 191 Positionen (Teil × Farbe), keine Minifiguren
+- **7.064 Teile**, 171 Positionen (Teil × Farbe), keine Minifiguren
 - **Echte Beleuchtung vorbereitet**: LED-Kanal im LED-Ring (Streifen ca. 1,2 m) und 24 Scheinwerfer mit LED, gemeinsame USB-Versorgung
 - **Grundfläche** 64 × 64 Noppen (4 Baseplates 32 × 32, ca. 51 × 51 cm)
 - **Höhe** ca. 44 Noppen (ca. 35 cm)
@@ -52,9 +52,8 @@ Konzertfotos der echten Bühne.
 8. **Innenstützen** – 2 × 2-Säulen im Hohlraum unter den Decks
 9. **Kuppel-Rundung**: ausschließlich 1 × 1-Teile (Cheese-Slopes, Platten, Fliesen) auf jeder Stufe, dazu eine kleine Kappe auf dem Plateau (siehe unten)
 10. **Nebel** – 2 × 2-Kuppelsteine + „Swirl“-Platten auf dem LED-Ring
-11. **Projektionsschirm** – 7 Lagen Wand mit Plattenrahmen unten, **hängt am Truss**
 12. **Truss-Türme** – 8 Türme auf dem Basis-Rand: 2 × 2-Stein + 2 Platten 2 × 2 + 3 × Gitterträger 95347 (2 × 2 × 10), hellgrau wie Alu-Traversen
-13. **Truss-Ring** Ø 59 – schmaler Plattenring, Technic-Lochsteine als Gitterträger, Obergurt mit Sprossen, liegt auf den Türmen
+13. **Truss-Ring** Ø 59 – schmaler Plattenring, zwei Wände aus normalen schwarzen Steinen (2 Lagen), Obergurt mit Sprossen, liegt auf den Türmen
 14. **Scheinwerfer** – 24 hängende Lampen unter dem Truss, jeweils mit LED (siehe „LED-Beleuchtung“)
 
 ## Kuppel-Rundung
@@ -91,8 +90,7 @@ Basis-Rand außerhalb des Laufstegs und liegt oben komplett unter dem Truss-Band
 | oben | Noppen greifen in die untere Plattenlage des Truss-Rings |
 
 Die Stapelhöhe (1 Stein + 2 Platten + 3 × 10 Steine) passt genau vom Basis-Rand bis unter den
-Truss. Der Projektionsschirm hängt mit Klemmkraft unter dem Truss. Er hat unten nur noch einen
-schmalen Plattenrahmen nach innen, damit er den Türmen nicht im Weg ist.
+Truss. Unter dem Ring ist sonst nichts – der Blick auf die Kuppel ist von allen Seiten frei.
 
 ## LED-Beleuchtung
 
@@ -130,7 +128,7 @@ und steht deshalb nicht in Stückliste und BrickLink-Liste.
 |---|---|
 | **Lampe** | Gehäuse = schwarzer 1 × 1-Rundstein (hohl), darin eine kleine LED (z. B. „Dot Light“ aus einem LEGO-Beleuchtungsset, 5 V), Linse = trans-klare 1 × 1-Rundplatte darunter |
 | **Draht an der Lampe** | direkt neben jeder Lampe ist ein 1 × 1-Loch durch beide Truss-Plattenlagen. Der Draht geht seitlich aus der Lampe (zwischen Gehäuse und Linse) und durch das Loch nach oben |
-| **Truss-Kanal** | zwischen innerer und äußerer Technic-Wand verläuft ringsum ein ca. 1 Noppe breiter Hohlraum. Dort werden die 24 Drähte gesammelt (z. B. mit Verteiler-Platinen des Lichtsets) |
+| **Truss-Kanal** | zwischen innerer und äußerer Truss-Wand verläuft ringsum ein ca. 1 Noppe breiter Hohlraum. Dort werden die 24 Drähte gesammelt (z. B. mit Verteiler-Platinen des Lichtsets) |
 | **Sammelleitung** | neben einem der beiden hinteren Türme (x = +11, z = −26 Noppen) ist ein weiteres Loch durch beide Truss-Plattenlagen. Dort kommt die Sammelleitung aus dem Kanal und läuft am Gitterträger entlang nach unten, wie bei echten Bühnen |
 | **Anschluss** | am Turmfuß läuft die Leitung unter den Fliesen des Basis-Rands (zwischen den Noppen ist Platz) bis zu einem Bodenloch hinten Mitte. Das Loch führt direkt in den Kabeltunnel, durch den auch das Kabel des LED-Streifens nach außen geht. Beide werden außen an dasselbe 5-V-USB-Netzteil angeschlossen (z. B. mit einem Y-Kabel) |
 
@@ -140,7 +138,7 @@ Ring bleibt durchgehend verbunden, die Turm-Zellen bleiben geschlossen. Das Bode
 der Statik auch den Kabelweg: alle Löcher frei und neben Lampe bzw. Turm, Bodenloch offen bis
 in den Tunnel, LED-Kanal und Schacht leer.
 
-**Einbau:** LEDs und Drähte einsetzen, bevor die Technic-Wände und der Obergurt des Truss
+**Einbau:** LEDs und Drähte einsetzen, bevor die Truss-Wände und der Obergurt
 aufgesetzt werden. Die Sammelleitung vor dem Verlegen der Fliesen auf dem Basis-Rand bis zum
 Bodenloch führen.
 
@@ -153,7 +151,7 @@ Bodenloch führen.
 Der Generator prüft das Modell nach jedem Lauf automatisch:
 
 - **0 nicht verbundene Teile**: Jedes Teil hängt über Noppenverbindungen an der Baseplate.
-- **0 schwebende Teile**: Jedes Teil sitzt auf mindestens einer Noppe. Die 127 Ausnahmen hängen mit Klemmkraft von oben: die unteren Plattenlagen von Schirmrahmen und Truss (kreuzweise verbaut) und die Scheinwerfer. Der Schirm als Ganzes hängt am Truss.
+- **0 schwebende Teile**: Jedes Teil sitzt auf mindestens einer Noppe. Die 183 Ausnahmen hängen mit Klemmkraft von oben: Teile der unteren Truss-Plattenlage (kreuzweise unter der zweiten Lage verbaut) und die Scheinwerfer.
 - **0 Kollisionen**: kein Volumen doppelt belegt
 - Alle Steine liegen exakt im Noppenraster.
 
@@ -172,7 +170,6 @@ Alle Parameter (Kuppelprofil, Kartenmitte, Wolken, Turm- und Lampenpositionen, F
 ## Hinweise & Grenzen
 
 - **Schräge Spotlight-Strahlen** aus der Skizze lassen sich nicht aus Steinen bauen. Stattdessen hängen 24 Scheinwerfer mit echten LEDs unter dem Truss.
-- **Projektionsbild** auf dem Schirm ist nicht enthalten. Möglich sind bedruckte Fliesen oder ein Sticker auf den weißen Schirmsteinen.
 - **Kosten** grob geschätzt 500–750 € über BrickLink (Cheese-Slopes und 1 × 1-Platten sind günstig). Die größten Posten sind:
   - 4 schwarze 32 × 32-Baseplates
   - 24 Gitterträger 95347

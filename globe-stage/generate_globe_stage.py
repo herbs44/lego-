@@ -1,6 +1,6 @@
 """
 Globe Stage – LEGO MOC Generator
-Konzertbuehne mit Erdkugel-Kuppel, Lichtvorhang, Projektionsschirm und Truss-Ring.
+Konzertbuehne mit Erdkugel-Kuppel, LED-Ring, Truss-Ring auf Gittertraeger-Tuermen und LED-Scheinwerfern.
 Pipeline: Zellgeometrie -> Farben -> Packing (Rechteck-Merge) -> Statik-/Kollisionscheck -> MPD/BOM/XML
 """
 import math, random, os, sys
@@ -37,7 +37,6 @@ PLATE = {(1, 1): "3024", (1, 2): "3023", (1, 3): "3623", (1, 4): "3710", (1, 6):
          (16, 16): "91405"}
 TILE = {(1, 1): "3070b", (1, 2): "3069b", (1, 4): "2431", (1, 6): "6636", (1, 8): "4162",
         (2, 2): "3068b", (2, 4): "87079"}
-TECHNIC = {(1, 1): "6541", (1, 2): "3700", (1, 4): "3701", (1, 6): "3894", (1, 8): "3702"}
 BL_ID = {"3070b": "3070", "3069b": "3069", "3068b": "3068", "6141": "4073", "3815c01": "970c00"}
 
 
@@ -397,7 +396,7 @@ def top_exposed(g):
     return {c for c in layers[g] if not covered_above(g, c)}
 
 # T0/T1: Fliesen (T1 ausser Saeulen-Zellen).
-SCREEN = boundary8(D_T1)          # Ring Oe 56 fuer Lichtvorhang + Schirm
+SCREEN = boundary8(D_T1)          # Ring Oe 56 = Innenkante des Truss-Rings
 E_T1 = top_exposed(3)
 E_LED = top_exposed(5)
 
@@ -481,30 +480,18 @@ for c in cands:
                  ledtop_y - 18, ledtop_y, studs=False))
 plates("10_nebel", {c: WHITE for c in E_LED - cloud_cells}, ledtop_y - PH, 0, table=TILE, studs=False)
 
-# ---- (Lichtvorhang-Saeulen entfallen: Truss steht auf 95347-Tuermen, Schirm haengt am Truss) ----
-G_COL_TOP = 25                       # Hoehenbezug: Schirm-Unterkante bei y=-624
+# ---- Laufsteg-Oberflaeche ----
 plates("03_laufsteg", {c: DBG for c in E_T1}, -BH * 4 - PH, 0, table=TILE, studs=False)
 
-# ---- Schirm-Rahmen: 2 Plattenlagen kreuzweise als Unterkante des (haengenden) Schirms ----
-RIM = {c for r in radial_runs({c for c in ALL if 25.6 < dist(c) <= 27.5}) if set(r) & SCREEN for c in r}
-y_rim = -BH * (G_COL_TOP + 1)        # -624
-for p in plates("11_projektionsschirm", {c: LBG for c in RIM}, y_rim - PH, 0, tangential=True):
-    p.hang = True                    # der ganze Schirm haengt per Klemmkraft am Truss
-place_runs("11_projektionsschirm", radial_runs(RIM), LBG, y_rim - 2 * PH)
-
-# ---- Projektionsschirm: 7 Brick-Lagen, 1 Noppe stark ----
-y0 = y_rim - 2 * PH
-for L in range(7):
-    col = LBG if L in (0, 6) else WHITE
-    pack("11_projektionsschirm", {c: col for c in SCREEN}, BRICK, y0 - BH * (L + 1), BH, L % 2)
-y_scr_top = y0 - BH * 7
+# Hoehe der Truss-Unterkante (frueher Oberkante des Projektionsschirms, der entfallen ist)
+y_scr_top = -808
 
 # ---- Truss-Ring (Gittertraeger) ----
 R_TRUSS = 29.5                       # Aussenradius Truss (schmaler Ring, ca. 3 Noppen breit)
 TRUSS = SCREEN | (disk(R_TRUSS) - D_T1)
 OUTW = boundary8(disk(R_TRUSS))
 INW = {c for c in TRUSS if any((c[0] + a, c[1] + b) not in TRUSS and dist((c[0] + a, c[1] + b)) < 27 for a, b in N8)}
-DUCT = TRUSS - OUTW - INW            # Kabelkanal zwischen den Technic-Waenden
+DUCT = TRUSS - OUTW - INW            # Kabelkanal zwischen den beiden Waenden
 
 # 8 Truss-Tuerme (Ground Support): 2x2-Bloecke ausserhalb des Laufstegs, komplett unter dem Truss-Band
 def angle_of(c): return math.atan2(c[1] + 0.5, c[0] + 0.5)
@@ -539,7 +526,7 @@ y -= PH
 plates("13_truss_ring", {c: DBG for c in TRUSS - HOLES}, y, 1)
 for L in range(2):
     ytop = y - BH * (L + 1)
-    pack("13_truss_ring", {c: BLACK for c in OUTW | INW}, TECHNIC, ytop, BH, L % 2)
+    pack("13_truss_ring", {c: BLACK for c in OUTW | INW}, BRICK, ytop, BH, L % 2)
 y = y - 2 * BH - PH
 # Obergurt: radiale Sprossen (jede 4. Reihe, inkl. Wandzellen) + Plattenring auf den Waenden
 rungs = [r for r in radial_runs(TRUSS) if ((r[0][1] if sector(r[0])[0] else r[0][0]) % 4 == 0)]
@@ -632,7 +619,7 @@ TITLES = {"01_baseplates": "Arena-Boden (4x Baseplate 32x32)", "02_basis": "Basi
           "05_kuppel_unten": "Kuppel unten + Deck 1", "06_kuppel_mitte": "Kuppel Mitte + Deck 2",
           "07_kuppel_oben": "Kuppel oben", "08_innenstuetzen": "Innenstuetzen (Hohlraum)",
           "09_kuppel_slopes": "Kuppel Rundung (1x1 Cheese-Slopes, Platten, Fliesen)", "10_nebel": "Nebel / Wolken am LED-Ring",
-          "11_projektionsschirm": "Projektionsschirm Oe56 (haengt am Truss)", "12_truss_tuerme": "Truss-Tuerme (Gittertraeger 95347)",
+          "12_truss_tuerme": "Truss-Tuerme (Gittertraeger 95347)",
           "13_truss_ring": "Truss-Ring Oe64", "14_scheinwerfer": "Scheinwerfer am Truss (echte LEDs)",
           }
 
@@ -644,7 +631,7 @@ NOTES = {"04_led_ring": [
     "0 // Streifen einlegen, BEVOR die obere Lage (radiale 1x4-Steine) aufgesetzt wird."],
   "14_scheinwerfer": [
     "0 // Echte LEDs: je eine LED (Lichtset-'Dot Light', 5 V) im hohlen Rundstein, Licht durch die trans-klare Linse.",
-    "0 // Draht neben der Lampe durch das Loch in beiden Truss-Plattenlagen in den Kanal zwischen den Technic-Waenden.",
+    "0 // Draht neben der Lampe durch das Loch in beiden Truss-Plattenlagen in den Kanal zwischen den beiden Truss-Waenden.",
     "0 // Sammelleitung: durch das Loch neben dem hinteren Turm, am Gittertraeger hinunter, unter den Fliesen",
     "0 // des Basis-Rands zum Bodenloch hinten Mitte und durch den Kabeltunnel nach aussen (gleiches USB-Netzteil)."]}
 
@@ -672,7 +659,7 @@ def export():
     os.makedirs(OUT, exist_ok=True)
     open(os.path.join(OUT, f"{NAME}.mpd"), "w").write("\n".join(out) + "\n")
     prev = [l for l in out if not any(f"{x}.ldr" in l and l.startswith("1 ") for x in
-            ("11_projektionsschirm", "12_truss_tuerme", "13_truss_ring", "14_scheinwerfer"))]
+            ("12_truss_tuerme", "13_truss_ring", "14_scheinwerfer"))]
     open(os.path.join(OUT, "preview_nocage.mpd"), "w").write("\n".join(prev) + "\n")
     bom = Counter((p.name, p.color) for p in parts)
     rows = ["LDraw Part,BrickLink ID,Name,Farbe,Menge"]; xml = ["<INVENTORY>"]
