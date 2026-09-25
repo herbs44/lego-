@@ -680,6 +680,22 @@ def export():
     for s in order: print(f"  {s}: {sum(1 for p in parts if p.sub == s)}")
 
 
-bad = checks()
+def check_cable():
+    """Kabelweg der Beleuchtung: Loecher frei, Kabelsaeule hohl, Luecke zum LED-Kanal offen."""
+    def at(c, y): return [p for p in parts if c in p.cells and p.ytop <= y < p.ybot]
+    errs = 0
+    y_p1 = y_scr_top - 2 * PH
+    for yy in range(y_p1, -BH * 4, 2):                       # Kabelsaeule: Truss-Kreuzlage bis Laufsteg
+        ps = at(CABLE_COL, yy)
+        if len(ps) != 1 or ps[0].name not in ("3062b", "85861"): errs += 1; break
+    if any(at(CABLE_COL, yy) for yy in range(y_p1 - 2 * BH, y_p1, 2)): errs += 1   # Innenwand offen
+    errs += sum(1 for h in HOLES if any(at(h, yy) for yy in range(y_p1 - 2 * BH, y_scr_top, 2)))
+    errs += sum(1 for l in LAMPS if not any((l[0] + a, l[1] + b) in HOLES for a, b in ((1, 0), (-1, 0), (0, 1), (0, -1))))
+    if at(LED_GAP, -BH * 5 + 10) or any(at(c, -BH * 5 + 10) for c in CHANNEL): errs += 1
+    print("cable path errors:", errs)
+    return errs
+
+
+bad = checks() + check_cable()
 export()
 print("CHECK", "OK" if bad == 0 else f"FEHLER ({bad})")
