@@ -280,16 +280,14 @@ def sub_for_g(g):
     return "07_kuppel_oben"
 
 
-# ---- Kuppel-Rundung: die Randzelle jeder Lage wird durch eine Slope ersetzt, ----
-# ---- die genau die freie Stufe der Lage darunter ueberbrueckt (volle Steinhoehe) ----
+# ---- Kuppel-Rundung nur mit 1x1-Teilen: jede freie Stufe (Terrasse) wird je Zelle ----
+# ---- passend zur idealen Kuppellinie mit Platte/Cheese-Slope/Fliese aufgefuellt     ----
 ROT_OUT = {(1, 0): 90, (-1, 0): 270, (0, 1): 180, (0, -1): 0}
-STRAIGHT = {1: "3040b", 2: "4286", 3: "60477"}   # 45/33/18 Grad, Noppe auf der hohen Zelle (Origin dort)
-CURVED = {2: "50950", 3: "61678"}                 # gebogen 3x1 / 4x1, ohne Noppen (Origin Mitte)
-EDGE = defaultdict(set)      # g -> ersetzte Randzellen
-EDGE_SLOPES = []             # (g, rim, terrace_cells, dir, layer_above_on_rim)
-SLOPED = defaultdict(set)    # g -> Terrassenzellen (Lage g), die schon abgedeckt sind
+TERRACES = []                # (g_unten, [Zellen innen->aussen], dir)
+SLOPED = defaultdict(set)    # g -> Terrassenzellen (Lage g), die bearbeitet werden
+EDGE = {}
 for g in range(G_DOME + 1, TOP_G + 1):
-    F, Fb, Fa = full[g], full[g - 1], full.get(g + 1, set())
+    F, Fb = full[g], full[g - 1]
     rows = defaultdict(list)
     for c in F:
         sx, sz = sector(c)
@@ -300,16 +298,14 @@ for g in range(G_DOME + 1, TOP_G + 1):
         while q in Fb and q not in F:
             ter.append(q); q = (q[0] + sx, q[1] + sz)
         if not ter: continue
-        k = min(len(ter), 3)
-        EDGE[g].add(rim)
-        EDGE_SLOPES.append((g, rim, ter[:k], (sx, sz), rim in Fa))
-        SLOPED[g - 1] |= set(ter[:k])
+        TERRACES.append((g - 1, ter, (sx, sz)))
+        SLOPED[g - 1] |= set(ter)
 
 # ---- Brick-Lagen ----
 DECK_BOTTOM = {}
 for g in range(0, TOP_G + 1):
     n = g - G_DOME
-    S = layers[g] - EDGE.get(g, set())
+    S = layers[g]
     sub = sub_for_g(g)
     if n in DECKS:
         # Deck: Aussenring als Bricks (sichtbar, Erdfarben), Innenscheibe als 3 Plattenlagen
@@ -373,26 +369,36 @@ SCREEN = boundary8(D_T1)          # Ring Oe 56 fuer Lichtvorhang + Schirm
 E_T1 = top_exposed(3)
 E_LED = top_exposed(5)
 
-# Kuppel: Kanten-Slopes platzieren
-for (g, rim, ter, d, above) in EDGE_SLOPES:
-    k = len(ter)
-    cells = [rim] + ter
-    cols = Counter(earth_color(c) for c in cells)
-    col = max(cols, key=lambda c: (cols[c], c == earth_color(ter[0])))
-    y = -BH * (g + 1)
-    if above or k == 1:
-        add(Part("09_kuppel_slopes", STRAIGHT[k], col, ctr(rim[0]), y, ctr(rim[1]), ROT_OUT[d], cells, y, y + BH,
-                 studs=True, studcells={rim}))
-    else:
-        cx = sum(ctr(c[0]) for c in cells) / len(cells); cz = sum(ctr(c[1]) for c in cells) / len(cells)
-        add(Part("09_kuppel_slopes", CURVED[k], col, cx, y, cz, ROT_OUT[d], cells, y, y + BH, studs=False))
+# Kuppel: Terrassen auffuellen. Ideale Linie steigt ueber w Zellen um 24 LDU;
+# Zelle j (0 = innen, an der hoeheren Lage) bekommt p Platten + Cheese (16) bzw. Fliese.
+TER_PLATES, TER_TILES = {}, {}
+for (gb, ter, d) in TERRACES:
+    w = len(ter)
+    y0 = -BH * (gb + 1)
+    for j, c in enumerate(ter):
+        h_in = 24.0 * (w - j) / w                # Sollhoehe an der Innenkante der Zelle
+        col = earth_color(c)
+        if h_in >= 11:
+            p = max(0, min(1, round((h_in - 16) / 8)))
+            if p: TER_PLATES[(gb, c)] = col
+            add(Part("09_kuppel_slopes", "54200", col, ctr(c[0]), y0 - PH * p, ctr(c[1]), ROT_OUT[d],
+                     {c}, y0 - PH * p - 16, y0 - PH * p, studs=False))
+        else:
+            TER_TILES[(gb, c)] = col
+for gb in {k[0] for k in TER_PLATES}:
+    plates("09_kuppel_slopes", {c: col for (g2, c), col in TER_PLATES.items() if g2 == gb}, -BH * (gb + 1) - PH, gb % 2)
+for gb in {k[0] for k in TER_TILES}:
+    plates("09_kuppel_slopes", {c: col for (g2, c), col in TER_TILES.items() if g2 == gb}, -BH * (gb + 1) - PH, gb % 2,
+           table=TILE, studs=False)
 
 # Restliche freie Stufenkanten (breite Terrassen, Zeilen ohne Lage darueber): Cheese-Slopes
 CHEESED = set()
-for g in range(G_DOME, TOP_G):
+CAP = {c for c in full[TOP_G] if dist(c) <= 5.0}     # kleine Kappe auf dem Plateau
+for g in range(G_DOME, TOP_G + 1):
     S = full[g]
     for c in top_exposed(g):
         if c in SLOPED[g] or c in EDGE.get(g, ()): continue
+        if g == TOP_G and c in CAP: continue
         d = sector(c)
         if (c[0] + d[0], c[1] + d[1]) in S: continue
         add(Part("09_kuppel_slopes", "54200", earth_color(c), ctr(c[0]), -BH * (g + 1), ctr(c[1]), ROT_OUT[d],
@@ -406,9 +412,23 @@ for g in range(G_DOME, TOP_G + 1):
     free = {}
     for c in top_exposed(g):
         if c in SLOPED[g] or (g, c) in CHEESED: continue
-        if (y, c) not in _idx: continue          # z.B. gebogene Rand-Slope ohne Noppe
+        if g == TOP_G and c in CAP: continue
+        if (y, c) not in _idx: continue
         free[c] = earth_color(c)
     plates("09_kuppel_slopes", free, y - PH, g % 2, table=TILE, studs=False)
+
+# Kappe: 1 Plattenlage, Rand mit 1x1-Cheese, innen Fliesen
+y = -BH * (TOP_G + 1)
+plates("09_kuppel_slopes", {c: earth_color(c) for c in CAP}, y - PH, 1)
+cap_tiles = {}
+for c in CAP:
+    d = sector(c)
+    if (c[0] + d[0], c[1] + d[1]) in CAP:
+        cap_tiles[c] = earth_color(c)
+    else:
+        add(Part("09_kuppel_slopes", "54200", earth_color(c), ctr(c[0]), y - PH, ctr(c[1]), ROT_OUT[d],
+                 {c}, y - PH - 16, y - PH, studs=False))
+plates("09_kuppel_slopes", cap_tiles, y - 2 * PH, 0, table=TILE, studs=False)
 
 # ---- Wolken / Nebel auf dem LED-Ring ----
 cloud_cells = set()
@@ -550,7 +570,7 @@ TITLES = {"01_baseplates": "Arena-Boden (4x Baseplate 32x32)", "02_basis": "Basi
           "03_laufsteg": "Laufsteg-Ring Oe56", "04_led_ring": "LED-Ring Oe52",
           "05_kuppel_unten": "Kuppel unten + Deck 1", "06_kuppel_mitte": "Kuppel Mitte + Deck 2",
           "07_kuppel_oben": "Kuppel oben", "08_innenstuetzen": "Innenstuetzen (Hohlraum)",
-          "09_kuppel_slopes": "Kuppel Rundung (Slopes + Fliesen)", "10_nebel": "Nebel / Wolken am LED-Ring",
+          "09_kuppel_slopes": "Kuppel Rundung (1x1 Cheese-Slopes, Platten, Fliesen)", "10_nebel": "Nebel / Wolken am LED-Ring",
           "11_projektionsschirm": "Projektionsschirm Oe56", "12_lichtvorhang": "Lichtvorhang (trans-clear Saeulen)",
           "13_truss_ring": "Truss-Ring Oe64", "14_scheinwerfer": "Scheinwerfer am Truss",
           }

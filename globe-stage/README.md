@@ -33,7 +33,7 @@ Konzertfotos der echten Bühne.
 
 ## Kennzahlen
 
-- **6.999 Teile**, 173 Positionen (Teil × Farbe), keine Minifiguren
+- **8.242 Teile**, 195 Positionen (Teil × Farbe), keine Minifiguren
 - **Grundfläche** 64 × 64 Noppen (4 Baseplates 32 × 32, ca. 51 × 51 cm)
 - **Höhe** ca. 44 Noppen (ca. 35 cm)
 - **Kuppel** Ø 48 Noppen, 14 Lagen, Erd-Mosaik (orthografische Projektion auf Nordafrika/Europa, Afrika zeigt zur Front)
@@ -49,7 +49,7 @@ Konzertfotos der echten Bühne.
 6. **Kuppel Mitte** (Lagen 8–11) mit **Deck 2**
 7. **Kuppel oben** (Lagen 12–13, massiv)
 8. **Innenstützen** – 2 × 2-Säulen im Hohlraum unter den Decks
-9. **Kuppel-Rundung**: Die äußerste Zelle jeder Kuppellage ist eine Slope, die genau die Stufe darunter überbrückt (siehe unten), freie Flächen sind mit Fliesen in Erdfarbe belegt.
+9. **Kuppel-Rundung**: ausschließlich 1 × 1-Teile (Cheese-Slopes, Platten, Fliesen) auf jeder Stufe, dazu eine kleine Kappe auf dem Plateau (siehe unten)
 10. **Nebel** – 2 × 2-Kuppelsteine + „Swirl“-Platten auf dem LED-Ring
 11. **Projektionsschirm** – Rahmen aus 2 kreuzweisen Plattenlagen, darauf 7 Lagen Wand
 12. **Lichtvorhang** – 24 Säulen aus trans-klaren 1 × 1-Rundsteinen (tragen Schirm + Truss)
@@ -58,20 +58,24 @@ Konzertfotos der echten Bühne.
 
 ## Kuppel-Rundung
 
+Die Rundung ist bewusst nur aus 1 × 1-Teilen aufgebaut, ohne längliche Slopes.
+
 Für jede Kuppellage und jede radiale Reihe misst der Generator, wie breit die freie Stufe
-der Lage darunter ist. Die Randzelle wird dann durch eine Slope ersetzt, die diese Stufe über
-die volle Steinhöhe überbrückt:
+der Lage darunter ist. Dann füllt er jede Stufenzelle passend zur idealen Kuppellinie
+(steigt über die Stufenbreite um eine Steinhöhe) auf:
 
-| Stufenbreite | Teil | Anzahl |
-|---|---|---|
-| 1 Noppe | Slope 45° 2 × 1 (3040b) | 592 |
-| 2 Noppen | Slope gebogen 3 × 1 (50950) | 240 |
-| 3 Noppen | Slope gebogen 4 × 1 (61678) | 96 |
-| breiter | Rest mit Cheese-Slopes 1 × 1 | 8 |
+| Sollhöhe der Zelle | Aufbau |
+|---|---|
+| hoch (direkt an der nächsten Lage) | 1 × 1-Platte + 1 × 1-Cheese-Slope (füllt die volle Steinhöhe) |
+| mittel | 1 × 1-Cheese-Slope |
+| niedrig (breite Terrassen außen) | 1 × 1-Fliese |
 
-Sitzt direkt über der Randzelle noch ein Stein, kommt eine gerade Slope mit Noppe zum
-Einsatz, damit die Lage darüber hält. Alle übrigen offenen Noppen der Kuppel sind mit
-Fliesen abgedeckt, damit die Oberfläche glatt wirkt wie auf den Konzertfotos.
+Auf dem Plateau sitzt eine kleine Kappe (1 Plattenlage, Rand mit Cheese-Slopes). Alle übrigen
+offenen Noppen der Kuppel sind mit Fliesen in Erdfarbe abgedeckt. So entsteht eine
+gleichmäßige „Schuppen“-Rundung wie bei einer glatten Kuppel.
+
+Verbaut sind 1.468 Cheese-Slopes 1 × 1 (54200), 427 Platten 1 × 1 als Unterbau und die
+Fliesen der Oberfläche.
 
 ## Statik & Prüfung
 
@@ -98,8 +102,8 @@ Alle Parameter (Kuppelprofil, Kartenmitte, Wolken, Säulenzahl, Farben) stehen o
 
 - **Schräge Spotlight-Strahlen** aus der Skizze lassen sich nicht sinnvoll aus Steinen bauen. Stattdessen hängen Scheinwerfer (trans-gelb) unter dem Truss.
 - **Projektionsbild** auf dem Schirm ist nicht enthalten. Möglich sind bedruckte Fliesen oder ein Sticker auf den weißen Schirmsteinen.
-- **Kosten** grob geschätzt 500–750 € über BrickLink. Die größten Posten sind:
+- **Kosten** grob geschätzt 500–750 € über BrickLink (Cheese-Slopes und 1 × 1-Platten sind günstig). Die größten Posten sind:
   - 4 schwarze 32 × 32-Baseplates
   - ca. 530 trans-klare 1 × 1-Rundsteine
-  - die rund 930 Slopes der Kuppel
+  - die rund 1.470 Cheese-Slopes der Kuppel
   - die schwarzen Kernsteine der Kuppel
