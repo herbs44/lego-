@@ -143,21 +143,23 @@ def radial_runs(cells):
 
 
 SIZES1 = sorted(k[1] for k in PLATE if k[0] == 1)
-def split_run(L):
-    if L in SIZES1: return [L]
-    for a in sorted(SIZES1, reverse=True):
-        if (L - a) in SIZES1: return [a, L - a]
+def split_run(L, sizes=None):
+    sizes = sizes or SIZES1
+    if L in sizes: return [L]
+    for a in sorted(sizes, reverse=True):
+        if (L - a) in sizes: return [a, L - a]
     out = []
     while L > 0:
-        a = max(x for x in SIZES1 if x <= L); out.append(a); L -= a
+        a = max(x for x in sizes if x <= L); out.append(a); L -= a
     return out
 
 
 def place_runs(sub, runs, color, ytop, table=PLATE, height=PH, hang=False, studs=True):
     res = []
+    sizes = sorted(k[1] for k in table if k[0] == 1)
     for run in runs:
         pos = 0
-        for n in split_run(len(run)):
+        for n in split_run(len(run), sizes):
             seg = run[pos:pos + n]; pos += n
             xs = {c[0] for c in seg}
             cx = sum(ctr(c[0]) for c in seg) / n; cz = sum(ctr(c[1]) for c in seg) / n
@@ -236,6 +238,16 @@ for g in range(0, G_DOME + N_DOME):
 
 TOP_G = G_DOME + N_DOME - 1
 
+# ---- LED-Kanal: hinter der trans-klaren Reihe (Lage 4) ringsum 1 Noppe frei fuer einen LED-Streifen ----
+# Lage 5 ueberbrueckt den Kanal mit radialen Steinen. Kabelweg: Schacht hinten nach unten + Tunnel nach aussen.
+B8_LED = boundary8(D_LED)
+CHANNEL = {c for c in D_LED - B8_LED if any((c[0] + a, c[1] + b) in B8_LED for a, b in N8)}
+SHAFT = max((c for c in CHANNEL if c[0] == 0 and c[1] < 0), key=lambda c: c[1])      # hinten (-z)
+TUNNEL = {(0, k) for k in range(SHAFT[1] - 1, -33, -1) if (0, k) in D_T0}
+layers[4] = layers[4] - CHANNEL
+for _g in range(0, 4): layers[_g] = layers[_g] - {SHAFT}
+layers[0] = layers[0] - TUNNEL
+
 
 def outer_r(g):
     if g < 2: return 31.5
@@ -254,14 +266,13 @@ def color_of(g, c):
     exposed = not covered_above(g, c)
     if g < 2: return BLACK
     if g < 4: return DBG if band else BLACK
-    if g == 4: return WHITE if (d > R - 2.0 or exposed) else BLACK
-    if g == 5:
-        if c in boundary8(D_LED): return TCLEAR
-        return WHITE if (d > R - 2.5 or exposed) else BLACK
+    if g == 4:
+        if c in B8_LED: return TCLEAR
+        return WHITE if (d > R - 3.0 or exposed) else BLACK
+    if g == 5: return WHITE if (d > R - 2.5 or exposed) else BLACK
     return earth_color(c) if (band or exposed) else BLACK
 
 
-B8_LED = boundary8(D_LED)
 
 # ---- Basis-Grundplatten ----
 for sx in (-1, 1):
@@ -317,6 +328,21 @@ for g in range(0, TOP_G + 1):
         for s in range(3):
             ps = plates(sub, {c: BLACK for c in disc}, y0 - PH * (s + 1), s % 2)
             if s == 0: DECK_BOTTOM[n] = ps
+    elif g == 1:
+        # ueber dem Kabeltunnel: quer liegende 1x3-Steine, die den Tunnel ueberbruecken
+        rest = set(S)
+        for t in sorted(TUNNEL):
+            if t not in S: continue
+            cells = [(t[0] - 1, t[1]), t, (t[0] + 1, t[1])]
+            add(Part(sub, "3622", BLACK, ctr(t[0]), -BH * (g + 1), ctr(t[1]), 0, cells, -BH * (g + 1), -BH * g))
+            rest -= set(cells)
+        bricks(sub, {c: color_of(g, c) for c in rest}, g)
+    elif g == 5:
+        # ueber dem LED-Kanal: radiale 1x4-Steine (aussen auf trans-klar, innen auf der Wand)
+        runs = [r[-4:] for r in radial_runs(S) if set(r[-4:]) & CHANNEL]
+        place_runs(sub, runs, WHITE, -BH * (g + 1), table=BRICK, height=BH)
+        used = {c for r in runs for c in r}
+        bricks(sub, {c: color_of(g, c) for c in S - used}, g)
     else:
         bricks(sub, {c: color_of(g, c) for c in S}, g)
 
@@ -567,13 +593,20 @@ def checks():
 
 # ---------------- Export ----------------
 TITLES = {"01_baseplates": "Arena-Boden (4x Baseplate 32x32)", "02_basis": "Basis Oe64 (2 Lagen)",
-          "03_laufsteg": "Laufsteg-Ring Oe56", "04_led_ring": "LED-Ring Oe52",
+          "03_laufsteg": "Laufsteg-Ring Oe56", "04_led_ring": "LED-Ring Oe52 mit Kanal fuer LED-Streifen",
           "05_kuppel_unten": "Kuppel unten + Deck 1", "06_kuppel_mitte": "Kuppel Mitte + Deck 2",
           "07_kuppel_oben": "Kuppel oben", "08_innenstuetzen": "Innenstuetzen (Hohlraum)",
           "09_kuppel_slopes": "Kuppel Rundung (1x1 Cheese-Slopes, Platten, Fliesen)", "10_nebel": "Nebel / Wolken am LED-Ring",
           "11_projektionsschirm": "Projektionsschirm Oe56", "12_lichtvorhang": "Lichtvorhang (trans-clear Saeulen)",
           "13_truss_ring": "Truss-Ring Oe64", "14_scheinwerfer": "Scheinwerfer am Truss",
           }
+
+
+NOTES = {"04_led_ring": [
+    "0 // LED-Kanal: hinter der trans-klaren Reihe (untere Lage) ringsum 1 Noppe tief, 1 Stein hoch.",
+    "0 // Empfehlung: 5-mm-COB-LED-Streifen (5 V/USB), ca. 1,2 m, auf die Innenwand kleben, Licht nach aussen.",
+    "0 // Kabel: Schacht hinten Mitte (x=10, z=-470) senkrecht nach unten, dann Tunnel in der untersten Basis-Lage nach aussen.",
+    "0 // Streifen einlegen, BEVOR die obere Lage (radiale 1x4-Steine) aufgesetzt wird."]}
 
 
 def export():
@@ -595,7 +628,7 @@ def export():
     for s in order: out += [f"0 // {TITLES.get(s, s)}", f"1 16 0 0 0 {ROT[0]} {s}.ldr"]
     out += ["0 NOFILE"]
     for s in order:
-        out += [f"0 FILE {s}.ldr", f"0 {TITLES.get(s, s)}", f"0 Name: {s}.ldr"] + bysub[s] + ["0 NOFILE"]
+        out += [f"0 FILE {s}.ldr", f"0 {TITLES.get(s, s)}", f"0 Name: {s}.ldr"] + NOTES.get(s, []) + bysub[s] + ["0 NOFILE"]
     os.makedirs(OUT, exist_ok=True)
     open(os.path.join(OUT, f"{NAME}.mpd"), "w").write("\n".join(out) + "\n")
     prev = [l for l in out if not any(f"{x}.ldr" in l and l.startswith("1 ") for x in

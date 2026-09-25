@@ -33,7 +33,8 @@ Konzertfotos der echten Bühne.
 
 ## Kennzahlen
 
-- **8.242 Teile**, 195 Positionen (Teil × Farbe), keine Minifiguren
+- **8.274 Teile**, 194 Positionen (Teil × Farbe), keine Minifiguren
+- **LED-Kanal** im LED-Ring für einen echten LED-Streifen (ca. 1,2 m)
 - **Grundfläche** 64 × 64 Noppen (4 Baseplates 32 × 32, ca. 51 × 51 cm)
 - **Höhe** ca. 44 Noppen (ca. 35 cm)
 - **Kuppel** Ø 48 Noppen, 14 Lagen, Erd-Mosaik (orthografische Projektion auf Nordafrika/Europa, Afrika zeigt zur Front)
@@ -44,7 +45,7 @@ Konzertfotos der echten Bühne.
 1. **Arena-Boden** – 4 × Baseplate 32 × 32 schwarz
 2. **Basis** Ø 64, 2 Lagen schwarz, Rand mit Fliesen
 3. **Laufsteg** Ø 56, dunkelgrau, Fliesen-Oberfläche
-4. **LED-Ring** Ø 52 – weiße Lage + trans-klare Lichtlage
+4. **LED-Ring** Ø 52 – trans-klare Leuchtreihe mit LED-Kanal dahinter, darüber weiße Brückenlage (siehe „LED-Beleuchtung“)
 5. **Kuppel unten** (Lagen 0–7) mit **Deck 1**: hohle Kuppel, auf Höhe von Lage 7 mit drei kreuzweisen Plattenlagen überspannt
 6. **Kuppel Mitte** (Lagen 8–11) mit **Deck 2**
 7. **Kuppel oben** (Lagen 12–13, massiv)
@@ -76,6 +77,31 @@ gleichmäßige „Schuppen“-Rundung wie bei einer glatten Kuppel.
 
 Verbaut sind 1.468 Cheese-Slopes 1 × 1 (54200), 427 Platten 1 × 1 als Unterbau und die
 Fliesen der Oberfläche.
+
+## LED-Beleuchtung
+
+Der LED-Ring ist für einen echten LED-Streifen vorbereitet:
+
+| | |
+|---|---|
+| **Kanal** | ringsum direkt hinter der trans-klaren Reihe, 1 Noppe tief (8 mm), 1 Stein hoch (9,6 mm, über den Noppen ca. 7,9 mm frei) |
+| **Länge** | ca. 1,2 m (Kanalmitte bei Ø ≈ 47 Noppen) |
+| **Streifen** | 5-mm-COB-LED-Streifen, 5 V / USB, kalt- oder neutralweiß (COB = durchgehende Lichtlinie ohne Punkte, wie der Ring auf den Konzertfotos). Alternativ die Strip-Lights eines LEGO-Beleuchtungssets |
+| **Montage** | Klebeseite an die weiße Innenwand des Kanals, Licht nach außen. Die trans-klaren Steine davor wirken als Diffusor |
+| **Kabel** | hinten Mitte ein senkrechter Schacht vom Kanal bis zur Baseplate, von dort ein Tunnel in der untersten Basis-Lage nach außen (1 Noppe breit, 1 Stein hoch – für das Kabel, der Stecker bleibt außen) |
+
+**Statik:** Die Lage über dem Kanal besteht aus radialen 1 × 4-Steinen. Jeder liegt außen
+auf der trans-klaren Reihe und innen auf der Wand und überbrückt so den Kanal. Die Kuppel steht
+unverändert darauf. Den Tunnel überbrücken quer liegende 1 × 3-Steine. Der Statik-Check prüft
+beides mit.
+
+**Einbau:** Streifen einlegen und Kabel durch Schacht und Tunnel führen, **bevor** die
+obere LED-Ring-Lage (radiale 1 × 4-Steine) aufgesetzt wird. Der Streifen ist kein LEGO-Teil
+und steht deshalb nicht in Stückliste und BrickLink-Liste.
+
+| Kanal im Schnitt (obere Lage ausgeblendet) | Kanal nah | LED-Ring von außen | Kabeltunnel hinten |
+|---|---|---|---|
+| ![Schnitt](renders/led_kanal_schnitt.png) | ![Nah](renders/led_kanal_schnitt_nah.png) | ![Ring](renders/kuppel_led_ring.png) | ![Tunnel](renders/kuppel_kabeltunnel.png) |
 
 ## Statik & Prüfung
 
