@@ -248,20 +248,11 @@ layers[4] = layers[4] - CHANNEL
 for _g in range(0, 4): layers[_g] = layers[_g] - {SHAFT}
 layers[0] = layers[0] - TUNNEL
 
-# ---- Kabelweg der Scheinwerfer-LEDs: eine Lichtvorhang-Saeule hinten dient als Kabelsaeule ----
-def column_cells():
-    out = []
-    for j in range(24):
-        a = 2 * math.pi * (j + 0.5) / 24
-        out.append((math.floor(26.7 * math.cos(a)), math.floor(26.7 * math.sin(a))))
-    return out
-CABLE_COL = min((c for c in column_cells() if c[0] >= 0 and c[1] < 0),
-                key=lambda c: abs(math.atan2(c[1] + 0.5, c[0] + 0.5) + math.pi / 2))
-_d = sector(CABLE_COL); _q = (CABLE_COL[0] - _d[0], CABLE_COL[1] - _d[1]); CABLE_PATH = []
-while _q not in B8_LED:
-    CABLE_PATH.append(_q); _q = (_q[0] - _d[0], _q[1] - _d[1])
-LED_GAP = _q                                   # Luecke in der trans-klaren Reihe -> Draht in den LED-Kanal
-layers[4] = layers[4] - {LED_GAP}
+# ---- Kabelweg der Scheinwerfer-LEDs: Bodenloch im Basis-Rand hinten Mitte fuehrt in den Kabeltunnel ----
+FLOOR_HOLE = (0, -29)                           # Zelle mit Mitte z=-28,5 Noppen = Basis-Rand
+assert FLOOR_HOLE in TUNNEL
+layers[1] = layers[1] - {FLOOR_HOLE}
+
 
 
 def outer_r(g):
@@ -490,37 +481,22 @@ for c in cands:
                  ledtop_y - 18, ledtop_y, studs=False))
 plates("10_nebel", {c: WHITE for c in E_LED - cloud_cells}, ledtop_y - PH, 0, table=TILE, studs=False)
 
-# ---- Lichtvorhang: 24 trans-klare Rundstein-Saeulen auf dem Laufsteg ----
-G_COL_TOP = 25                       # Saeulen g4..g25, Oberkante y=-624
-COLS = set()
-for j in range(24):
-    a = 2 * math.pi * (j + 0.5) / 24
-    c = (math.floor(26.7 * math.cos(a)), math.floor(26.7 * math.sin(a)))
-    assert c in E_T1 and c in SCREEN, c
-    COLS.add(c)
-for c in COLS:
-    for g in range(4, G_COL_TOP + 1):
-        add(Part("12_lichtvorhang", "3062b", TCLEAR, ctr(c[0]), -BH * (g + 1), ctr(c[1]), 0, {c}, -BH * (g + 1), -BH * g))
-plates("03_laufsteg", {c: DBG for c in E_T1 - COLS}, -BH * 4 - PH, 0, table=TILE, studs=False)
+# ---- (Lichtvorhang-Saeulen entfallen: Truss steht auf 95347-Tuermen, Schirm haengt am Truss) ----
+G_COL_TOP = 25                       # Hoehenbezug: Schirm-Unterkante bei y=-624
+plates("03_laufsteg", {c: DBG for c in E_T1}, -BH * 4 - PH, 0, table=TILE, studs=False)
 
-# ---- Schirm-Rahmen: 2 Plattenlagen kreuzweise (traegt den Schirm zwischen den Saeulen) ----
-RIM = {c for r in radial_runs({c for c in ALL if 25.6 < dist(c) <= 28.6}) if set(r) & SCREEN for c in r}
-y_rim = -BH * (G_COL_TOP + 1)        # -600
-for p in plates("11_projektionsschirm", {c: LBG for c in RIM - {CABLE_COL}}, y_rim - PH, 0, tangential=True):
-    p.hang = True                    # Teile ohne Saeule haengen an der Kreuzlage darueber
-place_runs("11_projektionsschirm", radial_runs(RIM - {CABLE_COL}), LBG, y_rim - 2 * PH)
-def open_round_plate(sub, c, col, ytop):   # 1x1 Rundplatte mit offener Noppe = Kabeldurchfuehrung
-    add(Part(sub, "85861", col, ctr(c[0]), ytop, ctr(c[1]), 0, {c}, ytop, ytop + PH))
-for L in range(2):
-    open_round_plate("11_projektionsschirm", CABLE_COL, LBG, y_rim - PH * (L + 1))
+# ---- Schirm-Rahmen: 2 Plattenlagen kreuzweise als Unterkante des (haengenden) Schirms ----
+RIM = {c for r in radial_runs({c for c in ALL if 25.6 < dist(c) <= 27.5}) if set(r) & SCREEN for c in r}
+y_rim = -BH * (G_COL_TOP + 1)        # -624
+for p in plates("11_projektionsschirm", {c: LBG for c in RIM}, y_rim - PH, 0, tangential=True):
+    p.hang = True                    # der ganze Schirm haengt per Klemmkraft am Truss
+place_runs("11_projektionsschirm", radial_runs(RIM), LBG, y_rim - 2 * PH)
 
 # ---- Projektionsschirm: 7 Brick-Lagen, 1 Noppe stark ----
 y0 = y_rim - 2 * PH
 for L in range(7):
     col = LBG if L in (0, 6) else WHITE
-    pack("11_projektionsschirm", {c: col for c in SCREEN - {CABLE_COL}}, BRICK, y0 - BH * (L + 1), BH, L % 2)
-    yt = y0 - BH * (L + 1)
-    add(Part("11_projektionsschirm", "3062b", col, ctr(CABLE_COL[0]), yt, ctr(CABLE_COL[1]), 0, {CABLE_COL}, yt, yt + BH))
+    pack("11_projektionsschirm", {c: col for c in SCREEN}, BRICK, y0 - BH * (L + 1), BH, L % 2)
 y_scr_top = y0 - BH * 7
 
 # ---- Truss-Ring (Gittertraeger) ----
@@ -529,23 +505,41 @@ TRUSS = SCREEN | (disk(R_TRUSS) - D_T1)
 OUTW = boundary8(disk(R_TRUSS))
 INW = {c for c in TRUSS if any((c[0] + a, c[1] + b) not in TRUSS and dist((c[0] + a, c[1] + b)) < 27 for a, b in N8)}
 DUCT = TRUSS - OUTW - INW            # Kabelkanal zwischen den Technic-Waenden
+
+# 8 Truss-Tuerme (Ground Support): 2x2-Bloecke ausserhalb des Laufstegs, komplett unter dem Truss-Band
+def angle_of(c): return math.atan2(c[1] + 0.5, c[0] + 0.5)
+def adiff(a, b): return abs(math.remainder(a - b, 2 * math.pi))
+TOWERS = []                                    # (Gitterpunkt X, Z) in Noppen; Zellen X-1..X, Z-1..Z
+for k in range(8):
+    a = math.radians(22.5 + 45 * k)
+    cands = [(X, Z) for X in range(-31, 32) for Z in range(-31, 32)
+             if all(27.5 < dist(c) <= R_TRUSS for c in ((X - 1, Z - 1), (X, Z - 1), (X - 1, Z), (X, Z)))]
+    TOWERS.append(min(cands, key=lambda t: adiff(math.atan2(t[1], t[0]), a)))
+TOWER_CELLS = {(X + dx, Z + dz) for X, Z in TOWERS for dx in (-1, 0) for dz in (-1, 0)}
+CABLE_TOWER = min(TOWERS, key=lambda t: adiff(math.atan2(t[1], t[0]), -math.pi / 2))   # hinten
 # 24 Scheinwerfer: Loch H im Kanal, Lampe direkt aussen daneben (Draht durch H in den Kanal)
 LAMPS, HOLES = [], set()
 for j in range(24):
     a = 2 * math.pi * (j + 0.25) / 24
-    h = min(DUCT, key=lambda c: abs(math.remainder(math.atan2(c[1] + 0.5, c[0] + 0.5) - a, 2 * math.pi)))
+    ok = [c for c in DUCT - TOWER_CELLS - HOLES
+          if (c[0] + sector(c)[0], c[1] + sector(c)[1]) not in TOWER_CELLS | DUCT | SCREEN
+          and not any(adiff(angle_of(c), angle_of(t)) < 0.12 for t in TOWER_CELLS)]
+    h = min(ok, key=lambda c: adiff(angle_of(c), a))
     sd = sector(h); lamp = (h[0] + sd[0], h[1] + sd[1])
-    assert lamp in TRUSS and lamp not in SCREEN and lamp not in DUCT, lamp
+    assert lamp in TRUSS and lamp not in SCREEN and lamp not in DUCT and lamp not in TOWER_CELLS, lamp
     LAMPS.append(lamp); HOLES.add(h)
+# Kabelloch neben dem hinteren Turm: Sammelleitung aus dem Kanal am Turm hinunter
+_tc = [(CABLE_TOWER[0] + dx, CABLE_TOWER[1] + dz) for dx in (-1, 0) for dz in (-1, 0)]
+TOWER_HOLE = min((c for c in DUCT - TOWER_CELLS - HOLES
+                  if any(abs(c[0] - q[0]) + abs(c[1] - q[1]) == 1 for q in _tc)), key=lambda c: -dist(c))
+HOLES.add(TOWER_HOLE)
 y = y_scr_top - PH
-place_runs("13_truss_ring", radial_runs(TRUSS - HOLES - {CABLE_COL}), DBG, y, hang=True)  # haengt teils an der Kreuzlage
-open_round_plate("13_truss_ring", CABLE_COL, DBG, y)
+place_runs("13_truss_ring", radial_runs(TRUSS - HOLES), DBG, y, hang=True)  # haengt teils an der Kreuzlage
 y -= PH
-plates("13_truss_ring", {c: DBG for c in TRUSS - HOLES - {CABLE_COL}}, y, 1)
-open_round_plate("13_truss_ring", CABLE_COL, DBG, y)
+plates("13_truss_ring", {c: DBG for c in TRUSS - HOLES}, y, 1)
 for L in range(2):
     ytop = y - BH * (L + 1)
-    pack("13_truss_ring", {c: BLACK for c in (OUTW | INW) - {CABLE_COL}}, TECHNIC, ytop, BH, L % 2)
+    pack("13_truss_ring", {c: BLACK for c in OUTW | INW}, TECHNIC, ytop, BH, L % 2)
 y = y - 2 * BH - PH
 # Obergurt: radiale Sprossen (jede 4. Reihe, inkl. Wandzellen) + Plattenring auf den Waenden
 rungs = [r for r in radial_runs(TRUSS) if ((r[0][1] if sector(r[0])[0] else r[0][0]) % 4 == 0)]
@@ -558,8 +552,22 @@ for c in LAMPS:
     add(Part("14_scheinwerfer", "3062b", BLACK, ctr(c[0]), y_scr_top, ctr(c[1]), 0, {c}, y_scr_top, y_scr_top + BH, hang=True))
     add(Part("14_scheinwerfer", "6141", TCLEAR, ctr(c[0]), y_scr_top + BH, ctr(c[1]), 0, {c}, y_scr_top + BH, y_scr_top + BH + PH, hang=True, studs=True))
 
-# ---- Basis-Rand: Fliesen statt offener Noppen ----
-E_T0 = top_exposed(1)
+# ---- Truss-Tuerme: 2x2-Stein + 2 Platten 2x2 + 3x Gittertraeger 95347 (2x2x10) = Basis-Rand bis Truss ----
+ROT_IN = {(1, 0): 270, (-1, 0): 90, (0, 1): 0, (0, -1): 180}      # Gitterflaeche nach aussen
+y_base = -BH * 2                                                  # Oberkante Basis (Rand)
+assert y_base - BH - 2 * PH - 3 * 240 == y_scr_top, (y_base, y_scr_top)
+for (X, Z) in TOWERS:
+    cells = {(X + dx, Z + dz) for dx in (-1, 0) for dz in (-1, 0)}
+    rot = ROT_IN[sector((X - 1, Z - 1)) if abs(X) != abs(Z) else ((1 if X > 0 else -1), 0)]
+    yy = y_base - BH
+    add(Part("12_truss_tuerme", "3003", BLACK, X * LDU, yy, Z * LDU, 0, cells, yy, yy + BH))
+    for _ in range(2):
+        yy -= PH; add(Part("12_truss_tuerme", "3022", BLACK, X * LDU, yy, Z * LDU, 0, cells, yy, yy + PH))
+    for _ in range(3):
+        yy -= 240; add(Part("12_truss_tuerme", "95347", LBG, X * LDU, yy, Z * LDU, rot, cells, yy, yy + 240))
+
+# ---- Basis-Rand: Fliesen statt offener Noppen (nicht unter den Tuermen) ----
+E_T0 = top_exposed(1) - TOWER_CELLS
 plates("02_basis", {c: BLACK for c in E_T0}, -BH * 2 - PH, 0, table=TILE, studs=False)
 
 
@@ -624,7 +632,7 @@ TITLES = {"01_baseplates": "Arena-Boden (4x Baseplate 32x32)", "02_basis": "Basi
           "05_kuppel_unten": "Kuppel unten + Deck 1", "06_kuppel_mitte": "Kuppel Mitte + Deck 2",
           "07_kuppel_oben": "Kuppel oben", "08_innenstuetzen": "Innenstuetzen (Hohlraum)",
           "09_kuppel_slopes": "Kuppel Rundung (1x1 Cheese-Slopes, Platten, Fliesen)", "10_nebel": "Nebel / Wolken am LED-Ring",
-          "11_projektionsschirm": "Projektionsschirm Oe56", "12_lichtvorhang": "Lichtvorhang (trans-clear Saeulen)",
+          "11_projektionsschirm": "Projektionsschirm Oe56 (haengt am Truss)", "12_truss_tuerme": "Truss-Tuerme (Gittertraeger 95347)",
           "13_truss_ring": "Truss-Ring Oe64", "14_scheinwerfer": "Scheinwerfer am Truss (echte LEDs)",
           }
 
@@ -633,13 +641,12 @@ NOTES = {"04_led_ring": [
     "0 // LED-Kanal: hinter der trans-klaren Reihe (untere Lage) ringsum 1 Noppe tief, 1 Stein hoch.",
     "0 // Empfehlung: 5-mm-COB-LED-Streifen (5 V/USB), ca. 1,2 m, auf die Innenwand kleben, Licht nach aussen.",
     "0 // Kabel: Schacht hinten Mitte (x=10, z=-470) senkrecht nach unten, dann Tunnel in der untersten Basis-Lage nach aussen.",
-    "0 // Streifen einlegen, BEVOR die obere Lage (radiale 1x4-Steine) aufgesetzt wird.",
-    "0 // Luecke in der trans-klaren Reihe hinten: hier kommt der Draht der Scheinwerfer von der Kabelsaeule herein."],
+    "0 // Streifen einlegen, BEVOR die obere Lage (radiale 1x4-Steine) aufgesetzt wird."],
   "14_scheinwerfer": [
     "0 // Echte LEDs: je eine LED (Lichtset-'Dot Light', 5 V) im hohlen Rundstein, Licht durch die trans-klare Linse.",
     "0 // Draht neben der Lampe durch das Loch in beiden Truss-Plattenlagen in den Kanal zwischen den Technic-Waenden.",
-    "0 // Sammelleitung: durch die Kabelsaeule (hohle Rundteile in Truss, Schirm, Rahmen und Saeule) nach unten,",
-    "0 // am Saeulenfuss unter den Laufsteg-Fliesen durch die Luecke in der trans-klaren Reihe in den LED-Kanal."]}
+    "0 // Sammelleitung: durch das Loch neben dem hinteren Turm, am Gittertraeger hinunter, unter den Fliesen",
+    "0 // des Basis-Rands zum Bodenloch hinten Mitte und durch den Kabeltunnel nach aussen (gleiches USB-Netzteil)."]}
 
 
 def export():
@@ -665,7 +672,7 @@ def export():
     os.makedirs(OUT, exist_ok=True)
     open(os.path.join(OUT, f"{NAME}.mpd"), "w").write("\n".join(out) + "\n")
     prev = [l for l in out if not any(f"{x}.ldr" in l and l.startswith("1 ") for x in
-            ("11_projektionsschirm", "12_lichtvorhang", "13_truss_ring", "14_scheinwerfer"))]
+            ("11_projektionsschirm", "12_truss_tuerme", "13_truss_ring", "14_scheinwerfer"))]
     open(os.path.join(OUT, "preview_nocage.mpd"), "w").write("\n".join(prev) + "\n")
     bom = Counter((p.name, p.color) for p in parts)
     rows = ["LDraw Part,BrickLink ID,Name,Farbe,Menge"]; xml = ["<INVENTORY>"]
@@ -681,17 +688,16 @@ def export():
 
 
 def check_cable():
-    """Kabelweg der Beleuchtung: Loecher frei, Kabelsaeule hohl, Luecke zum LED-Kanal offen."""
+    """Kabelweg der Beleuchtung: Loecher frei, Turm-Loch frei, Bodenloch offen bis in den Tunnel, LED-Kanal leer."""
     def at(c, y): return [p for p in parts if c in p.cells and p.ytop <= y < p.ybot]
     errs = 0
     y_p1 = y_scr_top - 2 * PH
-    for yy in range(y_p1, -BH * 4, 2):                       # Kabelsaeule: Truss-Kreuzlage bis Laufsteg
-        ps = at(CABLE_COL, yy)
-        if len(ps) != 1 or ps[0].name not in ("3062b", "85861"): errs += 1; break
-    if any(at(CABLE_COL, yy) for yy in range(y_p1 - 2 * BH, y_p1, 2)): errs += 1   # Innenwand offen
     errs += sum(1 for h in HOLES if any(at(h, yy) for yy in range(y_p1 - 2 * BH, y_scr_top, 2)))
     errs += sum(1 for l in LAMPS if not any((l[0] + a, l[1] + b) in HOLES for a, b in ((1, 0), (-1, 0), (0, 1), (0, -1))))
-    if at(LED_GAP, -BH * 5 + 10) or any(at(c, -BH * 5 + 10) for c in CHANNEL): errs += 1
+    if not any(abs(TOWER_HOLE[0] - q[0]) + abs(TOWER_HOLE[1] - q[1]) == 1 for q in TOWER_CELLS): errs += 1
+    if any(at(FLOOR_HOLE, yy) for yy in range(-BH * 2 - PH, 0, 2)): errs += 1          # Bodenloch bis Tunnel
+    if any(at(c, -BH * 5 + 10) for c in CHANNEL): errs += 1
+    if any(at(c, -BH * 5 + 10) for c in [SHAFT]) or any(at(SHAFT, yy) for yy in range(-BH * 4, 0, 2)): errs += 1
     print("cable path errors:", errs)
     return errs
 

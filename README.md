@@ -6,7 +6,7 @@ LEGO-MOCs als LDraw-Dateien (`.mpd`) mit Stückliste und BrickLink-Wanted-List.
 
 | Modell | Teile | Beschreibung |
 |---|---|---|
-| [Globe Stage](globe-stage/) | 8.349 | Stadion-Konzertbühne mit gerundeter Erdkugel-Kuppel, echter LED-Beleuchtung (Ring + 24 Scheinwerfer), Lichtvorhang, Projektionsschirm und Truss-Ring |
+| [Globe Stage](globe-stage/) | 7.822 | Stadion-Konzertbühne mit gerundeter Erdkugel-Kuppel, echter LED-Beleuchtung (Ring + 24 Scheinwerfer), Projektionsschirm und Truss-Ring auf 8 Gitterträger-Türmen |
 
 ![Globe Stage](globe-stage/renders/globe_stage_hero.png)
 
