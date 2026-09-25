@@ -3,19 +3,24 @@
 Stadion-Konzertbühne im Minifig-Maßstab: eine große, glatt gerundete Erdkugel-Kuppel,
 LED-Ring mit Nebel und ein schmaler Truss-Ring mit Scheinwerfern. Wie im Stadion hängt der
 Truss an Seilen (LEGO-Schnur 63142) unter einem dünnen Dach, das nur auf vier schlanken
-Ecktürmen am Rand der Baseplate steht – die Sicht auf die Kuppel bleibt frei. Vorlage ist die Konzeptskizze in
+Ecktürmen am Rand der Baseplate steht – die Sicht auf die Kuppel bleibt frei. Auf dem Dach liegt
+das Album-Cover als Mosaik aus 3.600 Fliesen 1 × 1. Vorlage ist die Konzeptskizze in
 [`reference/konzept-skizze.png`](reference/konzept-skizze.png), abgeglichen mit
 Konzertfotos der echten Bühne.
 
 ![Hero](renders/globe_stage_hero.png)
 
+| Dach-Mosaik (von oben) | Dach schräg |
+|---|---|
+| ![Mosaik](renders/globe_stage_dach_mosaik.png) | ![Dach](renders/globe_stage_dach.png) |
+
 | Seite | Ohne Dach | Draufsicht ohne Dach |
 |---|---|---|
 | ![Seite](renders/globe_stage_seite.png) | ![Ohne Dach](renders/ohne_dach_schraeg.png) | ![Oben](renders/ohne_dach_oben.png) |
 
-| Kuppel (ohne Aufbau) | Rückseite |
-|---|---|
-| ![Kuppel](renders/kuppel_front.png) | ![Hinten](renders/kuppel_hinten.png) |
+| Kuppel (ohne Aufbau) | Rückseite | Weltkarte von oben (vorne = unten) |
+|---|---|---|
+| ![Kuppel](renders/kuppel_front.png) | ![Hinten](renders/kuppel_hinten.png) | ![Karte](renders/kuppel_karte_oben.png) |
 
 | Kuppel-Rundung (Nahaufnahme) | Truss an den Seilen | Dach von unten |
 |---|---|---|
@@ -29,18 +34,21 @@ Konzertfotos der echten Bühne.
 | `globe_stage_bom.csv` | Stückliste (LDraw-ID, BrickLink-ID, Name, Farbe, Menge) |
 | `globe_stage_bricklink.xml` | BrickLink Wanted List – direkt unter *Wanted → Upload* importierbar |
 | `preview_nocage.mpd` | Vorschau ohne Ecktürme, Dach, Truss und Scheinwerfer (zum Anschauen der Kuppel) |
+| `bully_mosaik_60x60.txt` | Raster des Dach-Mosaiks, 60 Zeilen × 60 Zeichen (K = Schwarz, D = Dark Bluish Gray, L = Light Bluish Gray, W = Weiß), Zeile 1 = hinten, von vorne gelesen |
+| `bully_mosaik_60x60_pearl.txt` | Alternative mit 5 Farben (+ P = Pearl Dark Gray), feinere Hauttöne – `MOSAIC_FILE=… python3 generate_globe_stage.py` |
 | `generate_globe_stage.py` | Generator, der alle drei Dateien erzeugt |
 | `renders/` | Renderings der aktuellen Version |
 
 ## Kennzahlen
 
-- **7.255 Teile**, 182 Positionen (Teil × Farbe), keine Minifiguren
+- **10.835 Teile**, 179 Positionen (Teil × Farbe), keine Minifiguren – davon 3.600 Fliesen im Dach-Mosaik
 - **Echte Beleuchtung vorbereitet**: LED-Kanal im LED-Ring (Streifen ca. 1,2 m) und 24 Scheinwerfer mit LED, gemeinsame USB-Versorgung
 - **Grundfläche** 64 × 64 Noppen (4 Baseplates 32 × 32, ca. 51 × 51 cm)
 - **Höhe** ca. 41 cm (bis Oberkante Dach)
 - **Kuppel** Ø 48 Noppen, 14 Lagen, Erd-Mosaik (orthografische Projektion auf Nordafrika/Europa, Afrika zeigt zur Front)
 - **Truss-Ring** Ø 59 Noppen, ca. 3,5 Noppen breit, hängt an 8 Seilen 63142
 - **Dach** 64 × 64 Noppen, nur 2 Plattenlagen + Attika, auf 4 Ecktürmen (je 2 Gitterträger 95347 diagonal pro Ebene)
+- **Dach-Mosaik** 60 × 60 Fliesen innerhalb der Attika (48 × 48 cm)
 
 ## Aufbau (Submodelle = Bauabschnitte)
 
@@ -58,7 +66,8 @@ Konzertfotos der echten Bühne.
 13. **Truss-Ring** Ø 59 – schmaler Plattenring, zwei Wände aus normalen schwarzen Steinen (2 Lagen), Obergurt aus 2 Plattenlagen, liegt in den Seilschlingen
 14. **Scheinwerfer** – 24 hängende Lampen unter dem Truss, jeweils mit LED (siehe „LED-Beleuchtung“)
 15. **Seile** – 8 Schnüre 63142 (String with End Studs 30L) als Schlingen zwischen Decke und Truss
-16. **Dach** 64 × 64 – Decke und Dachplatten (um 8 Noppen versetzt verlegt), umlaufende Attika 1 Stein hoch
+16. **Dach** 64 × 64 – Decke und Dachplatten (um 8 Noppen versetzt verlegt), umlaufende Attika 1 Stein hoch, Kabel-Clips unter der Decke
+17. **Dach-Mosaik** – Album-Cover aus 3.600 Fliesen 1 × 1 (3070b) in 4 Grautönen (siehe unten)
 
 ## Kuppel-Rundung
 
@@ -81,6 +90,31 @@ gleichmäßige „Schuppen“-Rundung wie bei einer glatten Kuppel.
 Verbaut sind 1.468 Cheese-Slopes 1 × 1 (54200), 427 Platten 1 × 1 als Unterbau und die
 Fliesen der Oberfläche.
 
+## Dach-Mosaik (Album-Cover)
+
+Das Cover ist als Graustufen-Mosaik 60 × 60 aus Fliesen 1 × 1 umgesetzt – genau die Fläche
+innerhalb der Attika. Das Raster erzeugt [`tools/mosaic/make_mosaic.py`](../tools/mosaic/make_mosaic.py),
+das mehrere Varianten baut und jede gegen die Vorlage bewertet:
+
+- **fern (ΔL\*)** – Helligkeitsabweichung nach leichter Unschärfe, so wie ein Mosaik aus
+  Betrachtungsabstand wirkt (kleiner = besser)
+- **detail (SSIM)** – strukturelle Ähnlichkeit im Raster selbst (größer = besser)
+
+| Runde | Ansatz | Ergebnis |
+|---|---|---|
+| 1 | nächste Farbe / Fehlerdiffusion, 4–6 Grautöne | Tonwerte ok, aber der Grill ist nur ein graues Feld, Diffusion erzeugt Pixelrauschen |
+| 2 | Lichter anheben (Metall-Glanz) + Lokalkontrast | Grill leuchtet, Mund und Nase klar, Falten sichtbar |
+| 3 | nur Standardfarben, leichte Diffusion, einzelne Ausreißer-Fliesen bereinigt | **gewählt** – klare Flächen, kaum „Krümel“, Grill als Blickfang |
+
+Verwendet werden nur gut erhältliche Farben: Schwarz 1.482, Dark Bluish Gray 1.491,
+Light Bluish Gray 486, Weiß 141. Die 5-Farben-Variante mit Pearl Dark Gray misst etwas besser
+(SSIM 0,76 statt 0,68) und liegt als `bully_mosaik_60x60_pearl.txt` bei; Pearl Dark Gray ist
+als 1 × 1-Fliese aber deutlich seltener und teurer.
+
+Das Mosaik ist so orientiert, dass es von vorne (Publikumsseite) richtig herum lesbar ist.
+Der Generator prüft, dass alle 3.600 Felder belegt sind; das Rendering wurde per Korrelation
+gegen das Raster gegengeprüft (r = 0,99).
+
 ## Dach, Ecktürme und Seil-Aufhängung
 
 Wie bei der echten Bühne hängt der Truss-Ring von oben. Unter dem Ring steht nichts, nur die
@@ -93,7 +127,7 @@ vier Ecktürme ganz außen an der Baseplate:
 | **Ecktürme** | an jeder Ecke 4 Ebenen aus je 2 Gitterträgern 95347 auf der Diagonale (außen und innen), dazwischen Platten 4 × 4. Von der Bühne aus stehen die beiden Träger hintereinander und wirken wie einer |
 | **Decke** | Plattenlage 64 × 64 (Platten 16 × 16 und 8 × 16, schwarz) |
 | **Dachplatten** | zweite Plattenlage, um 8 Noppen versetzt verlegt, damit jede Fuge der Decke überbrückt ist |
-| **Attika** | umlaufender Randträger, 2 Noppen breit, 1 Stein hoch – macht die Dachkanten zwischen den Türmen steif |
+| **Attika** | umlaufender Randträger, 2 Noppen breit, 1 Stein hoch – macht die Dachkanten zwischen den Türmen steif und rahmt das Mosaik |
 
 **Aufbau-Reihenfolge:** Basis, Kuppel und Ecktürme bauen. Die 8 Seile unten in die Decke stecken
 (Positionen siehe Modell) und das Dach auf die Türme setzen. Dann den fertigen Truss-Ring mit
@@ -103,7 +137,7 @@ Scheinwerfern von unten in die Schlaufen einhängen: je ein Seil unter dem Ring 
 
 Der Generator rechnet bei jedem Lauf eine grobe, konservative Statik-Abschätzung mit
 (Noppen-Klemmkraft 1,5 N je Noppe, Fugen halbieren die Biegesteifigkeit). Verglichen wurden
-drei Turm-Varianten – alle mit dünnem Dach und Seilen:
+drei Turm-Varianten – alle mit dünnem Dach, Seilen und Dach-Mosaik (Dach inkl. Mosaik ca. 1,4 kg):
 
 | | schlank 2 × 2 (1 Träger) | **diagonal (2 Träger), gewählt** | 4 × 4 (4 Träger, bisher) |
 |---|---|---|---|
@@ -111,23 +145,23 @@ drei Turm-Varianten – alle mit dünnem Dach und Seilen:
 | Kraft je Seil-Endnoppe | 0,32 N (21 %) | **0,32 N (21 %)** | 0,32 N (21 %) |
 | Kippmoment je Trägerfuge | 48 Nmm | **192 Nmm** | 384 Nmm |
 | seitliche Kraft am Dach bis zum Nachgeben | 1,0 N (≈ 100 g) | **3,9 N (≈ 400 g)** | 7,8 N (≈ 800 g) |
-| Schiefstellung bis Instabilität | 24 mm | **96 mm** | 185 mm |
-| Durchbiegung Dachrand | 0,97 mm | **0,88 mm** | 0,88 mm |
+| Schiefstellung bis Instabilität | 20 mm | **77 mm** | 150 mm |
+| Durchbiegung Dachrand | 1,22 mm | **1,10 mm** | 1,10 mm |
 | Bewertung | kritisch – kippt bei leichtem Anstoßen | **OK** | OK |
 
-Das dünne Dach (2 Plattenlagen + Attika statt Trägerrost) biegt sich unter Eigengewicht und
-Truss weniger als 1 mm durch. Die Seile sind unkritisch: jede Endnoppe trägt ca. 0,3 N.
+Das dünne Dach (2 Plattenlagen + Attika statt Trägerrost) biegt sich auch mit den 3.600
+Mosaik-Fliesen (ca. 400 g) nur etwa 1 mm durch. Die Seile sind unkritisch: jede Endnoppe trägt ca. 0,3 N.
 Der hängende Ring kann wie beim Original leicht pendeln, trifft dabei aber weder Kuppel noch Türme.
 
-| Dach von oben | Eckturm (Detail) | Kabelausgang am Eckturm hinten rechts |
+| Dach von unten | Eckturm (Detail) | Eckturm hinten links mit Kabelweg unter der Decke |
 |---|---|---|
-| ![Dach](renders/globe_stage_dach.png) | ![Turm](renders/globe_stage_turm.png) | ![Kabelecke](renders/globe_stage_kabelecke.png) |
+| ![Decke](renders/globe_stage_dach_unten.png) | ![Turm](renders/globe_stage_turm.png) | ![Kabelecke](renders/globe_stage_kabelecke.png) |
 
 ## LED-Beleuchtung
 
 Beide Lichtquellen sind für echte LEDs vorbereitet und hängen an **einer** USB-Versorgung (5 V).
 Beide Kabel kommen hinten aus dem Modell: das des LED-Streifens aus dem Kabeltunnel hinten Mitte,
-das der Scheinwerfer am Eckturm hinten rechts.
+das der Scheinwerfer am Eckturm hinten links (von vorne gesehen).
 
 ### LED-Ring
 
@@ -161,18 +195,18 @@ und steht deshalb nicht in Stückliste und BrickLink-Liste.
 | **Lampe** | Gehäuse = schwarzer 1 × 1-Rundstein (hohl), darin eine kleine LED (z. B. „Dot Light“ aus einem LEGO-Beleuchtungsset, 5 V), Linse = trans-klare 1 × 1-Rundplatte darunter |
 | **Draht an der Lampe** | direkt neben jeder Lampe ist ein 1 × 1-Loch durch beide Truss-Plattenlagen. Der Draht geht seitlich aus der Lampe (zwischen Gehäuse und Linse) und durch das Loch nach oben |
 | **Truss-Kanal** | zwischen innerer und äußerer Truss-Wand verläuft ringsum ein ca. 1 Noppe breiter Hohlraum. Dort werden die 24 Drähte gesammelt (z. B. mit Verteiler-Platinen des Lichtsets) |
-| **Sammelleitung** | durch ein Loch im Obergurt (in der Seilreihe hinten rechts) auf den Truss und am äußeren Seil entlang nach oben |
-| **Im Dach** | durch ein Loch in Decke und Dachplatten aufs Dach, dort unter einer Reihe schwarzer Fliesen („Kabelkanal“) bis zu einer Lücke in der Attika direkt neben dem Eckturm hinten rechts |
+| **Sammelleitung** | durch ein Loch im Obergurt (in der Seilreihe hinten links) auf den Truss und am äußeren Seil entlang nach oben |
+| **Unter der Decke** | an der schwarzen Deckenunterseite entlang (schwarz auf schwarz, von vorne unsichtbar), gehalten von 4 Platten 1 × 1 mit Clip (4081b), bis direkt vor den inneren Träger des Eckturms hinten links – das Dach selbst bleibt frei für das Mosaik |
 | **Anschluss** | am Eckturm entlang nach unten (im Gitter geführt oder mit kleinen Clips) und an der Ecke der Baseplate nach außen, wie die Kabel an echten Bühnentürmen |
 
 **Statik:** Die Löcher sind einzelne Zellen in kreuzweise verbauten Plattenlagen; Truss und
 Dach bleiben durchgehend verbunden. Der Generator prüft neben der Statik auch den Kabelweg:
-Lampenlöcher frei, Obergurt-Loch über dem Kanal, Loch in Decke und Dachplatten frei,
-Fliesen-Kabelkanal durchgehend bis zur Attika-Lücke neben dem Turm, LED-Kanal und Schacht leer.
+Lampenlöcher frei, Obergurt-Loch über dem Kanal, Weg unter der Decke frei (nur die Clips),
+endet direkt am Eckturm, Mosaik vollständig, LED-Kanal und Schacht leer.
 
 **Einbau:** LEDs und Drähte einsetzen, bevor die Truss-Wände und der Obergurt aufgesetzt
-werden. Die Sammelleitung vor dem Einhängen des Rings durch das Deckenloch aufs Dach führen und
-die Fliesen des Kabelkanals erst danach aufsetzen.
+werden. Nach dem Einhängen des Rings die Sammelleitung am Seil hoch und in die Clips unter der
+Decke legen, dann am Eckturm hinunter.
 
 | Truss-Kanal im Schnitt (Wände/Obergurt ausgeblendet) | Scheinwerfer von unten |
 |---|---|
@@ -183,7 +217,7 @@ die Fliesen des Kabelkanals erst danach aufsetzen.
 Der Generator prüft das Modell nach jedem Lauf automatisch:
 
 - **0 nicht verbundene Teile**: Jedes Teil hängt über Noppenverbindungen an der Baseplate.
-- **0 schwebende Teile**: Jedes Teil sitzt auf mindestens einer Noppe. Die 232 Ausnahmen hängen mit Klemmkraft von oben: die Deckenplatten (an den Dachplatten), die Seil-Endnoppen (in der Decke), Teile der unteren Truss-Plattenlage (kreuzweise unter der zweiten Lage verbaut) und die Scheinwerfer. Der Truss als Ganzes liegt in den Seilschlingen – der Check wertet das als Verbindung.
+- **0 schwebende Teile**: Jedes Teil sitzt auf mindestens einer Noppe. Die 214 Ausnahmen hängen mit Klemmkraft von oben: die Deckenplatten (an den Dachplatten), die Seil-Endnoppen und Kabel-Clips (in der Decke), Teile der unteren Truss-Plattenlage (kreuzweise unter der zweiten Lage verbaut) und die Scheinwerfer. Der Truss als Ganzes liegt in den Seilschlingen – der Check wertet das als Verbindung.
 - **Statik-Abschätzung**: Seilkräfte, Kippsicherheit der Ecktürme und Durchbiegung des Dachs (siehe „Statik-Iterationen“). Die Turm-Variante lässt sich mit `TOWER_STYLE=slim|diag|full` umschalten.
 - **0 Kollisionen**: kein Volumen doppelt belegt
 - Alle Steine liegen exakt im Noppenraster.
@@ -203,9 +237,11 @@ Alle Parameter (Kuppelprofil, Kartenmitte, Wolken, Seil- und Lampenpositionen, T
 ## Hinweise & Grenzen
 
 - **Schräge Spotlight-Strahlen** aus der Skizze lassen sich nicht aus Steinen bauen. Stattdessen hängen 24 Scheinwerfer mit echten LEDs unter dem Truss.
+- **Weltkarte:** Die Kuppel war bis v14 seitenverkehrt (Arabien lag von vorne gesehen links). Beim Prüfen der Draufsichten für das Mosaik aufgefallen und korrigiert – jetzt liegt Westafrika links, Arabien rechts.
 - **Seile im Modell:** LDraw hat keine fertige Datei für 63142. Das Seil ist im MPD als eigenes Untermodell `seil_63142.ldr` aus Primitiven nachgebildet (Endnoppen + dünne Schnur) und steht in Stückliste und BrickLink-Liste als `x127c30pb01`. In Stud.io erscheint es als Untermodell, nicht als Katalogteil.
-- **Kosten** grob geschätzt 550–800 € über BrickLink (Cheese-Slopes und 1 × 1-Platten sind günstig). Die größten Posten sind:
+- **Kosten** grob geschätzt 650–950 € über BrickLink (Cheese-Slopes, 1 × 1-Platten und -Fliesen sind günstig). Die größten Posten sind:
   - 4 schwarze 32 × 32-Baseplates
+  - 3.600 Fliesen 1 × 1 für das Dach-Mosaik (ca. 100–150 €)
   - 32 Gitterträger 95347
   - 22 Platten 16 × 16 und 23 Platten 8 × 16 für das Dach
   - die rund 1.470 Cheese-Slopes der Kuppel

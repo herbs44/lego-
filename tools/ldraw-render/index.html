@@ -29,7 +29,7 @@ loader.parse(mtxt,g=>{
     const d=(dist||1)*s*1.9; const a=(az+180)*Math.PI/180,e=el*Math.PI/180;
     cam.fov=fov||30;cam.updateProjectionMatrix();
     cam.position.set(t.x+d*Math.cos(e)*Math.sin(a),t.y+d*Math.sin(e),t.z+d*Math.cos(e)*Math.cos(a));
-    cam.up.set(0,1,0); if(el>=89.9) cam.up.set(0,0,-1);
+    cam.up.set(0,1,0); if(el>=89.9) cam.up.set(-Math.sin(a),0,-Math.cos(a));   // Draufsicht: vorne unten im Bild
     cam.lookAt(t);renderer.render(scene,cam);return true;};
   window.done=true;
 },e=>{window.errors.push(String(e));window.done=true;});

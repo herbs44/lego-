@@ -7,7 +7,8 @@ import math, random, os, sys
 from collections import defaultdict, Counter
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.dirname(os.path.abspath(__file__))
-TOWER_STYLE = os.environ.get("TOWER_STYLE", "diag")   # "slim" (2x2), "diag" (4x4, 2 Traeger diagonal), "full" (4x4, 4 Traeger)
+TOWER_STYLE = os.environ.get("TOWER_STYLE", "diag")
+MOSAIC_FILE = os.environ.get("MOSAIC_FILE", os.path.join(os.path.dirname(os.path.abspath(__file__)), "bully_mosaik_60x60.txt"))   # "slim" (2x2), "diag" (4x4, 2 Traeger diagonal), "full" (4x4, 4 Traeger)
 NAME = "globe_stage"
 random.seed(7)
 
@@ -23,7 +24,8 @@ COLORS = {0: ("Black", 11), 15: ("White", 1), 1: ("Blue", 7), 2: ("Green", 6), 4
           14: ("Yellow", 3), 19: ("Tan", 2), 28: ("Dark Tan", 69), 71: ("Light Bluish Gray", 86),
           72: ("Dark Bluish Gray", 85), 47: ("Trans-Clear", 12), 46: ("Trans-Yellow", 19),
           73: ("Medium Blue", 42), 320: ("Dark Red", 59), 70: ("Reddish Brown", 88),
-          308: ("Dark Brown", 120), 272: ("Dark Blue", 63), 288: ("Dark Green", 80)}
+          308: ("Dark Brown", 120), 272: ("Dark Blue", 63), 288: ("Dark Green", 80),
+          148: ("Pearl Dark Gray", 77), 179: ("Flat Silver", 95)}
 
 # ---------------- Teile ----------------
 BRICK = {(1, 1): "3005", (1, 2): "3004", (1, 3): "3622", (1, 4): "3010", (1, 6): "3009", (1, 8): "3008",
@@ -177,7 +179,8 @@ CLOUD_PHASE = (1.402, 4.073, 2.480)
 
 
 def earth_color(c):
-    u = (c[0] + 0.5) / R_DOME * 0.985
+    # Blick von vorne (+z): +x liegt links, also Osten = -x (sonst waere die Karte seitenverkehrt)
+    u = -(c[0] + 0.5) / R_DOME * 0.985
     n = -(c[1] + 0.5) / R_DOME * 0.985
     rho = math.hypot(u, n)
     if rho >= 1: rho = 0.9999; u, n = u / math.hypot(u, n) * rho, n / math.hypot(u, n) * rho
@@ -592,32 +595,52 @@ TOWER_FOOT = {c for (X, Z) in CORNERS for g in GIRDERS(X, Z) for c in block(*g)}
 # ---- Dach 64x64: Decke + Dachplatten (versetzt verlegt) + Attika 1 Stein ----
 ROOF = {(i, k) for i in range(-32, 32) for k in range(-32, 32)}
 ATTIKA = {c for c in ROOF if max(abs(c[0] + 0.5), abs(c[1] + 0.5)) > 30}
-# Kabelweg: am aeusseren Seil der Kabel-Schlinge hoch, Deckenloch daneben (innen), auf dem Dach unter
-# einer Fliesenreihe zur Attika-Luecke direkt neben dem Eckturm hinten rechts
-CEIL_HOLE = (_co[0] - _d[0], _co[1] - _d[1]) if (_co[0] - _d[0], _co[1] - _d[1]) not in ATTIKA else None
-if CEIL_HOLE is None or CEIL_HOLE in ATTIKA:
-    CEIL_HOLE = next(c for c in ((_co[0] - 2 * _d[0], _co[1] - 2 * _d[1]),) if c not in ATTIKA)
-_tx = min(c[0] for c in TOWER_CELLS if c[0] > 0 and c[1] == -32) - 1       # Spalte links neben dem Traeger an der Dachkante
-_row = -30                                                                  # erste Reihe innerhalb der Attika
-PATH = ([(CEIL_HOLE[0], k) for k in range(CEIL_HOLE[1], _row - 1, -1)]
-        + [(i, _row) for i in range(CEIL_HOLE[0] - 1, _tx - 1, -1)] + [(i, _row) for i in range(CEIL_HOLE[0] + 1, _tx + 1)]
-        + [(_tx, -31), (_tx, -32)])
-assert all(abs(a[0] - b[0]) + abs(a[1] - b[1]) == 1 for a, b in zip(PATH, PATH[1:])), PATH
+# Kabelweg: am aeusseren Seil der Kabel-Schlinge hoch, dann an der Deckenunterseite (schwarz auf schwarz)
+# mit Clip-Platten zum inneren Traeger des Eckturms hinten links (von vorne gesehen) und daran hinunter
+_corner = next(c for c in CORNERS if c[0] > 0 and c[1] < 0)                # hinten links (von vorne gesehen)
+_tgt_girder = min(GIRDERS(*_corner), key=lambda g: dist(g))                # zur Buehne hin gelegener Traeger
+_tc = block(*_tgt_girder)
+CEIL_TARGET = (min(c[0] for c in _tc), max(c[1] for c in _tc) + 1)         # Zelle direkt vor dem Traeger
+def _steps(a, b): return list(range(a + (1 if b > a else -1), b + (1 if b > a else -1), 1 if b > a else -1)) if a != b else []
+CEIL_PATH = ([(_co[0], k) for k in _steps(_co[1], CEIL_TARGET[1])]
+             + [(i, CEIL_TARGET[1]) for i in _steps(_co[0], CEIL_TARGET[0])])
+assert all(abs(a[0] - b[0]) + abs(a[1] - b[1]) == 1 for a, b in zip([_co] + CEIL_PATH, CEIL_PATH)), CEIL_PATH
+assert CEIL_PATH[-1] == CEIL_TARGET and not set(CEIL_PATH) & TOWER_CELLS
 y = y_ceiling - PH
-for p in plates("16_dach", {c: BLACK for c in ROOF - {CEIL_HOLE}}, y, 0):
+for p in plates("16_dach", {c: BLACK for c in ROOF}, y, 0):
     p.hang = True                                  # Decke haengt an den Dachplatten darueber
 y -= PH
 # Dachplatten um 8 Noppen versetzt, damit sie alle Stoesse der Decke ueberbruecken
 EDGES = [-32, -24, -8, 8, 24, 32]
 for i0, i1 in zip(EDGES, EDGES[1:]):
     for k0, k1 in zip(EDGES, EDGES[1:]):
-        rect = {(i, k) for i in range(i0, i1) for k in range(k0, k1)} - {CEIL_HOLE}
+        rect = {(i, k) for i in range(i0, i1) for k in range(k0, k1)}
         plates("16_dach", {c: DBG for c in rect}, y, 0)
 y_roof_plates = y
-plates("16_dach", {c: BLACK for c in set(PATH) - ATTIKA}, y - PH, 0, table=TILE, studs=False)  # Kabelkanal
 y -= BH
-pack("16_dach", {c: BLACK for c in ATTIKA - set(PATH)}, BRICK_CORE, y, BH, 0)
+pack("16_dach", {c: BLACK for c in ATTIKA}, BRICK_CORE, y, BH, 0)
 y_roof_top = y
+
+# ---- Dach-Mosaik: Album-Cover aus 1x1-Fliesen (60x60 innerhalb der Attika) ----
+MOSAIC_CODES = {"K": BLACK, "D": DBG, "L": LBG, "W": WHITE, "P": 148, "S": 179}
+MOSAIC = [l.rstrip("\n") for l in open(MOSAIC_FILE) if l.strip()]
+N_MOS = len(MOSAIC)
+assert N_MOS == 60 and all(len(r) == N_MOS for r in MOSAIC), "Mosaik muss 60x60 sein"
+MOS_CELLS = {c for c in ROOF if c not in ATTIKA}
+assert len(MOS_CELLS) == N_MOS * N_MOS
+y_tile = y_roof_plates - PH
+for r, row in enumerate(MOSAIC):                 # Bildzeile 0 = hinten (-z); Spalte 0 = links von vorne = +x
+    for q, ch in enumerate(row):
+        c = (29 - q, -30 + r)
+        add(Part("17_dach_mosaik", "3070b", MOSAIC_CODES[ch], ctr(c[0]), y_tile, ctr(c[1]), 0, {c}, y_tile, y_roof_plates, studs=False))
+
+# ---- Kabel-Clips unter der Decke (Platte 1x1 mit Clip, Noppe oben in der Decke) ----
+CLIP_CELLS = [CEIL_PATH[i] for i in range(2, len(CEIL_PATH), 6)] + [CEIL_PATH[-1]]
+for i, c in enumerate(CLIP_CELLS):
+    j = CEIL_PATH.index(c); nb = CEIL_PATH[j - 1] if j else _co
+    along_x = nb[1] == c[1]
+    add(Part("16_dach", "4081b", BLACK, ctr(c[0]), y_ceiling, ctr(c[1]), 0 if along_x else 90, {c},
+             y_ceiling, y_ceiling + PH, studs=True, hang=True))
 
 # ---- Seile (eigenes Untermodell seil_63142.ldr, gleiche Form fuer alle 8 Schlingen) ----
 ROT_OF_DIR = {(1, 0): 0, (-1, 0): 180, (0, 1): 90, (0, -1): 270}
@@ -715,7 +738,8 @@ TITLES = {"01_baseplates": "Arena-Boden (4x Baseplate 32x32)", "02_basis": "Basi
           "09_kuppel_slopes": "Kuppel Rundung (1x1 Cheese-Slopes, Platten, Fliesen)", "10_nebel": "Nebel / Wolken am LED-Ring",
           "12_ecktuerme": "Ecktuerme (Gittertraeger 95347)",
           "13_truss_ring": "Truss-Ring Oe59 (haengt am Dach)", "14_scheinwerfer": "Scheinwerfer am Truss (echte LEDs)",
-          "15_seile": "Seilschlingen 63142 (Truss-Aufhaengung)", "16_dach": "Dach 64x64 (Decke, Dachplatten, Attika)",
+          "15_seile": "Seilschlingen 63142 (Truss-Aufhaengung)", "16_dach": "Dach 64x64 (Decke, Dachplatten, Attika, Kabel-Clips)",
+          "17_dach_mosaik": "Dach-Mosaik 60x60 aus 1x1-Fliesen (Album-Cover)",
           }
 
 
@@ -727,9 +751,12 @@ NOTES = {"04_led_ring": [
   "14_scheinwerfer": [
     "0 // Echte LEDs: je eine LED (Lichtset-'Dot Light', 5 V) im hohlen Rundstein, Licht durch die trans-klare Linse.",
     "0 // Draht neben der Lampe durch das Loch in beiden Truss-Plattenlagen in den Kanal zwischen den beiden Truss-Waenden.",
-    "0 // Sammelleitung: durch das Loch im Obergurt (Seilreihe hinten rechts) auf den Truss, am aeusseren Seil hoch,",
-    "0 // durch das Loch in der Decke aufs Dach, unter der Fliesenreihe zur Attika-Luecke neben dem Eckturm hinten rechts",
-    "0 // und am Turm entlang nach unten (gleiches USB-Netzteil wie der LED-Streifen)."]}
+    "0 // Sammelleitung: durch das Loch im Obergurt (Seilreihe hinten links, von vorne gesehen) auf den Truss, am aeusseren Seil hoch,",
+    "0 // an der Deckenunterseite in den Clips (Platte 1x1 mit Clip) zum inneren Traeger des Eckturms hinten links",
+    "0 // und am Turm entlang nach unten (gleiches USB-Netzteil wie der LED-Streifen)."],
+  "17_dach_mosaik": [
+    "0 // 3600 Fliesen 1x1 (3070b), Bildzeile 1 liegt hinten, Spalte 1 links (von vorne gesehen).",
+    "0 // Raster auch als Textdatei: bully_mosaik_60x60.txt (K=Schwarz, D=Dark Bluish Gray, L=Light Bluish Gray, W=Weiss)."]}
 
 
 def export():
@@ -758,7 +785,7 @@ def export():
     os.makedirs(OUT, exist_ok=True)
     open(os.path.join(OUT, f"{NAME}.mpd"), "w").write("\n".join(out) + "\n")
     prev = [l for l in out if not any(f"{x}.ldr" in l and l.startswith("1 ") for x in
-            ("12_ecktuerme", "13_truss_ring", "14_scheinwerfer", "15_seile", "16_dach"))]
+            ("12_ecktuerme", "13_truss_ring", "14_scheinwerfer", "15_seile", "16_dach", "17_dach_mosaik"))]
     open(os.path.join(OUT, "preview_nocage.mpd"), "w").write("\n".join(prev) + "\n")
     bom = Counter((p.name, p.color) for p in parts)
     rows = ["LDraw Part,BrickLink ID,Name,Farbe,Menge"]; xml = ["<INVENTORY>"]
@@ -774,19 +801,19 @@ def export():
 
 
 def check_cable():
-    """Kabelweg: Lampenloecher frei, Obergurt-Loch frei, Deckenloch frei, Fliesen-Kanal auf dem Dach
-    durchgehend bis zur Attika-Luecke neben dem Eckturm, LED-Kanal und Schacht leer."""
+    """Kabelweg: Lampenloecher frei, Obergurt-Loch frei, Weg unter der Decke frei (nur Clips),
+    endet direkt vor dem Eckturm-Traeger; LED-Kanal und Schacht leer."""
     def at(c, y): return [p for p in parts if c in p.cells and p.ytop <= y < p.ybot]
     errs = 0
     y_p1 = y_scr_top - 2 * PH
     errs += sum(1 for h in HOLES if any(at(h, yy) for yy in range(y_p1 - 2 * BH, y_scr_top, 2)))
     errs += sum(1 for l in LAMPS if not any((l[0] + a, l[1] + b) in HOLES for a, b in ((1, 0), (-1, 0), (0, 1), (0, -1))))
     if OG_HOLE not in DUCT or any(at(OG_HOLE, yy) for yy in range(y_truss_top, y_p1 - 2 * BH, 2)): errs += 1
-    if any(at(CEIL_HOLE, yy) for yy in range(y_roof_plates, y_ceiling, 2)): errs += 1
-    tiles = {c for p in parts if p.sub == "16_dach" and p.ytop == y_roof_plates - PH for c in p.cells}
-    if any(c not in tiles for c in PATH if c not in ATTIKA): errs += 1
-    if any(at(c, y_roof_plates - 2) for c in PATH if c in ATTIKA): errs += 1
-    if PATH[0] != CEIL_HOLE or PATH[-1][1] != -32 or (PATH[-1][0] + 1, -32) not in TOWER_CELLS: errs += 1
+    for c in CEIL_PATH:                                  # unter der Decke: nur Clips, sonst frei
+        for yy in range(y_ceiling, y_ceiling + 3 * BH, 2):
+            if any(p.name != "4081b" for p in at(c, yy)): errs += 1; break
+    if not any(abs(CEIL_PATH[-1][0] - q[0]) + abs(CEIL_PATH[-1][1] - q[1]) == 1 for q in TOWER_CELLS): errs += 1
+    if len({c for p in parts if p.sub == "17_dach_mosaik" for c in p.cells}) != N_MOS * N_MOS: errs += 1
     if any(at(c, -BH * 5 + 10) for c in CHANNEL): errs += 1
     if any(at(SHAFT, yy) for yy in range(-BH * 4, 0, 2)): errs += 1
     print("cable path errors:", errs)
@@ -805,7 +832,7 @@ def mass_g(p):
     return len(p.cells) * (0.29 if h >= 20 else 0.11)
 def statik():
     m = lambda subs: sum(mass_g(p) for p in parts if p.sub in subs) / 1000.0
-    m_truss, m_roof, m_rope, m_tow = m(("13_truss_ring", "14_scheinwerfer")), m(("16_dach",)), m(("15_seile",)), m(("12_ecktuerme",))
+    m_truss, m_roof, m_rope, m_tow = m(("13_truss_ring", "14_scheinwerfer")), m(("16_dach", "17_dach_mosaik")), m(("15_seile",)), m(("12_ecktuerme",))
     knob = m_truss * G / (2 * len(SLINGS))
     P = ((m_roof + m_truss + m_rope) / 4 + m_tow / 8) * G
     # Kippmoment einer Traegerfuge: Noppen-Zug x Abstand zur Kippkante (schwaechste Achse)
@@ -821,7 +848,7 @@ def statik():
     EI = JOINT_EFF * E_ABS * b * hb ** 3 / 12
     q = (m_roof + m_truss) * G / 4 / span
     w = 5 * q * span ** 4 / (384 * EI) * 1000
-    rows = [("Truss + Scheinwerfer", f"{m_truss*1000:.0f} g"), ("Dach", f"{m_roof*1000:.0f} g"),
+    rows = [("Truss + Scheinwerfer", f"{m_truss*1000:.0f} g"), ("Dach inkl. Mosaik", f"{m_roof*1000:.0f} g"),
             ("Kraft je Seil-Endnoppe", f"{knob:.2f} N ({knob/F_STUD*100:.0f} % der Noppen-Klemmkraft)"),
             ("Last je Eckturm", f"{P:.1f} N"),
             ("Kippmoment je Traegerfuge", f"{M_j*1000:.0f} Nmm"),
