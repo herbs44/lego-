@@ -42,11 +42,12 @@ BL_ID = {"3070b": "3070", "3069b": "3069", "3068b": "3068", "6141": "4073", "381
 
 
 class Part:
-    __slots__ = ("sub", "name", "color", "x", "y", "z", "rot", "cells", "ytop", "ybot", "studs", "hang", "extra")
+    __slots__ = ("sub", "name", "color", "x", "y", "z", "rot", "cells", "ytop", "ybot", "studs", "hang", "extra", "studcells")
 
-    def __init__(s, sub, name, color, x, y, z, rot, cells, ytop, ybot, studs=True, hang=False, extra=None):
+    def __init__(s, sub, name, color, x, y, z, rot, cells, ytop, ybot, studs=True, hang=False, extra=None, studcells=None):
         s.sub, s.name, s.color, s.x, s.y, s.z, s.rot = sub, name, color, x, y, z, rot
         s.cells, s.ytop, s.ybot, s.studs, s.hang, s.extra = frozenset(cells), ytop, ybot, studs, hang, extra
+        s.studcells = frozenset(cells if studcells is None else studcells) if studs else frozenset()
 
     def lines(s):
         if s.extra: return s.extra
@@ -279,11 +280,36 @@ def sub_for_g(g):
     return "07_kuppel_oben"
 
 
+# ---- Kuppel-Rundung: die Randzelle jeder Lage wird durch eine Slope ersetzt, ----
+# ---- die genau die freie Stufe der Lage darunter ueberbrueckt (volle Steinhoehe) ----
+ROT_OUT = {(1, 0): 90, (-1, 0): 270, (0, 1): 180, (0, -1): 0}
+STRAIGHT = {1: "3040b", 2: "4286", 3: "60477"}   # 45/33/18 Grad, Noppe auf der hohen Zelle (Origin dort)
+CURVED = {2: "50950", 3: "61678"}                 # gebogen 3x1 / 4x1, ohne Noppen (Origin Mitte)
+EDGE = defaultdict(set)      # g -> ersetzte Randzellen
+EDGE_SLOPES = []             # (g, rim, terrace_cells, dir, layer_above_on_rim)
+SLOPED = defaultdict(set)    # g -> Terrassenzellen (Lage g), die schon abgedeckt sind
+for g in range(G_DOME + 1, TOP_G + 1):
+    F, Fb, Fa = full[g], full[g - 1], full.get(g + 1, set())
+    rows = defaultdict(list)
+    for c in F:
+        sx, sz = sector(c)
+        rows[(sx, sz, c[1] if sx else c[0])].append(c)
+    for (sx, sz, t), cs in rows.items():
+        rim = max(cs, key=lambda c: c[0] * sx + c[1] * sz)
+        ter, q = [], (rim[0] + sx, rim[1] + sz)
+        while q in Fb and q not in F:
+            ter.append(q); q = (q[0] + sx, q[1] + sz)
+        if not ter: continue
+        k = min(len(ter), 3)
+        EDGE[g].add(rim)
+        EDGE_SLOPES.append((g, rim, ter[:k], (sx, sz), rim in Fa))
+        SLOPED[g - 1] |= set(ter[:k])
+
 # ---- Brick-Lagen ----
 DECK_BOTTOM = {}
 for g in range(0, TOP_G + 1):
     n = g - G_DOME
-    S = layers[g]
+    S = layers[g] - EDGE.get(g, set())
     sub = sub_for_g(g)
     if n in DECKS:
         # Deck: Aussenring als Bricks (sichtbar, Erdfarben), Innenscheibe als 3 Plattenlagen
@@ -315,7 +341,7 @@ for (gx, gz) in PILLAR_GRID[1]:
     pillar_stack("08_innenstuetzen", pillar_cells(gx, gz), G_DOME + 8, G_DOME + 11 - 1)
 
 def top_index():
-    return {(p.ytop, c) for p in parts if p.studs for c in p.cells}
+    return {(p.ytop, c) for p in parts for c in p.studcells}
 
 
 def nearest_block(cells):
@@ -342,20 +368,47 @@ for n, plist in DECK_BOTTOM.items():
 def top_exposed(g):
     return {c for c in layers[g] if not covered_above(g, c)}
 
-# T0: Studs frei (Publikum). T1: Tiles DBG ausser Saeulen-Zellen.
+# T0/T1: Fliesen (T1 ausser Saeulen-Zellen).
 SCREEN = boundary8(D_T1)          # Ring Oe 56 fuer Lichtvorhang + Schirm
 E_T1 = top_exposed(3)
 E_LED = top_exposed(5)
 
-# Kuppel: Cheese-Slopes an Stufenkanten
-ROT_OUT = {(1, 0): 90, (-1, 0): 270, (0, 1): 180, (0, -1): 0}
+# Kuppel: Kanten-Slopes platzieren
+for (g, rim, ter, d, above) in EDGE_SLOPES:
+    k = len(ter)
+    cells = [rim] + ter
+    cols = Counter(earth_color(c) for c in cells)
+    col = max(cols, key=lambda c: (cols[c], c == earth_color(ter[0])))
+    y = -BH * (g + 1)
+    if above or k == 1:
+        add(Part("09_kuppel_slopes", STRAIGHT[k], col, ctr(rim[0]), y, ctr(rim[1]), ROT_OUT[d], cells, y, y + BH,
+                 studs=True, studcells={rim}))
+    else:
+        cx = sum(ctr(c[0]) for c in cells) / len(cells); cz = sum(ctr(c[1]) for c in cells) / len(cells)
+        add(Part("09_kuppel_slopes", CURVED[k], col, cx, y, cz, ROT_OUT[d], cells, y, y + BH, studs=False))
+
+# Restliche freie Stufenkanten (breite Terrassen, Zeilen ohne Lage darueber): Cheese-Slopes
+CHEESED = set()
 for g in range(G_DOME, TOP_G):
-    S = layers[g]
+    S = full[g]
     for c in top_exposed(g):
+        if c in SLOPED[g] or c in EDGE.get(g, ()): continue
         d = sector(c)
         if (c[0] + d[0], c[1] + d[1]) in S: continue
         add(Part("09_kuppel_slopes", "54200", earth_color(c), ctr(c[0]), -BH * (g + 1), ctr(c[1]), ROT_OUT[d],
                  {c}, -BH * (g + 1) - 16, -BH * (g + 1), studs=False))
+        CHEESED.add((g, c))
+
+# Glatte Oberflaeche: alle noch offenen Noppen der Kuppel mit Fliesen in Erdfarbe abdecken
+_idx = top_index()
+for g in range(G_DOME, TOP_G + 1):
+    y = -BH * (g + 1)
+    free = {}
+    for c in top_exposed(g):
+        if c in SLOPED[g] or (g, c) in CHEESED: continue
+        if (y, c) not in _idx: continue          # z.B. gebogene Rand-Slope ohne Noppe
+        free[c] = earth_color(c)
+    plates("09_kuppel_slopes", free, y - PH, g % 2, table=TILE, studs=False)
 
 # ---- Wolken / Nebel auf dem LED-Ring ----
 cloud_cells = set()
@@ -404,12 +457,13 @@ for L in range(7):
 y_scr_top = y0 - BH * 7
 
 # ---- Truss-Ring (Gittertraeger) ----
-TRUSS = SCREEN | (D_T0 - D_T1)
+R_TRUSS = 29.5                       # Aussenradius Truss (schmaler Ring, ca. 3 Noppen breit)
+TRUSS = SCREEN | (disk(R_TRUSS) - D_T1)
 y = y_scr_top - PH
 place_runs("13_truss_ring", radial_runs(TRUSS), DBG, y, hang=True)  # haengt teils an der Kreuzlage darueber
 y -= PH
 plates("13_truss_ring", {c: DBG for c in TRUSS}, y, 1)
-OUTW = boundary8(D_T0)
+OUTW = boundary8(disk(R_TRUSS))
 INW = {c for c in TRUSS if any((c[0] + a, c[1] + b) not in TRUSS and dist((c[0] + a, c[1] + b)) < 27 for a, b in N8)}
 for L in range(2):
     ytop = y - BH * (L + 1)
@@ -425,69 +479,22 @@ plates("13_truss_ring", {c: DBG for c in (OUTW | INW) - rung_cells}, y, 0)
 lamp_cells = set()
 for j in range(24):
     a = 2 * math.pi * (j + 0.25) / 24
-    c = (math.floor(29.6 * math.cos(a)), math.floor(29.6 * math.sin(a)))
+    c = (math.floor(28.7 * math.cos(a)), math.floor(28.7 * math.sin(a)))
+    assert c in TRUSS and c not in SCREEN, c
     lamp_cells.add(c)
     add(Part("14_scheinwerfer", "3062b", BLACK, ctr(c[0]), y_scr_top, ctr(c[1]), 0, {c}, y_scr_top, y_scr_top + BH, hang=True))
     add(Part("14_scheinwerfer", "6141", TYELLOW, ctr(c[0]), y_scr_top + BH, ctr(c[1]), 0, {c}, y_scr_top + BH, y_scr_top + BH + PH, hang=True, studs=True))
 
-# ---------------- Minifiguren ----------------
-def mm(A, B): return [[sum(A[i][k] * B[k][j] for k in range(3)) for j in range(3)] for i in range(3)]
-def mstr(M): return " ".join(fmt(v) for r in M for v in r)
-def mv(M, v): return [sum(M[i][k] * v[k] for k in range(3)) for i in range(3)]
-
-
-def minifig(sub, x, surf_y, z, rot, torso, legs, head=YELLOW, hair=None, hands=YELLOW, cells=()):
-    M = RM[rot]
-    P = [x, surf_y - 72, z]
-    comps = [("3626bp01", head, (0, -24, 0), [[1, 0, 0], [0, 1, 0], [0, 0, 1]]),
-             ("973", torso, (0, 0, 0), [[1, 0, 0], [0, 1, 0], [0, 0, 1]]),
-             ("3818", torso, (-15.552, 9, 0), [[0.985, 0.174, 0], [-0.174, 0.985, 0], [0, 0, 1]]),
-             ("3819", torso, (15.552, 9, 0), [[0.985, -0.174, 0], [0.174, 0.985, 0], [0, 0, 1]]),
-             ("3820", hands, (-23.1, 24.7, -10), [[0.985, 0.174, 0], [-0.133, 0.754, -0.643], [-0.112, 0.633, 0.766]]),
-             ("3820", hands, (23.1, 24.7, -10), [[0.985, -0.174, 0], [0.133, 0.754, -0.643], [0.112, 0.633, 0.766]]),
-             ("3815c01", legs, (0, 32, 0), [[1, 0, 0], [0, 1, 0], [0, 0, 1]])]
-    if hair is not None: comps.append(("3901", hair, (0, -24, 0), [[1, 0, 0], [0, 1, 0], [0, 0, 1]]))
-    lines, sub_parts = [], []
-    for nm, col, off, Mi in comps:
-        w = mv(M, off)
-        pos = [P[0] + w[0], P[1] + w[1], P[2] + w[2]]
-        add(Part(sub, nm, col, pos[0], pos[1], pos[2], rot, cells if nm == "3815c01" else (), surf_y - 96 if nm == "3815c01" else 0,
-                 surf_y if nm == "3815c01" else 0, studs=False,
-                 extra=[f"1 {col} {fmt(pos[0])} {fmt(pos[1])} {fmt(pos[2])} {mstr(mm(M, Mi))} {nm}.dat"]))
-
-
-# Performer oben auf der Kuppel (zur Front +z)
-top_y = -BH * (TOP_G + 1)
-minifig("15_performer", 0, top_y, 10, 180, RED, RED, hair=BLACK, cells={(-1, 0), (0, 0)})
-
-# Publikum auf dem Basis-Rand
+# ---- Basis-Rand: Fliesen statt offener Noppen ----
 E_T0 = top_exposed(1)
-TORSOS = [RED, BLUE, WHITE, BLACK, GREEN, YELLOW, DBG, TAN, 272]
-LEGS = [BLUE, BLACK, DBG, TAN, 272]
-HAIRS = [BLACK, 70, 308, TAN, BLACK]
-used = set()
-for j in range(28):
-    a = 2 * math.pi * (j + 0.25) / 28
-    px, pz = 29.6 * math.cos(a), 29.6 * math.sin(a)
-    if abs(pz) >= abs(px):
-        gx = round(px); k = math.floor(pz)
-        cells = {(gx - 1, k), (gx, k)}
-        x, z, rot = gx * LDU, ctr(k), (0 if pz > 0 else 180)
-    else:
-        gz = round(pz); i = math.floor(px)
-        cells = {(i, gz - 1), (i, gz)}
-        x, z, rot = ctr(i), gz * LDU, (270 if px > 0 else 90)
-    if not cells <= E_T0 or cells & used: continue
-    used |= cells
-    minifig("16_publikum", x, -BH * 2, z, rot, random.choice(TORSOS), random.choice(LEGS), hair=random.choice(HAIRS), cells=cells)
+plates("02_basis", {c: BLACK for c in E_T0}, -BH * 2 - PH, 0, table=TILE, studs=False)
 
 
 # ---------------- Checks ----------------
 def checks():
     idx_top = defaultdict(list)   # (ytop, cell) -> part index (Teile mit Noppen oben)
     for n, p in enumerate(parts):
-        if p.studs:
-            for c in p.cells: idx_top[(p.ytop, c)].append(n)
+        for c in p.studcells: idx_top[(p.ytop, c)].append(n)
     below = defaultdict(set); above = defaultdict(set)
     for n, p in enumerate(parts):
         if not p.cells: continue
@@ -543,10 +550,10 @@ TITLES = {"01_baseplates": "Arena-Boden (4x Baseplate 32x32)", "02_basis": "Basi
           "03_laufsteg": "Laufsteg-Ring Oe56", "04_led_ring": "LED-Ring Oe52",
           "05_kuppel_unten": "Kuppel unten + Deck 1", "06_kuppel_mitte": "Kuppel Mitte + Deck 2",
           "07_kuppel_oben": "Kuppel oben", "08_innenstuetzen": "Innenstuetzen (Hohlraum)",
-          "09_kuppel_slopes": "Kuppel Cheese-Slopes", "10_nebel": "Nebel / Wolken am LED-Ring",
+          "09_kuppel_slopes": "Kuppel Rundung (Slopes + Fliesen)", "10_nebel": "Nebel / Wolken am LED-Ring",
           "11_projektionsschirm": "Projektionsschirm Oe56", "12_lichtvorhang": "Lichtvorhang (trans-clear Saeulen)",
           "13_truss_ring": "Truss-Ring Oe64", "14_scheinwerfer": "Scheinwerfer am Truss",
-          "15_performer": "Performer", "16_publikum": "Publikum"}
+          }
 
 
 def export():
