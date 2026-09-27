@@ -220,10 +220,9 @@ def bond_layer(sub, cells, lower, ytop, color, max_len=6):
 # PUBLIKUMSSICHT (wie auf den Konzertfotos) = Blick von -x in Richtung +x: vorne die Lower Stage im
 # Publikum, der Laufsteg fuehrt zum Berg, dahinter mittig der runde Screen. Von vorne gesehen liegt
 # +z links. Die Ansichtszeichnung (Elevation) ist die Seitenansicht von +z.
-COLORS.update({212: ("Bright Light Blue", 105), 25: ("Orange", 4), 36: ("Trans-Red", 17)})
-TRED = 36
-# Farbkonzept nach der 60-30-10-Regel: ~60 % Schwarz (Buehne, Screen), ~30 % Weiss/Hellgrau (Fels),
-# ~10 % Dunkelgrau (Risse, Schatten, Traverse) - dazu wenige rote Akzente (Yeezus-Rot) als Blickpunkte.
+COLORS.update({212: ("Bright Light Blue", 105)})
+# Farbkonzept nach der 60-30-10-Regel, rein unbunt wie die Tour-Optik: Schwarz dominiert (Buehne, Screen),
+# Weiss/Hellgrau fuer den Fels, Dunkelgrau fuer Risse, Schatten und Traverse.
 XMIN, XMAX, ZMIN, ZMAX = -32, 31, -16, 15
 GRID = [(i, k) for i in range(XMIN, XMAX + 1) for k in range(ZMIN, ZMAX + 1)]
 DIRS = [(1, 0), (-1, 0), (0, 1), (0, -1)]
@@ -393,6 +392,7 @@ STAGE_CRACKS = [[(-28.0, -3.0), (-24.0, -1.0), (-21.0, 2.5), (-17.0, 3.0)],
 ROCK = ("berg", "fels")
 SLOPE_OK = ("berg", "fels", "rampe")
 
+SNOT_LINKS = []           # (Anbauteil, Halter) - seitliche Verbindungen, die der Check als Verbindung wertet
 # ---------------- Schale, Decks und Stuetzen ----------------
 def chebyshev_dist(Sg):
     """Abstand (in Zellen) jeder Zelle zum Rand der Menge (BFS, 8er-Nachbarschaft)"""
@@ -482,6 +482,13 @@ def sub_of(c):
             "fels": "05_lower_stage"}[MAT[c]]
 
 
+# Front-Fills: in der obersten Podestlage vorne Steine 1x2 mit Seitennoppen, darauf Gitter-Fliesen (SNOT)
+PX0 = min(p[0] for p in PLAT)
+FRONTFILL = [((PX0, z0), (PX0, z0 + 1)) for z0 in (-12, -8, 6, 10)]
+for pair in FRONTFILL:
+    for c in pair:
+        assert c in solid[PLAT_H - 1] and MAT[c] == "podest"
+        replaced.add((c, PLAT_H - 1))
 for g in range(GMAX + 1):
     cells = {c for c in solid[g] if (c, g) not in replaced}
     bysub = defaultdict(dict)
@@ -500,6 +507,13 @@ for g in range(GMAX + 1):
             l2, nc = bond_layer(sb, dc, l1, y0 - 2 * PH, BLACK)
             plates(sb, {c: BLACK for c in dc}, y0 - 3 * PH, 1)
 
+for (a, b) in FRONTFILL:
+    y = -BH * PLAT_H
+    front = add(Part("02_podest", "11211", BLACK, ctr(a[0]), y, (b[1]) * LDU, 270, {a, b}, y, y + BH))
+    grille = add(Part("02_podest", "2412b", DBG, ctr(a[0]) - 18, y + 10, b[1] * LDU, 0,
+                      {(a[0] - 1, a[1]), (b[0] - 1, b[1])}, y, y + 20, studs=False, hang=True,
+                      extra=[f"1 {DBG} {fmt(ctr(a[0]) - 18)} {fmt(y + 10)} {fmt(b[1] * LDU)} 0 1 0 0 0 -1 -1 0 0 2412b.dat"]))
+    SNOT_LINKS.append((grille, front))
 for (c, o, d) in LIPS:
     y = -BH * _gl
     add(Part(sub_of(c), "3665a", rock_color(c, g=_gl - 1), ctr(c[0]), y, ctr(c[1]), ROT_OUT[d], [c, o], y, y + BH,
@@ -510,14 +524,30 @@ for (name, c, d, g, h, cells) in SLOPES:
     add(Part(sub_of(c), name, col, ctr(c[0]), y, ctr(c[1]), ROT_OUT[d], cells, y, y + BH * h,
              studs=True, studcells={c}))
 
-# Abdeckung aller noch offenen Oberseiten: Cheese-Slopes an Felskanten, sonst Fliesen
-LIGHTS = []
+# Abdeckung aller noch offenen Oberseiten.
+# Felskanten: Mischung aus gebogenen Slopes 2x1 (11477, "ausgewaschen") und Cheese-Slopes 1x1 (Rockwork-Tipp:
+# gebogene Keile fuer weiche, erodierte Uebergaenge), sonst Fliesen. Laufsteg: Dielen im Verband.
 caps = defaultdict(dict)
+PLANKS = defaultdict(set)
 for g in range(GMAX + 1):
     Sa = S[g + 1] if g + 1 <= GMAX else set()
     y = -BH * (g + 1)
-    for c in S[g] - Sa:
-        if (c, g + 1) in covered or (c, g) in replaced: continue
+    open_ = sorted(c for c in S[g] - Sa if (c, g + 1) not in covered and (c, g) not in replaced)
+    openset, done = set(open_), set()
+    # Pass 1: gebogene Slopes auf Randzelle + Nachbar innen
+    for c in open_:
+        if MAT[c] not in ROCK or c in SUMMIT or c in done: continue
+        drop = [d for d in grad_dirs(c) if (c[0] + d[0], c[1] + d[1]) not in S[g]]
+        if not drop or vnoise(c[0] + 0.5, c[1] + 0.5, 2.3, 11) < 0.5: continue
+        d = drop[0]; i = (c[0] - d[0], c[1] - d[1])
+        if i not in openset or i in done or MAT.get(i) not in ROCK or i in SUMMIT: continue
+        col = rock_color(c, top=True)
+        add(Part(sub_of(c), "11477", col, (ctr(c[0]) + ctr(i[0])) / 2, y, (ctr(c[1]) + ctr(i[1])) / 2, ROT_OUT[d],
+                 {c, i}, y - 16, y, studs=False))
+        done |= {c, i}
+    # Pass 2: Rest
+    for c in open_:
+        if c in done: continue
         m = MAT[c]
         if c in SUMMIT: caps[(g, "03_berg")][c] = BLACK; continue
         if m in ROCK:
@@ -530,15 +560,31 @@ for g in range(GMAX + 1):
         elif m == "rampe": caps[(g, sub_of(c))][c] = DBG
         elif m == "podest":
             edge = any((c[0] + a, c[1] + b) not in S[g] for a, b in DIRS)
-            if edge and c[0] == min(p[0] for p in PLAT) and c[1] % 3 == 0:
-                LIGHTS.append((g, c)); continue            # rote Kantenlichter (Akzent)
             caps[(g, sub_of(c))][c] = DBG if edge else BLACK
+        elif m == "laufsteg": PLANKS[g].add(c)
         else: caps[(g, sub_of(c))][c] = DBG
 for (g, sb), cc in caps.items():
     plates(sb, cc, -BH * (g + 1) - PH, g % 2, table=TILE, studs=False)
-for g, c in LIGHTS:
+# Dielen: 1 Noppe breite Fliesen entlang x, Stoesse von Reihe zu Reihe versetzt (Verband)
+TILE_LEN = {1: "3070b", 2: "3069b", 4: "2431", 6: "6636", 8: "4162"}
+for g, cells in PLANKS.items():
     y = -BH * (g + 1) - PH
-    add(Part("02_podest", "98138", TRED, ctr(c[0]), y, ctr(c[1]), 0, {c}, y, y + PH, studs=False))
+    for z in sorted({c[1] for c in cells}):
+        xs = sorted(c[0] for c in cells if c[1] == z)
+        runs, cur = [], [xs[0]]
+        for x in xs[1:]:
+            if x == cur[-1] + 1: cur.append(x)
+            else: runs.append(cur); cur = [x]
+        runs.append(cur)
+        for run in runs:
+            pos, first = 0, (2 if z % 2 else 4)
+            while pos < len(run):
+                rest = len(run) - pos
+                n = min(first, rest) if pos == 0 else min(4, rest)
+                while n not in TILE_LEN: n -= 1
+                seg = run[pos:pos + n]; pos += n
+                cx = sum(ctr(x) for x in seg) / n
+                add(Part("04_laufsteg", TILE_LEN[n], DBG, cx, y, ctr(z), 0, {(x, z) for x in seg}, y, y + PH, studs=False))
 
 # ---------------- Runder Screen hinter dem Berg (zeigt zum Publikum, -x) ----------------
 SCR_X = (27, 28, 29)                         # vorne .. hinten; hinten schwarze Rueckwand
@@ -622,6 +668,32 @@ for r, zs in sorted(DISC_ROWS.items()):
         for x in band: prev_j[x] = set(joints_here)
     prev_cells = set(zs)
 DISC_TOP = max(DISC_ROWS)
+# Runde Formen: Jede Zeile der oberen Haelfte ist schmaler als die darunter. Auf die freien Stufenenden
+# kommen gebogene Slopes (2 Zellen) bzw. Cheese-Slopes (1 Zelle), Gefaelle nach aussen; von vorne wird
+# der Umriss dadurch rund statt treppig. Vorn in Bildfarbe, dahinter schwarz.
+TIE_CELLS = {(29, z) for z in (-1, 0)}
+for r in sorted(DISC_ROWS):
+    here, above = DISC_ROWS[r], set(DISC_ROWS.get(r + 1, []))
+    exposed = [z for z in here if z not in above]
+    if not exposed: continue
+    y = -BH * (r + 1)
+    ends = []
+    lo = [z for z in exposed if not above or z < min(above)]
+    hi = [z for z in exposed if above and z > max(above)]
+    if not above: lo, hi = exposed[:len(exposed) // 2], exposed[len(exposed) // 2:]
+    for grp, d in ((lo, (0, -1)), (sorted(hi, reverse=True), (0, 1))):
+        grp = sorted(grp, key=lambda z: -z * d[1])          # von aussen nach innen
+        for x in SCR_X:
+            col = sky(grp[0], r) if (x == 27 and grp) else BLACK
+            k = 0
+            if len(grp) >= 2 and (x, grp[0]) not in TIE_CELLS and (x, grp[1]) not in TIE_CELLS:
+                add(Part("07_screen", "11477", col, ctr(x), y, (ctr(grp[0]) + ctr(grp[1])) / 2, ROT_OUT[d],
+                         {(x, grp[0]), (x, grp[1])}, y - 16, y, studs=False)); k = 2
+            elif grp and (x, grp[0]) not in TIE_CELLS:
+                add(Part("07_screen", "54200", col, ctr(x), y, ctr(grp[0]), ROT_OUT[d], {(x, grp[0])}, y - 16, y,
+                         studs=False)); k = 1
+            rest = {(x, z): BLACK for z in grp[k:] if (x, z) not in TIE_CELLS}
+            if rest: plates("07_screen", rest, y - PH, 0, table=TILE, studs=False)
 
 # ---------------- Ecktuerme und Traversen-Rechteck ----------------
 TRUSS_Y = -BH * 3 - 3 * 240 - 2 * PH       # Unterkante Traverse (= Oberkante Tuerme)
@@ -678,7 +750,7 @@ def top_y(cells):
     return min([-BH * HF.get(c, 0) for c in cells] + [0])
 
 
-SLING_LINKS = []          # seitliche Verbindungen (SNOT), die der Check als Verbindung wertet
+SLING_LINKS = SNOT_LINKS  # seitliche Verbindungen (SNOT), die der Check als Verbindung wertet
 # Line-Arrays links und rechts vom Berg (wie PA-Anlagen), unten J-foermig zum Publikum (-x)
 ARRAYS = [(10, -15), (17, -15), (10, 15), (17, 15)]       # Gitterpunkt (Mitte 2x2) unter der Seitentraverse
 for ax, az in ARRAYS:
@@ -720,8 +792,7 @@ HEADS = [(x, z) for x in (-28, -22, -16) for z in (-16, 14)] + [(-32, z) for z i
 for hx, hz in HEADS:
     cells = {(hx + a, hz + b) for a in (0, 1) for b in (0, 1)}
     yy = TRUSS_Y
-    lens = TRED if (hx, hz) in ((-22, -16), (-22, 14)) else TCLEAR
-    for name, col, h in (("3022", BLACK, PH), ("3941", BLACK, BH), ("4032a", lens, PH)):
+    for name, col, h in (("3022", BLACK, PH), ("3941", BLACK, BH), ("4032a", TCLEAR, PH)):
         add(Part("10_licht", name, col, (hx + 1) * LDU, yy, (hz + 1) * LDU, 0, cells, yy, yy + h, hang=True))
         yy += h
 

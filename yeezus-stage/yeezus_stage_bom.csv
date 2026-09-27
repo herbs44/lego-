@@ -1,9 +1,13 @@
 LDraw Part,BrickLink ID,Name,Farbe,Menge
-11211.dat,11211,"Brick  1 x  2 with Two Studs on One Side",Black,52
-2412b.dat,2412b,"Tile  1 x  2 Grille with Groove",Dark Bluish Gray,52
+11211.dat,11211,"Brick  1 x  2 with Two Studs on One Side",Black,56
+11477.dat,11477,"Slope Brick Curved  2 x  1",Black,17
+11477.dat,11477,"Slope Brick Curved  2 x  1",White,3
+11477.dat,11477,"Slope Brick Curved  2 x  1",Light Bluish Gray,9
+11477.dat,11477,"Slope Brick Curved  2 x  1",Dark Bluish Gray,2
+2412b.dat,2412b,"Tile  1 x  2 Grille with Groove",Dark Bluish Gray,56
 2431.dat,2431,"Tile  1 x  4 with Groove",Black,2
-2431.dat,2431,"Tile  1 x  4 with Groove",Light Bluish Gray,2
-2431.dat,2431,"Tile  1 x  4 with Groove",Dark Bluish Gray,4
+2431.dat,2431,"Tile  1 x  4 with Groove",Light Bluish Gray,3
+2431.dat,2431,"Tile  1 x  4 with Groove",Dark Bluish Gray,10
 2445.dat,2445,"Plate  2 x 12",Dark Bluish Gray,11
 2456.dat,2456,"Brick  2 x  6",Black,27
 2456.dat,2456,"Brick  2 x  6",Light Bluish Gray,1
@@ -19,7 +23,7 @@ LDraw Part,BrickLink ID,Name,Farbe,Menge
 3003.dat,3003,"Brick  2 x  2",White,1
 3003.dat,3003,"Brick  2 x  2",Light Bluish Gray,3
 3003.dat,3003,"Brick  2 x  2",Dark Bluish Gray,4
-3004.dat,3004,"Brick  1 x  2",Black,107
+3004.dat,3004,"Brick  1 x  2",Black,111
 3004.dat,3004,"Brick  1 x  2",White,13
 3004.dat,3004,"Brick  1 x  2",Light Bluish Gray,15
 3004.dat,3004,"Brick  1 x  2",Dark Bluish Gray,15
@@ -28,14 +32,14 @@ LDraw Part,BrickLink ID,Name,Farbe,Menge
 3005.dat,3005,"Brick  1 x  1",Light Bluish Gray,16
 3005.dat,3005,"Brick  1 x  1",Dark Bluish Gray,30
 3006.dat,3006,"Brick  2 x 10",Black,86
-3007.dat,3007,"Brick  2 x  8",Black,48
+3007.dat,3007,"Brick  2 x  8",Black,47
 3007.dat,3007,"Brick  2 x  8",White,1
 3007.dat,3007,"Brick  2 x  8",Dark Bluish Gray,1
-3008.dat,3008,"Brick  1 x  8",Black,76
+3008.dat,3008,"Brick  1 x  8",Black,75
 3008.dat,3008,"Brick  1 x  8",White,1
 3008.dat,3008,"Brick  1 x  8",Light Bluish Gray,1
 3008.dat,3008,"Brick  1 x  8",Dark Bluish Gray,1
-3009.dat,3009,"Brick  1 x  6",Black,55
+3009.dat,3009,"Brick  1 x  6",Black,56
 3009.dat,3009,"Brick  1 x  6",White,2
 3009.dat,3009,"Brick  1 x  6",Light Bluish Gray,1
 3010.dat,3010,"Brick  1 x  4",Black,61
@@ -59,14 +63,14 @@ LDraw Part,BrickLink ID,Name,Farbe,Menge
 3062b.dat,3062b,"Brick  1 x  1 Round with Hollow Stud",Dark Bluish Gray,130
 3068b.dat,3068,"Tile  2 x  2 with Groove",Black,1
 3068b.dat,3068,"Tile  2 x  2 with Groove",White,2
-3069b.dat,3069,"Tile  1 x  2 with Groove",Black,1
-3069b.dat,3069,"Tile  1 x  2 with Groove",White,4
-3069b.dat,3069,"Tile  1 x  2 with Groove",Light Bluish Gray,8
-3069b.dat,3069,"Tile  1 x  2 with Groove",Dark Bluish Gray,15
-3070b.dat,3070,"Tile  1 x  1 with Groove",Black,2
+3069b.dat,3069,"Tile  1 x  2 with Groove",Black,7
+3069b.dat,3069,"Tile  1 x  2 with Groove",White,3
+3069b.dat,3069,"Tile  1 x  2 with Groove",Light Bluish Gray,7
+3069b.dat,3069,"Tile  1 x  2 with Groove",Dark Bluish Gray,17
+3070b.dat,3070,"Tile  1 x  1 with Groove",Black,12
 3070b.dat,3070,"Tile  1 x  1 with Groove",White,7
-3070b.dat,3070,"Tile  1 x  1 with Groove",Light Bluish Gray,7
-3070b.dat,3070,"Tile  1 x  1 with Groove",Dark Bluish Gray,9
+3070b.dat,3070,"Tile  1 x  1 with Groove",Light Bluish Gray,5
+3070b.dat,3070,"Tile  1 x  1 with Groove",Dark Bluish Gray,12
 3460.dat,3460,"Plate  1 x  8",Dark Bluish Gray,1
 3622.dat,3622,"Brick  1 x  3",Black,22
 3622.dat,3622,"Brick  1 x  3",White,10
@@ -86,8 +90,7 @@ LDraw Part,BrickLink ID,Name,Farbe,Menge
 3811.dat,3811,"Baseplate 32 x 32",Black,2
 3832.dat,3832,"Plate  2 x 10",Dark Bluish Gray,3
 3941.dat,3941,"Brick  2 x  2 Round without Reinforcement",Black,8
-4032a.dat,4032a,"Plate  2 x  2 Round with Axlehole",Trans-Red,2
-4032a.dat,4032a,"Plate  2 x  2 Round with Axlehole",Trans-Clear,6
+4032a.dat,4032a,"Plate  2 x  2 Round with Axlehole",Trans-Clear,8
 4162.dat,4162,"Tile  1 x  8",White,1
 4162.dat,4162,"Tile  1 x  8",Light Bluish Gray,2
 4162.dat,4162,"Tile  1 x  8",Dark Bluish Gray,1
@@ -99,9 +102,10 @@ LDraw Part,BrickLink ID,Name,Farbe,Menge
 4460b.dat,4460b,"Slope Brick 75  2 x  1 x  3 with Hollow Stud",Light Bluish Gray,4
 4460b.dat,4460b,"Slope Brick 75  2 x  1 x  3 with Hollow Stud",Dark Bluish Gray,5
 4477.dat,4477,"Plate  1 x 10",Dark Bluish Gray,2
+54200.dat,54200,"Slope Brick 31  1 x  1 x  0.667",Black,18
 54200.dat,54200,"Slope Brick 31  1 x  1 x  0.667",White,7
-54200.dat,54200,"Slope Brick 31  1 x  1 x  0.667",Light Bluish Gray,17
-54200.dat,54200,"Slope Brick 31  1 x  1 x  0.667",Dark Bluish Gray,3
+54200.dat,54200,"Slope Brick 31  1 x  1 x  0.667",Light Bluish Gray,9
+54200.dat,54200,"Slope Brick 31  1 x  1 x  0.667",Dark Bluish Gray,2
 60477.dat,60477,"Slope Brick 18  4 x  1",Black,4
 60477.dat,60477,"Slope Brick 18  4 x  1",White,4
 60477.dat,60477,"Slope Brick 18  4 x  1",Light Bluish Gray,1
@@ -110,14 +114,11 @@ LDraw Part,BrickLink ID,Name,Farbe,Menge
 60481.dat,60481,"Slope Brick 65  2 x  1 x  2",White,60
 60481.dat,60481,"Slope Brick 65  2 x  1 x  2",Light Bluish Gray,45
 60481.dat,60481,"Slope Brick 65  2 x  1 x  2",Dark Bluish Gray,33
-6111.dat,6111,"Brick  1 x 10",Black,41
-6112.dat,6112,"Brick  1 x 12",Black,80
+6111.dat,6111,"Brick  1 x 10",Black,40
+6112.dat,6112,"Brick  1 x 12",Black,81
 6636.dat,6636,"Tile  1 x  6",Black,1
 6636.dat,6636,"Tile  1 x  6",White,1
 6636.dat,6636,"Tile  1 x  6",Light Bluish Gray,2
-6636.dat,6636,"Tile  1 x  6",Dark Bluish Gray,1
+6636.dat,6636,"Tile  1 x  6",Dark Bluish Gray,2
 87079.dat,87079,"Tile  2 x  4 with Groove",White,1
-87079.dat,87079,"Tile  2 x  4 with Groove",Light Bluish Gray,1
-87079.dat,87079,"Tile  2 x  4 with Groove",Dark Bluish Gray,5
 95347.dat,95347,"Support  2 x  2 x 10 Girder Triangular  3 Sections with Axlehole",Dark Bluish Gray,18
-98138.dat,98138,"Tile  1 x  1 Round with Groove",Trans-Red,6
