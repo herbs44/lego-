@@ -20,13 +20,17 @@ Das Modell ist auf die **Publikumssicht** der Konzertfotos ausgerichtet:
 |---|---|
 | ![Front](renders/yeezus_front.png) | ![Seite](renders/yeezus_seite.png) |
 
-| Screen | Mount Yeezus | Lower Stage | Rückseite |
-|---|---|---|---|
-| ![Screen](renders/yeezus_screen.png) | ![Berg](renders/yeezus_berg.png) | ![Lower Stage](renders/yeezus_lower_stage.png) | ![Hinten](renders/yeezus_hinten.png) |
+| Screen | Mount Yeezus | Lower Stage mit Überhängen |
+|---|---|---|
+| ![Screen](renders/yeezus_screen.png) | ![Berg](renders/yeezus_berg.png) | ![Lower Stage](renders/yeezus_lower_stage.png) |
+
+| Line-Arrays mit SNOT-Gittern | Rückseite |
+|---|---|
+| ![Line-Arrays](renders/yeezus_line_arrays.png) | ![Hinten](renders/yeezus_hinten.png) |
 
 ## Kennzahlen
 
-- **2.004 Teile**, 116 Positionen (Teil × Farbe), keine Minifiguren
+- **2.152 Teile**, 122 Positionen (Teil × Farbe), keine Minifiguren
 - **Grundfläche** 64 × 32 Noppen (2 Baseplates hintereinander), **Höhe** ca. 36 cm
 - **Mount Yeezus** 20 Steine hoch, Pyramide um 45° gedreht (Grat zum Publikum), Gipfelplattform 2 × 2
 - **Screen** oval, 28 Noppen breit und 20 Lagen hoch, direkt hinter dem Berg
@@ -34,14 +38,33 @@ Das Modell ist auf die **Publikumssicht** der Konzertfotos ausgerichtet:
 ## Aufbau (Submodelle)
 
 1. **Grundplatten** – 2 × Baseplate 32 × 32 schwarz
-2. **Bühnenpodest** – schwarzer Block 24 × 28 Noppen, 3 Steine hoch, Kante mit dunkelgrauen Fliesen
+2. **Bühnenpodest** – schwarzer Block 24 × 28 Noppen, 3 Steine hoch, Kante mit dunkelgrauen Fliesen und roten Kantenlichtern vorne
 3. **Mount Yeezus** – Pyramide mit Grat nach vorne, davor eine breite untere Stufe mit Sims (Platz für den Chor), seitlich zwei asymmetrische Felsmassen; Risse als dunkelgraue Kerben, vorne eine durchgehende Gratlinie von der Spitze nach unten
-4. **Laufsteg mit Rampe** – 5 Noppen breit, mit Stufe und Rampe zur Lower Stage
-5. **Lower Stage** – Felsplateau mit unregelmäßigem Rand und steilen Felswänden
+4. **Laufsteg mit Rampe** – 4 Noppen breit, exakt auf der Mittelachse von Berg und Screen, Stufen beidseitig, Rampe zur Lower Stage
+5. **Lower Stage** – Felsplateau mit unregelmäßigem Rand, steilen Felswänden und Überhängen: die oberste Lage kragt stellenweise aus und sitzt auf umgedrehten Slopes
 6. **Runder Screen** – Wand aus 3 Noppen Tiefe, hinten schwarz. Vorne ein dunkler Sturmhimmel wie auf den Fotos: heller Sichelrand links, Wolkenband oben rechts. Er steht auf einem Sockel hinter dem Berg und ist oben an der hinteren Traverse aufgehängt
-7. **Ecktürme und Traversen-Rechteck** – vorne je 1, hinten (hinter dem Screen) je 2 Gitterträger-Stapel 95347; oben läuft ein Traversen-Rechteck mit Pfosten im Zickzack. Die Mitte bleibt frei, damit die Blickachse nicht zugestellt wird
-8. **Line-Arrays** – 4 Stränge links und rechts neben dem Berg (wie PA-Anlagen), unten J-förmig zum Publikum geneigt; ihre Länge passt der Generator an die Oberfläche darunter an
-9. **Moving Heads** – 8 Scheinwerfer an den Seitentraversen über der Lower Stage und an der vorderen Traverse
+7. **Ecktürme und Traversen-Rechteck** – dunkelgrau; vorne je 1, hinten (hinter dem Screen) je 2 Gitterträger-Stapel 95347; oben läuft ein Traversen-Rechteck mit Pfosten im Zickzack. Die Mitte bleibt frei, damit die Blickachse nicht zugestellt wird
+8. **Line-Arrays** – 4 Stränge links und rechts neben dem Berg (wie PA-Anlagen), unten J-förmig zum Publikum geneigt. Jede Box hat ein Lautsprechergitter, das per SNOT auf den Seitennoppen eines Steins sitzt. Die Länge passt der Generator an die Oberfläche darunter an
+9. **Moving Heads** – 8 Scheinwerfer an den Seitentraversen über der Lower Stage und an der vorderen Traverse, zwei davon mit roter Linse (der rote Strahl aus der Zeichnung)
+
+## Angewandte Techniken
+
+Abgeleitet aus [Brick Builder's Handbook – Building Techniques](https://brickbuildershandbook.com/category/building-techniques/),
+[jmbricklayer – LEGO MOC mit Farbtheorie](https://www.jmbricklayer.com/blogs/knowledge/how-to-design-and-build-a-lego-moc-with-color-theory),
+[r/LegoTechniques](https://www.reddit.com/r/LegoTechniques/) sowie
+[BrickNerd – Rockwork](https://bricknerd.com/home/lego-rockwork-techniques-lets-get-rocking-1-26-23) und
+[BrickNerd – Farbtheorie und Komposition](https://bricknerd.com/home/using-color-theory-and-composition-in-lego-mocs-3-25-24):
+
+| Technik | Umsetzung im Modell |
+|---|---|
+| **Rockwork: Slopes und umgedrehte Slopes mischen** | An der Kante der Lower Stage kragt die oberste Lage an 15 Stellen 1 Noppe aus und sitzt auf umgedrehten 45°-Slopes (3665) – echte Überhänge statt glatter Böschung |
+| **Keine sich wiederholenden Muster** | Überhänge, Cheese-Slope-Kanten und Farbflecken folgen einer glatten Rauschfunktion statt eines Rasters oder Zufalls pro Zelle |
+| **Fels in Schichten, unten weiter vorne** | Die Stufen des Bergs laufen mit Slopes passender Breite und Höhe auf die Stufe darunter aus |
+| **60-30-10-Farbregel** | Dominant Schwarz (Bühne, Screen), zweitrangig Weiß/Hellgrau (Fels), Dunkelgrau für Risse, Schatten und Traverse, dazu wenige rote Akzente |
+| **Zuerst Helligkeitskontrast sichern** | Der Berg ist die hellste Fläche und liegt vor dem dunklen Screen. Die Traverse ist dunkelgrau statt hellgrau, damit sie optisch zurücktritt. Der Fels hat einen Verlauf von hell (Spitze im Spotlight) nach dunkel (Fuß) |
+| **Akzentfarbe für Blickpunkte** | Rote Kantenlichter an der Podestkante und zwei rote Moving Heads (Yeezus-Rot, wie das rote Tape auf dem Album) |
+| **SNOT / Greebling** | Lautsprechergitter (Gitter-Fliese 1 × 2, 2412) auf Steinen 1 × 2 mit Seitennoppen (11211), Front zum Publikum |
+| **Symmetrie / Achse** | Laufsteg von 5 auf 4 Noppen geändert: Er liegt jetzt exakt auf der Mittelachse von Berg, Gipfel und Screen statt eine halbe Noppe daneben |
 
 ## Wie der Berg entsteht
 
@@ -64,7 +87,7 @@ Das Modell ist auf die **Publikumssicht** der Konzertfotos ausgerichtet:
 
 Der Generator prüft nach jedem Lauf:
 - **0 nicht verbundene Teile:** Alles hängt an den Baseplates.
-- **0 schwebende Teile:** Die 21 Ausnahmen hängen mit Klemmkraft von oben, nämlich Line-Arrays, Moving Heads und Teile der unteren Traversenlage.
+- **0 schwebende Teile:** Die 41 Ausnahmen hängen mit Klemmkraft von oben (Line-Arrays, Moving Heads, Teile der unteren Traversenlage) oder sitzen per SNOT seitlich an ihrem Halter (Lautsprechergitter). Der Check wertet diese seitliche Verbindung mit.
 - **0 Kollisionen.**
 - **Traverse als ein Stück:** Die zwei Plattenlagen verbindet ein Verbund-Algorithmus, und das wird geprüft.
 
@@ -82,6 +105,7 @@ Die Parameter für Berg (Flächen, Massen, Risse), Lower Stage, Screen (Größe,
 
 - **Chor und Performer:** Die Figuren sind nicht enthalten. Auf den Simsen und der Gipfelplattform ist Platz für Minifiguren in weißen Roben.
 - **Lichtkegel:** Die Lichtkegel der Moving Heads (rot/gelb in der Zeichnung) lassen sich nicht sinnvoll aus Steinen bauen.
-  Die Scheinwerfer haben trans-klare Linsen. Wie bei der Globe Stage könnten dort echte LEDs sitzen.
+  Die Scheinwerfer haben Linsen in Trans-Klar und Trans-Rot. Wie bei der Globe Stage könnten dort echte LEDs sitzen.
+- **Gitterträger in Dunkelgrau:** 95347 gibt es in Dark Bluish Gray, aber seltener als in Hellgrau. Vor der Bestellung auf BrickLink die Verfügbarkeit prüfen.
 - **Geneigte Traverse:** In der Zeichnung hängt die Traverse schräg über dem Berg. Im Modell ist sie waagerecht, weil geneigte Verbindungen mit Noppen nicht stabil gehen.
 - **Echte Bühne ohne Stützen:** Auf der echten Bühne hing alles unter der Hallendecke. Das Modell braucht die Ecktürme als Stützen. Sie stehen ganz außen, damit die Sicht auf Berg und Screen frei bleibt.

@@ -6,7 +6,7 @@ LEGO-MOCs als LDraw-Dateien (`.mpd`) mit Stückliste und BrickLink-Wanted-List.
 
 | Modell | Teile | Beschreibung |
 |---|---|---|
-| [Yeezus Stage](yeezus-stage/) | 2.004 | Mount Yeezus: Fels-Pyramide vor dem runden Screen, Laufsteg zur Lower Stage im Publikum, Line-Arrays und Moving Heads – auf 2 Baseplates |
+| [Yeezus Stage](yeezus-stage/) | 2.152 | Mount Yeezus: Fels-Pyramide vor dem runden Screen, Laufsteg zur Lower Stage im Publikum, Line-Arrays und Moving Heads – auf 2 Baseplates |
 | [Globe Stage](globe-stage/) | 10.876 | Stadion-Konzertbühne mit gerundeter Erdkugel-Kuppel, echter LED-Beleuchtung (Ring + 24 Scheinwerfer), einem Truss-Ring an Seilen unter einem Dach auf vier schlanken Ecktürmen und dem Album-Cover als Dach-Mosaik |
 
 ![Globe Stage](globe-stage/renders/globe_stage_hero.png)
