@@ -1,6 +1,7 @@
 """
 Yeezus Stage – LEGO MOC Generator
-Mount Yeezus (Fels-Berg mit Spitze und Simsen), Buehnenpodest, Laufsteg mit Rampe, Lower Stage (Felsplateau),
+Mount Yeezus (Fels-Pyramide mit Grat und Wendelweg bis zum Gipfel), Buehnenpodest, Laufsteg mit Rampe,
+Lower Stage (Felsplateau),
 runder Screen, Traverse mit Line-Arrays und Moving Heads. Massstab: 2 Baseplates 32x32.
 Pipeline: Hoehenfeld -> Schale + Stuetz-Propagation -> Slopes an Stufenkanten -> Packing -> Checks -> MPD/BOM/XML
 """
@@ -232,15 +233,15 @@ rng = random.Random(11)
 # ---------------- Hoehenfeld (in Steinhoehen) ----------------
 PLAT = {(i, k) for i in range(3, 27) for k in range(-14, 14)}          # Buehnenpodest unter dem Berg
 PLAT_H = 3
-MREGION = {(i, k) for i in range(4, 26) for k in range(-13, 13)}       # Bereich des Bergs auf dem Podest
+MREGION = {(i, k) for i in range(5, 26) for k in range(-13, 13)}       # Bereich des Bergs (vorne 2 Noppen Vorplatz)
 RUNWAY = {(i, k) for i in range(-11, 3) for k in range(-2, 2)}          # Laufsteg (4 breit, mittig auf z = 0)
 RUNWAY_H = 2
-RAMP = {(i, k) for i in range(-13, -11) for k in range(-2, 2)}          # Rampe zur Lower Stage
+RAMP = {(i, k) for i in range(-14, -11) for k in range(-2, 2)}          # Rampe zur Lower Stage (Unterbau)
 STAIR = {(i, 2) for i in range(-3, 0)} | {(i, -3) for i in range(-3, 0)}  # Stufen beidseitig am Laufsteg
 STAGE_C, STAGE_R = (-22.0, 0.0), 8.6                                    # Lower Stage (Felsplateau)
 STAGE_H = 4
-APEX = (14.0, 0.0); APEX_H = 19
-SUMMIT = {(13, -1), (14, -1), (13, 0), (14, 0)}                        # Gipfelplattform 2x2
+APEX = (12.0, 0.0); APEX_H = 19
+SUMMIT = {(11, -1), (12, -1), (11, 0), (12, 0)}                        # Gipfelplattform 2x2
 
 
 def planes_height(p, apex, h0, faces):
@@ -251,16 +252,36 @@ def planes_height(p, apex, h0, faces):
     return h0 - max(0.0, m)
 
 
-# Berg: Pyramide um 45 Grad gedreht (Grat zeigt zum Publikum, wie auf den Fotos) + breite untere Stufe
-# mit Sims vorne (Chor) + zwei asymmetrische Felsmassen seitlich
-PEAK = dict(apex=APEX, h0=APEX_H + 0.5, faces=[(45, 1.55), (135, 1.55), (225, 1.55), (315, 1.55)])
-MASSES = [dict(apex=(8.5, 0.0), h0=11.5, cap=7.5, faces=[(180, 2.1), (90, 0.55), (270, 0.55), (0, 0.9)]),
-          dict(apex=(15.0, -9.0), h0=9.5, cap=6.0, faces=[(270, 1.5), (180, 1.3), (0, 1.0), (90, 0.9)]),
-          dict(apex=(18.0, 9.0), h0=10.5, cap=7.0, faces=[(90, 1.4), (0, 1.1), (180, 1.2), (270, 0.9)])]
-CRACKS = [[(14.0, -0.5), (11.0, -0.5), (8.0, -0.2), (4.0, -0.6)],       # Grat-Linie vorne, von der Spitze nach unten
-          [(12.0, 3.5), (9.5, 7.0), (7.0, 10.5)],
-          [(12.5, -4.0), (10.0, -7.5), (8.5, -11.0)],
-          [(17.0, 5.5), (20.0, 9.0)], [(18.0, -5.0), (21.0, -9.5)]]
+# Berg wie auf den Fotos: unten ein Sockel mit zwei Weg-Ebenen, darauf eine spitze Pyramide. Nach vorne zeigt
+# ein scharfer Grat, der gleichmaessig mit 2 Steinen pro Noppe steigt (durchgehend 65-Grad-Slopes). Nach hinten
+# faellt ein langer, flacher Ruecken ab (Ansichtszeichnung). Um den Berg windet sich ein Wendelweg.
+GRAT = 2 * math.sqrt(2)                   # Grat-Flanken: 2 Steine pro Noppe entlang x und z
+PEAK = dict(apex=APEX, h0=APEX_H + 1.5, faces=[(135, GRAT), (225, GRAT), (90, 1.3), (270, 1.25), (0, 0.62)])
+CRACKS = [[(13.5, 2.0), (15.5, 4.5)], [(14.0, -2.0), (16.0, -4.5)],     # Risse (Kerben) auf Flanken und Sockel,
+          [(10.5, 5.5), (13.0, 8.0)], [(16.0, -6.5), (19.0, -7.5)],     # der Grat vorne bleibt glatt
+          [(17.5, 5.0), (20.0, 7.5)]]
+
+# Wendelweg: beginnt vorne rechts auf Podesthoehe und laeuft aussen rechts -> hinten -> links nach oben,
+# vorne als Sims vor dem Grat entlang, dann eine Ebene hoeher rechts und hinten herum und als Gipfeltreppe
+# ueber den flachen Ruecken zur Spitze. Station = 2 Zellen quer zum Weg (talseitig, bergseitig).
+WAY_SEGS = [("A", [((x, -12), (x, -11)) for x in range(5, 23)], 3.0, 5.0),
+            ("B", [((24, z), (23, z)) for z in range(-12, 12)], 5.0, 7.0),
+            ("C", [((x, 11), (x, 10)) for x in range(22, 7, -1)], 7.0, 8.67),
+            ("D", [((6, z), (7, z)) for z in range(11, -9, -1)], 8.67, 10.0),
+            ("E", [((x, -10), (x, -9)) for x in range(6, 21)], 10.0, 13.33),
+            ("F", [((22, z), (21, z)) for z in range(-10, 1)], 13.33, 14.33),
+            ("G", [((x, -1), (x, 0)) for x in range(20, 12, -1)], 14.33, APEX_H)]
+INSIDE = {(x, z) for x in range(8, 23) for z in range(-10, 10)}        # Sockel innerhalb des aeusseren Umlaufs
+STATIONS = []                   # (Abschnitt, Zellen (aussen, innen), Hoehe in Platten)
+for seg, sts, h0, h1 in WAY_SEGS:
+    n = len(sts)
+    for j, cells in enumerate(sts):
+        t = (j + 1) / n if seg == "G" else j / n
+        STATIONS.append((seg, cells, int(math.floor((h0 + (h1 - h0) * t) * 3 + 0.5))))
+WAY = {}                        # Zelle -> (Abschnitt, Hoehe in Platten)
+for seg, cells, hp in STATIONS:
+    for c in cells: WAY[c] = (seg, hp)
+assert len(WAY) == 2 * len(STATIONS)
 
 
 def seg_dist(p, a, b):
@@ -276,10 +297,7 @@ def crack_d(p, cracks=CRACKS):
 
 def mountain_f(p):
     """kontinuierliche Berghoehe (Steine) ueber dem Podest"""
-    h = planes_height(p, PEAK["apex"], PEAK["h0"], PEAK["faces"])
-    for m in MASSES:
-        h = max(h, min(m["cap"], planes_height(p, m["apex"], m["h0"], m["faces"])))
-    return h
+    return min(APEX_H + 0.4, planes_height(p, PEAK["apex"], PEAK["h0"], PEAK["faces"]))
 
 
 def stage_f(p):
@@ -294,6 +312,44 @@ def stage_f(p):
 # Ecktuerme: vorne je 1 Gittertraeger (freie Sicht), hinten hinter dem Screen je 2 nebeneinander
 TOWERS = [(-31, -15), (-31, 15)] + [(31, Z) for Z in (-15, -13, 13, 15)]   # vorne 1, hinten 2 Traeger je Ecke
 RESERVED = {(X + a, Z + b) for X, Z in TOWERS for a in (-1, 0) for b in (-1, 0)}
+def vnoise(x, z, sc=3.0, seed=0):
+    """glatte Werte-Rauschfunktion 0..1"""
+    def h(i, k): return (math.sin(i * 127.1 + k * 311.7 + seed * 74.7) * 43758.5453) % 1.0
+    x, z = x / sc, z / sc; i, k = math.floor(x), math.floor(z); fx, fz = x - i, z - k
+    sx, sz = fx * fx * (3 - 2 * fx), fz * fz * (3 - 2 * fz)
+    a = h(i, k) + (h(i + 1, k) - h(i, k)) * sx
+    b = h(i, k + 1) + (h(i + 1, k + 1) - h(i, k + 1)) * sx
+    return a + (b - a) * sz
+
+
+# Fels neben dem Weg: bergseitig mindestens 1 Stein hoeher als der Weg (Wand), talseitig hoechstens auf
+# Weghoehe (der Weg ist in die Flanke geschnitten). Die Gipfeltreppe liegt auf dem Hang.
+def natural(c):
+    """Fels innerhalb des aeusseren Umlaufs: Pyramide, mindestens auf Sockelhoehe"""
+    p = (c[0] + 0.5, c[1] + 0.5)
+    hm = round(mountain_f(p), 6)
+    tier = 9 + (vnoise(p[0], p[1], 2.5, 6) - 0.5) * 1.4                # niedriger Sockel, Pyramide dominiert
+    h = int(math.floor(max(hm, tier) + 0.5))
+    if crack_d(p) < 0.5: h -= 1                        # Risse als Kerben
+    return min(APEX_H, h)
+
+
+REQ, CAP = defaultdict(int), {}
+for seg, (co, ci), hp in STATIONS:
+    if seg == "G": continue
+    out = (co[0] - ci[0], co[1] - ci[1])                  # talseitige Richtung
+    for q in (co, ci):
+        for a, b in N8:
+            n = (q[0] + a, q[1] + b)
+            if n not in MREGION or n in WAY: continue
+            side = a * out[0] + b * out[1]
+            if side == 0: side = -1 if mountain_f((n[0] + 0.5, n[1] + 0.5)) > hp / 3 + 0.5 else 1
+            if side < 0:
+                if a == 0 or b == 0: REQ[n] = max(REQ[n], hp // 3 + 1)
+            else: CAP[n] = min(CAP.get(n, 99), hp // 3)
+        for k in (2, 3):                                    # bergseitig eine Schulter statt einer Rinne
+            n = (q[0] - k * out[0], q[1] - k * out[1])
+            if n in MREGION and n not in WAY: REQ[n] = max(REQ[n], hp // 3 + 1)
 HF, MAT = {}, {}
 for c in GRID:
     if c in RESERVED: continue
@@ -301,20 +357,29 @@ for c in GRID:
     h, m = 0, None
     if c in PLAT:
         h, m = PLAT_H, "podest"
-        if c in MREGION:
-            hm = mountain_f(p)
-            if crack_d(p) < 0.5: hm -= 1.0                     # Risse als Kerben
-            if hm >= PLAT_H + 0.5:
-                h, m = max(PLAT_H, int(round(hm))), "berg"
+        if c in WAY: h, m = WAY[c][1] // 3, "weg"
+        elif c in MREGION:
+            if c in INSIDE: h = min(max(REQ[c], natural(c)), CAP.get(c, 99))   # talseitig hat Vorrang
+            else: h = CAP.get(c, PLAT_H + 1) - 1 - (vnoise(p[0], p[1], 2.0, 4) > 0.6)   # Fuss aussen, unruhig
+            h, m = (h, "berg") if h > PLAT_H else (PLAT_H, "podest")
     elif c in RUNWAY: h, m = RUNWAY_H, "laufsteg"
-    elif c in RAMP: h, m = (3 if c[0] == -12 else 4), "rampe"
+    elif c in RAMP: h, m = RUNWAY_H + 1, "rampe"
     elif c in STAIR: h, m = 1, "laufsteg"
     else:
         hs = stage_f(p)
         if hs > 0.5: h, m = int(round(hs)), "fels"
     if h: HF[c], MAT[c] = h, m
+# Mulden im Fels schliessen (Zelle tiefer als alle 4 Nachbarn), damit hinter Wegkanten keine Loecher entstehen
+for _ in range(4):
+    for c in sorted(INSIDE):
+        if MAT.get(c) != "berg": continue
+        nb = [HF.get((c[0] + a, c[1] + b), 0) for a, b in DIRS]
+        if min(nb) > HF[c]: HF[c] = min(nb)
 # Gipfelplattform 2x2
 for c in SUMMIT: HF[c], MAT[c] = APEX_H, "berg"
+# Rampe: die Lower Stage beginnt direkt dahinter auf voller Hoehe
+RAMP_TOP = [(-15, z) for z in range(-2, 2)]
+for c in RAMP_TOP: HF[c], MAT[c] = STAGE_H, "fels"
 GMAX = max(HF.values())
 S = [{c for c, h in HF.items() if h > g} for g in range(GMAX + 1)]
 
@@ -350,23 +415,13 @@ LIP_OUT = {o for _, o, _ in LIPS}
 def grad_dirs(c):
     """Richtungen nach Gefaelle sortiert (staerkstes Gefaelle zuerst)"""
     p = (c[0] + 0.5, c[1] + 0.5)
-    f = mountain_f if MAT.get(c) in ("berg", "podest") else stage_f
+    f = mountain_f if MAT.get(c) in ("berg", "podest", "weg") else stage_f
     g = [(f((p[0] + d[0] * 0.7, p[1] + d[1] * 0.7)) - f(p), d) for d in DIRS]
     g.sort()
     return [d for _, d in g]
 
 
 # ---------------- Rock-Farben ----------------
-def vnoise(x, z, sc=3.0, seed=0):
-    """glatte Werte-Rauschfunktion 0..1"""
-    def h(i, k): return (math.sin(i * 127.1 + k * 311.7 + seed * 74.7) * 43758.5453) % 1.0
-    x, z = x / sc, z / sc; i, k = math.floor(x), math.floor(z); fx, fz = x - i, z - k
-    sx, sz = fx * fx * (3 - 2 * fx), fz * fz * (3 - 2 * fz)
-    a = h(i, k) + (h(i + 1, k) - h(i, k)) * sx
-    b = h(i, k + 1) + (h(i + 1, k + 1) - h(i, k + 1)) * sx
-    return a + (b - a) * sz
-
-
 SUN = (-0.75, 0.8, 0.3)   # Licht von vorne (-x) oben, etwas von links
 def rock_color(c, top=False, g=None):
     if MAT.get(c) == "berg" and crack_d((c[0] + 0.5, c[1] + 0.5)) < 0.75: return DBG
@@ -376,12 +431,12 @@ def rock_color(c, top=False, g=None):
         if MAT.get(c) == "fels": return WHITE if v > 0.62 else LBG
         return LBG if v > 0.68 else WHITE
     p = (c[0] + 0.5, c[1] + 0.5)
-    f = mountain_f if MAT.get(c) == "berg" else stage_f
+    f = mountain_f if MAT.get(c) in ("berg", "weg") else stage_f
     gx = f((p[0] + 0.5, p[1])) - f((p[0] - 0.5, p[1])); gz = f((p[0], p[1] + 0.5)) - f((p[0], p[1] - 0.5))
     n = (-gx, 1.0, -gz); L = math.sqrt(sum(v * v for v in n))
     shade = sum(a * b for a, b in zip(n, SUN)) / L
     shade -= 0.3 * (vnoise(c[0] + 0.5, c[1] + 0.5, 2.5, 3) > 0.72)
-    if g is not None and MAT.get(c) == "berg":
+    if g is not None and MAT.get(c) in ("berg", "weg"):
         shade += 0.35 * (g / APEX_H - 0.45)          # Verlauf: Spitze im Licht, Fuss im Schatten
         if shade < 0.12: return DBG
     return WHITE if shade > 0.55 else LBG
@@ -390,7 +445,7 @@ def rock_color(c, top=False, g=None):
 STAGE_CRACKS = [[(-28.0, -3.0), (-24.0, -1.0), (-21.0, 2.5), (-17.0, 3.0)],
                 [(-24.0, -1.0), (-23.0, -5.5)], [(-19.0, -6.0), (-16.5, -2.0)]]
 ROCK = ("berg", "fels")
-SLOPE_OK = ("berg", "fels", "rampe")
+SLOPE_OK = ("berg", "fels")
 
 SNOT_LINKS = []           # (Anbauteil, Halter) - seitliche Verbindungen, die der Check als Verbindung wertet
 # ---------------- Schale, Decks und Stuetzen ----------------
@@ -416,7 +471,7 @@ for g in range(GMAX + 1):
     Sg = S[g]; Sa = S[g + 1] if g + 1 <= GMAX else set()
     dist = chebyshev_dist(Sg)
     exposed = Sg - Sa
-    deck[g] = {c for c in exposed if dist[c] > T_SHELL + 1 and MAT[c] != "laufsteg"}
+    deck[g] = {c for c in exposed if dist[c] > T_SHELL + 1 and MAT[c] not in ("laufsteg", "weg")}
     solid[g] = {c for c in Sg if dist[c] <= T_SHELL or c in exposed} - deck[g]
     for c in deck[g]:
         if c[0] % 4 == 0 and c[1] % 4 == 0:
@@ -432,6 +487,15 @@ STEEP_PART = {2: "60481", 3: "4460b"}                    # 65 / 75 Grad, Hoehe 2
 replaced = set()     # (Zelle, Lage) - Stein durch Slope ersetzt
 covered = set()      # (Zelle, Lage) - von Slope-Schraege belegt
 SLOPES = []          # (Teil, Zelle, Richtung, Lage unten, Hoehe, Zellen)
+# Rampe Laufsteg -> Lower Stage (wie in der Ansichtszeichnung): zwei 18-Grad-Slopes 4x1 hintereinander
+# ergeben eine durchgehende, gleichmaessige Steigung ueber 6 Noppen
+RAMP_SLOPES = set()
+for z in range(-2, 2):
+    for c, g in (((-12, z), RUNWAY_H), ((-15, z), RUNWAY_H + 1)):
+        cells = [c] + [(c[0] + i, z) for i in (1, 2, 3)]
+        SLOPES.append(("60477", c, (1, 0), g, 1, cells)); RAMP_SLOPES.add(c)
+        replaced.add((c, g))
+        for q in cells[1:]: covered.add((q, g))
 for (c, o, d) in LIPS:                         # umgedrehte Slopes unter den Ueberhaengen
     replaced.add((c, _gl - 1)); covered.add((o, _gl - 1))
 for g in range(0, GMAX + 1):
@@ -445,6 +509,7 @@ for g in range(0, GMAX + 1):
             if MAT.get(n) not in SLOPE_OK + ("podest", "laufsteg", None): continue
             run, q = [], n
             while q in below and q not in S[g] and (q, g) not in covered and len(run) < 3 and q not in RESERVED \
+                    and MAT.get(q) != "weg" \
                     and XMIN <= q[0] <= XMAX and ZMIN <= q[1] <= ZMAX:
                 run.append(q); q = (q[0] + d[0], q[1] + d[1])
             if not run: continue
@@ -473,13 +538,20 @@ def body_color(c, g):
         vis = side_visible(c, g) or c not in (S[g + 1] if g + 1 <= GMAX else set())
         return rock_color(c, g=g) if vis else BLACK
     if m == "rampe": return BLACK
+    if m == "weg":
+        # Felswand unter dem Wendelweg: senkrechte Riefen wie auf den Fotos. Der Farbton haengt nur von der
+        # Position entlang der Wand ab (nicht von der Lage), unten dunkler (Schatten am Fuss).
+        if not side_visible(c, g): return BLACK
+        u = (math.sin((c[0] * 3 + c[1] * 5) * 12.9898) * 43758.5453) % 1.0
+        base = LBG if u < 0.5 else WHITE if u < 0.85 else DBG
+        return DBG if g < PLAT_H + 1 and base != WHITE else base
     # Podest / Laufsteg: schwarz, sichtbare Fugen dunkelgrau (Paneele)
     return BLACK
 
 
 def sub_of(c):
     return {"podest": "02_podest", "berg": "03_berg", "laufsteg": "04_laufsteg", "rampe": "04_laufsteg",
-            "fels": "05_lower_stage"}[MAT[c]]
+            "fels": "05_lower_stage", "weg": "03_berg"}[MAT[c]]
 
 
 # Front-Fills: in der obersten Podestlage vorne Steine 1x2 mit Seitennoppen, darauf Gitter-Fliesen (SNOT)
@@ -520,7 +592,7 @@ for (c, o, d) in LIPS:
              studs=True, studcells={c, o}))
 for (name, c, d, g, h, cells) in SLOPES:
     y = -BH * (g + h)
-    col = rock_color(c, g=g) if MAT[c] in ROCK else BLACK
+    col = DBG if c in RAMP_SLOPES else rock_color(c, g=g) if MAT[c] in ROCK else BLACK
     add(Part(sub_of(c), name, col, ctr(c[0]), y, ctr(c[1]), ROT_OUT[d], cells, y, y + BH * h,
              studs=True, studcells={c}))
 
@@ -562,6 +634,7 @@ for g in range(GMAX + 1):
             edge = any((c[0] + a, c[1] + b) not in S[g] for a, b in DIRS)
             caps[(g, sub_of(c))][c] = DBG if edge else BLACK
         elif m == "laufsteg": PLANKS[g].add(c)
+        elif m == "weg": continue                              # Wendelweg: eigene Oberflaeche (unten)
         else: caps[(g, sub_of(c))][c] = DBG
 for (g, sb), cc in caps.items():
     plates(sb, cc, -BH * (g + 1) - PH, g % 2, table=TILE, studs=False)
@@ -585,6 +658,49 @@ for g, cells in PLANKS.items():
                 seg = run[pos:pos + n]; pos += n
                 cx = sum(ctr(x) for x in seg) / n
                 add(Part("04_laufsteg", TILE_LEN[n], DBG, cx, y, ctr(z), 0, {(x, z) for x in seg}, y, y + PH, studs=False))
+
+# Wendelweg-Oberflaeche: Stationen gleicher Hoehe bilden einen Absatz. Jede Stufe ist 1 Platte hoch
+# (dunkelgraue Platten als Setzstufe, weisse Fliesen als Trittflaeche - so liest man die Stufen auch
+# aus der Entfernung). Im Aussenrand laengerer Absaetze sitzen Bodenleuchten (Gitter-Fliese 1x2).
+TILE_LEN[3] = "63864"
+WAY_GROUPS = []
+for seg, cells, hp in STATIONS:
+    if WAY_GROUPS and WAY_GROUPS[-1][0] == seg and WAY_GROUPS[-1][2] == hp: WAY_GROUPS[-1][1].append(cells)
+    else: WAY_GROUPS.append([seg, [cells], hp])
+N_LIGHTS = 0
+
+
+def row_tiles(sub, row, y, color, lengths=(4, 3, 2, 1)):
+    """1 Noppe breite Fliesen entlang einer Zellreihe (Zellen in Wegrichtung sortiert)"""
+    pos = 0
+    while pos < len(row):
+        n = next(L for L in lengths if L <= len(row) - pos)
+        seg = row[pos:pos + n]; pos += n
+        along_x = len({q[0] for q in seg}) == n
+        cx = sum(ctr(q[0]) for q in seg) / n; cz = sum(ctr(q[1]) for q in seg) / n
+        add(Part(sub, TILE_LEN[n], color, cx, y, cz, 0 if along_x else 90, set(seg), y, y + PH, studs=False))
+
+
+for seg, sts, hp in WAY_GROUPS:
+    base = -BH * (hp // 3); k = hp % 3
+    allc = {c for st in sts for c in st}
+    for i in range(k):
+        plates("06_wendelweg", {c: DBG for c in allc}, base - (i + 1) * PH, i % 2)
+    y = base - (k + 1) * PH
+    for r in (0, 1):
+        row = [st[r] for st in sts]
+        if r == 0 and seg != "G" and len(row) >= 4:           # Bodenleuchte mittig im Aussenrand
+            m = len(row) // 2 - 1
+            lamp = row[m:m + 2]
+            along_x = lamp[0][0] != lamp[1][0]
+            add(Part("06_wendelweg", "2412b", DBG, sum(ctr(q[0]) for q in lamp) / 2, y, sum(ctr(q[1]) for q in lamp) / 2,
+                     0 if along_x else 90, set(lamp), y, y + PH, studs=False))
+            N_LIGHTS += 1
+            row_tiles("06_wendelweg", row[:m], y, WHITE); row_tiles("06_wendelweg", row[m + 2:], y, WHITE)
+        else:
+            row_tiles("06_wendelweg", row, y, WHITE)
+print("Wendelweg:", len(STATIONS), "Stationen,", len(WAY_GROUPS), "Absaetze,", N_LIGHTS, "Bodenleuchten,",
+      "Hoehe", STATIONS[0][2] / 3, "->", STATIONS[-1][2] / 3, "Steine")
 
 # ---------------- Runder Screen hinter dem Berg (zeigt zum Publikum, -x) ----------------
 SCR_X = (27, 28, 29)                         # vorne .. hinten; hinten schwarze Rueckwand
@@ -803,6 +919,7 @@ for sx in (-1, 1):
 
 TITLES = {"01_baseplates": "Grundplatten (2x 32x32)", "02_podest": "Buehnenpodest", "03_berg": "Mount Yeezus",
           "04_laufsteg": "Laufsteg mit Rampe", "05_lower_stage": "Lower Stage (Felsplateau)",
+          "06_wendelweg": "Wendelweg (Spiralpfad zum Gipfel)",
           "07_screen": "Runder Screen (hinter dem Berg)", "08_traverse": "Ecktuerme und Traversen-Rechteck", "09_line_arrays": "Line-Arrays",
           "10_licht": "Moving Heads"}
 
