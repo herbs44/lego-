@@ -216,9 +216,10 @@ def bond_layer(sub, cells, lower, ytop, color, max_len=6):
 # =====================================================================================
 #                                  YEEZUS STAGE
 # =====================================================================================
-# Koordinaten: Zellen x in [-32, 31], z in [-16, 15] (2 Baseplates 32x32 nebeneinander).
-# Vorne = +z (Publikum). Von vorne gesehen liegt +x LINKS: der Berg steht bei +x (links, wie in
-# den Ansichtszeichnungen), die Lower Stage bei -x (rechts).
+# Koordinaten: Zellen x in [-32, 31], z in [-16, 15] (2 Baseplates 32x32 hintereinander).
+# PUBLIKUMSSICHT (wie auf den Konzertfotos) = Blick von -x in Richtung +x: vorne die Lower Stage im
+# Publikum, der Laufsteg fuehrt zum Berg, dahinter mittig der runde Screen. Von vorne gesehen liegt
+# +z links. Die Ansichtszeichnung (Elevation) ist die Seitenansicht von +z.
 COLORS.update({212: ("Bright Light Blue", 105), 25: ("Orange", 4)})
 XMIN, XMAX, ZMIN, ZMAX = -32, 31, -16, 15
 GRID = [(i, k) for i in range(XMIN, XMAX + 1) for k in range(ZMIN, ZMAX + 1)]
@@ -227,15 +228,17 @@ ROT_OUT = {(1, 0): 90, (-1, 0): 270, (0, 1): 180, (0, -1): 0}    # Slope-Gefaell
 rng = random.Random(11)
 
 # ---------------- Hoehenfeld (in Steinhoehen) ----------------
-PLAT = {(i, k) for i in range(8, 30) for k in range(-10, 11)}          # Buehnenpodest unter dem Berg
+PLAT = {(i, k) for i in range(3, 27) for k in range(-14, 14)}          # Buehnenpodest unter dem Berg
 PLAT_H = 3
-RUNWAY = {(i, k) for i in range(-11, 8) for k in range(-2, 3)}          # Laufsteg
+MREGION = {(i, k) for i in range(4, 26) for k in range(-13, 13)}       # Bereich des Bergs auf dem Podest
+RUNWAY = {(i, k) for i in range(-11, 3) for k in range(-2, 3)}          # Laufsteg
 RUNWAY_H = 2
 RAMP = {(i, k) for i in range(-13, -11) for k in range(-2, 3)}          # Rampe zur Lower Stage
-STAIR = {(i, 3) for i in range(-3, 0)}                                  # Treppenstufe vorne am Laufsteg
+STAIR = {(i, 3) for i in range(-3, 0)}                                  # Treppenstufe seitlich am Laufsteg
 STAGE_C, STAGE_R = (-22.0, 0.0), 8.6                                    # Lower Stage (Felsplateau)
 STAGE_H = 4
-APEX = (17.0, -1.0); APEX_H = 19
+APEX = (14.0, 0.0); APEX_H = 19
+SUMMIT = {(13, -1), (14, -1), (13, 0), (14, 0)}                        # Gipfelplattform 2x2
 
 
 def planes_height(p, apex, h0, faces):
@@ -246,14 +249,16 @@ def planes_height(p, apex, h0, faces):
     return h0 - max(0.0, m)
 
 
-# Berg: Spitze (Pyramide) + drei Felsmassen als Unterbau (Simse fuer den Chor)
-PEAK = dict(apex=APEX, h0=APEX_H + 0.4, faces=[(78, 1.30), (168, 1.05), (262, 1.35), (352, 1.15), (215, 1.2)])
-MASSES = [dict(apex=(20.0, 1.5), h0=12.0, cap=9.0, faces=[(95, 2.3), (185, 1.5), (272, 2.0), (5, 1.9), (140, 1.8)]),
-          dict(apex=(11.5, 3.0), h0=8.5, cap=6.0, faces=[(90, 2.2), (180, 2.6), (270, 1.6), (0, 1.2)]),
-          dict(apex=(25.0, -5.0), h0=11.0, cap=8.0, faces=[(80, 1.7), (175, 1.4), (265, 2.2), (355, 2.4)])]
-CRACKS = [[(17.0, -1.0), (17.6, 3.0), (16.4, 6.0), (17.2, 9.5)],          # Riss vorne durch die Spitze
-          [(20.5, 3.5), (23.0, 6.5), (22.2, 9.8)],
-          [(13.0, 2.5), (11.0, 6.0)]]
+# Berg: Pyramide um 45 Grad gedreht (Grat zeigt zum Publikum, wie auf den Fotos) + breite untere Stufe
+# mit Sims vorne (Chor) + zwei asymmetrische Felsmassen seitlich
+PEAK = dict(apex=APEX, h0=APEX_H + 0.5, faces=[(45, 1.55), (135, 1.55), (225, 1.55), (315, 1.55)])
+MASSES = [dict(apex=(8.5, 0.0), h0=11.5, cap=7.5, faces=[(180, 2.1), (90, 0.55), (270, 0.55), (0, 0.9)]),
+          dict(apex=(15.0, -9.0), h0=9.5, cap=6.0, faces=[(270, 1.5), (180, 1.3), (0, 1.0), (90, 0.9)]),
+          dict(apex=(18.0, 9.0), h0=10.5, cap=7.0, faces=[(90, 1.4), (0, 1.1), (180, 1.2), (270, 0.9)])]
+CRACKS = [[(14.0, -0.5), (11.0, -0.5), (8.0, -0.2), (4.0, -0.6)],       # Grat-Linie vorne, von der Spitze nach unten
+          [(12.0, 3.5), (9.5, 7.0), (7.0, 10.5)],
+          [(12.5, -4.0), (10.0, -7.5), (8.5, -11.0)],
+          [(17.0, 5.5), (20.0, 9.0)], [(18.0, -5.0), (21.0, -9.5)]]
 
 
 def seg_dist(p, a, b):
@@ -280,13 +285,12 @@ def stage_f(p):
     x, z = p[0] - STAGE_C[0], p[1] - STAGE_C[1]
     a = math.atan2(z, x)
     r = STAGE_R * (1 + 0.10 * math.sin(3 * a + 0.7) + 0.06 * math.sin(7 * a + 2.1) + 0.04 * math.sin(11 * a))
-    r_x = r * 1.12                                             # etwas laenger als breit
-    d = math.hypot(x / 1.12, z) * 1.12 / (r_x / r) if r else 0
     edge = r - math.hypot(x, z * 1.08)
     return STAGE_H * max(0.0, min(1.0, 0.25 + edge / 2.2))
 
 
-TOWERS = [(31, -1), (31, 1), (-31, -1), (-31, 1)]   # je 2 Gittertraeger nebeneinander (Tiefe der Traverse)
+# Ecktuerme: vorne je 1 Gittertraeger (freie Sicht), hinten hinter dem Screen je 2 nebeneinander
+TOWERS = [(-31, -15), (-31, 15)] + [(31, Z) for Z in (-15, -13, 13, 15)]   # vorne 1, hinten 2 Traeger je Ecke
 RESERVED = {(X + a, Z + b) for X, Z in TOWERS for a in (-1, 0) for b in (-1, 0)}
 HF, MAT = {}, {}
 for c in GRID:
@@ -295,7 +299,7 @@ for c in GRID:
     h, m = 0, None
     if c in PLAT:
         h, m = PLAT_H, "podest"
-        if 9 <= c[0] <= 28 and -9 <= c[1] <= 9:
+        if c in MREGION:
             hm = mountain_f(p)
             if crack_d(p) < 0.5: hm -= 1.0                     # Risse als Kerben
             if hm >= PLAT_H + 0.5:
@@ -308,7 +312,7 @@ for c in GRID:
         if hs > 0.5: h, m = int(round(hs)), "fels"
     if h: HF[c], MAT[c] = h, m
 # Gipfelplattform 2x2
-for c in ((16, -2), (17, -2), (16, -1), (17, -1)): HF[c], MAT[c] = APEX_H, "berg"
+for c in SUMMIT: HF[c], MAT[c] = APEX_H, "berg"
 GMAX = max(HF.values())
 S = [{c for c, h in HF.items() if h > g} for g in range(GMAX + 1)]
 
@@ -333,7 +337,7 @@ def vnoise(x, z, sc=3.0, seed=0):
     return a + (b - a) * sz
 
 
-SUN = (0.35, 0.8, 0.9)   # Licht von vorne-oben (etwas von links)
+SUN = (-0.75, 0.8, 0.3)   # Licht von vorne (-x) oben, etwas von links
 def rock_color(c, top=False):
     if MAT.get(c) == "berg" and crack_d((c[0] + 0.5, c[1] + 0.5)) < 0.75: return DBG
     if MAT.get(c) == "fels" and crack_d((c[0] + 0.5, c[1] + 0.5), STAGE_CRACKS) < 0.6: return DBG
@@ -468,7 +472,6 @@ for (name, c, d, g, h, cells) in SLOPES:
 
 # Abdeckung aller noch offenen Oberseiten: Cheese-Slopes an Felskanten, sonst Fliesen
 caps = defaultdict(dict)
-SUMMIT = {(16, -2), (17, -2), (16, -1), (17, -1)}
 for g in range(GMAX + 1):
     Sa = S[g + 1] if g + 1 <= GMAX else set()
     y = -BH * (g + 1)
@@ -491,168 +494,177 @@ for g in range(GMAX + 1):
 for (g, sb), cc in caps.items():
     plates(sb, cc, -BH * (g + 1) - PH, g % 2, table=TILE, studs=False)
 
-# ---------------- Runder Screen hinter dem Berg ----------------
-DISC_C, DISC_R, DISC_ROW0 = (18.5, 17.0), 13.0, 6
-DISC_Z = [-16, -15, -14, -13]
+# ---------------- Runder Screen hinter dem Berg (zeigt zum Publikum, -x) ----------------
+SCR_X = (27, 28, 29)                         # vorne .. hinten; hinten schwarze Rueckwand
+DISC_ZC, DISC_RZ = 0.0, 14.0                 # Mitte zwischen z=-1 und z=0, Radius 14 Noppen
+DISC_RC, DISC_RY = 20.0, 10.3                # Mitte (Steinlagen) und Radius in Lagen
 
 
-def disc_cells(r):
-    dy = (r + 0.5 - DISC_C[1]) * 1.2
-    if abs(dy) > DISC_R: return []
-    hw = math.sqrt(DISC_R ** 2 - dy * dy)
-    return [x for x in range(XMIN, XMAX + 1) if abs(x + 0.5 - DISC_C[0]) <= hw]
+def disc_row(r):
+    v = (r + 0.5 - DISC_RC) / DISC_RY
+    if abs(v) > 1: return []
+    hw = math.sqrt(1 - v * v) * DISC_RZ
+    return [z for z in range(ZMIN, ZMAX + 1) if abs(z + 0.5 - DISC_ZC) <= hw]
 
 
-def sky(x, r):
-    """Himmel wie auf dem Foto: tiefes Blau oben, grosse weisse Wolkenbaenke, gleissendes Licht
-    unten rechts (von vorne gesehen rechts = kleines x)"""
-    t = (r + 0.5 - (DISC_C[1] - DISC_R / 1.2)) / (2 * DISC_R / 1.2)       # 0 unten .. 1 oben
-    u = x + 0.5 - DISC_C[0]                                                 # >0 = links von vorne
-    glow = math.hypot((u + 7.5) / 1.3, (t - 0.28) * 24)
-    if glow < 3.2: return WHITE
-    cloud = (math.sin(0.42 * u + 0.9 * t * 6 + 1.1) + 0.7 * math.sin(0.8 * u - 1.7 * t * 6 + 0.3)
-             + 0.6 * math.sin(0.23 * u + 2.9) - 1.4 * t + 0.5) / 2.2
-    if glow < 5.5 and cloud > -0.3: return WHITE
-    if cloud > 0.38: return WHITE
-    if cloud > 0.22: return LBG if t > 0.45 else 212
-    if t > 0.72: return BLUE
-    if t > 0.4: return MBLUE
-    return 212
+def sky(z, r):
+    """dunkler Sturmhimmel wie auf den Fotos: heller Sichelrand links (von vorne: +z = links),
+    Wolkenband von oben rechts zur Mitte, sonst schwarz/dunkelgrau"""
+    u = (z + 0.5 - DISC_ZC) / DISC_RZ; v = (r + 0.5 - DISC_RC) / DISC_RY
+    rho = math.hypot(u, v)
+    ang = math.degrees(math.atan2(-v, u))                   # 0 = links, +90 = unten (von vorne)
+    if rho > 0.86 and -45 < ang < 70: return WHITE           # Sichel
+    if rho > 0.77 and -25 < ang < 50: return LBG
+    band = 1 - abs((v - 0.3) - 0.45 * (-u)) / 0.5
+    n = vnoise(z + 0.5, (r + 0.5) * 1.4, 4.0, 5) * 0.65 + vnoise(z + 0.5, (r + 0.5) * 1.4, 2.0, 6) * 0.35
+    c = 0.6 * n + 0.45 * max(0.0, band)
+    if c > 0.80: return WHITE
+    if c > 0.66: return LBG
+    if c > 0.52: return DBG
+    return BLACK
 
 
-DISC_ROWS = {}
-r = DISC_ROW0
-while True:
-    xs = disc_cells(r)
-    if not xs and r > DISC_C[1]: break
-    if xs: DISC_ROWS[r] = xs
-    r += 1
-PED_X = range(12, 26)
-for g in range(DISC_ROW0):                                     # Sockel
-    bricks("07_screen", {(x, z): BLACK for x in PED_X for z in DISC_Z}, g)
+DISC_ROWS = {r: disc_row(r) for r in range(0, 40) if disc_row(r)}
+R0 = min(DISC_ROWS)
 SIZES = [1, 2, 3, 4, 6, 8]
 
 
-def partition(L, left_need, right_need, prev_joints):
+def partition(L, left_need, right_need, prev_joints, colors=None):
     """Lauf der Laenge L in Steinlaengen zerlegen: Endsteine reichen auf gestuetzte Zellen,
     Fugen moeglichst versetzt zur Lage darunter (Verband)"""
     INF = 10 ** 9
     best = [INF] * (L + 1); back = [None] * (L + 1); best[0] = 0
     for pos in range(L):
         if best[pos] == INF: continue
-        for s in SIZES:
-            e = pos + s
+        for s_ in SIZES:
+            e = pos + s_
             if e > L: continue
-            if pos == 0 and s < left_need: continue
-            if e == L and s < right_need: continue
+            if pos == 0 and s_ < left_need: continue
+            if e == L and s_ < right_need: continue
             cost = best[pos] + 1 + (3 if e < L and e in prev_joints else 0)
+            if colors:
+                seg = colors[pos:e]; cost += 2.5 * (len(seg) - Counter(seg).most_common(1)[0][1])
             if cost < best[e]: best[e] = cost; back[e] = pos
     out, e = [], L
     while e > 0: out.append(e - back[e]); e = back[e]
     return out[::-1]
 
 
-prev = {band: (set(PED_X), set()) for band in ("a", "b", "c", "d", "e")}
-prev_cells = set(PED_X); prev_j = defaultdict(set)
-for r, xs in sorted(DISC_ROWS.items()):
-    # hinten eine schwarze Rueckwand (1 Noppe), davor 3 Noppen Bild; Fugen im Verband
-    bands = [(-16,), (-15, -14), (-13,)] if r % 2 == 0 else [(-16,), (-15,), (-14, -13)]
+PED_Z = DISC_ROWS[R0]
+for g in range(R0):                                            # Sockel (hinter dem Berg verborgen)
+    bricks("07_screen", {(x, z): BLACK for x in SCR_X for z in PED_Z}, g)
+prev_cells = set(PED_Z); prev_j = defaultdict(set)
+for r, zs in sorted(DISC_ROWS.items()):
+    bands = [(29,), (28, 27)] if r % 2 == 0 else [(29, 28), (27,)]
     joints_here = set()
     for band in bands:
-        run = list(xs); sup = [x for x in run if x in prev_cells]
+        run = list(zs); sup = [z for z in run if z in prev_cells]
         left_need = (sup[0] - run[0] + 1) if sup else 1
         right_need = (run[-1] - sup[-1] + 1) if sup else 1
-        pj = {x - run[0] for x in prev_j[min(band)] | prev_j[max(band)]}
+        pj = {z - run[0] for x in band for z in prev_j[x]}
         pos = 0
-        for s_ in partition(len(run), left_need, right_need, pj):
+        cols = [sky(z, r) for z in run] if 27 in band else None
+        for s_ in partition(len(run), left_need, right_need, pj, cols):
             seg = run[pos:pos + s_]; pos += s_
             joints_here.add(seg[-1] + 1)
-            col = BLACK if -16 in band and len(band) == 1 else Counter(sky(x, r) for x in seg).most_common(1)[0][0]
+            col = Counter(sky(z, r) for z in seg).most_common(1)[0][0] if 27 in band else BLACK
             w = len(band)
-            key = (min(w, s_), max(w, s_))
-            cells = [(x, z) for x in seg for z in band]
+            cells = [(x, z) for x in band for z in seg]
             cx = sum(ctr(q[0]) for q in cells) / len(cells); cz = sum(ctr(q[1]) for q in cells) / len(cells)
-            add(Part("07_screen", BRICK[key], col, cx, -BH * (r + 1), cz, 0 if s_ >= w else 90,
-                     cells, -BH * (r + 1), -BH * r))
-        for z in band: prev_j[z] = {j_ for j_ in joints_here}
-    prev_cells = set(xs)
+            add(Part("07_screen", BRICK[(min(w, s_), max(w, s_))], col, cx, -BH * (r + 1), cz,
+                     90 if s_ > w else 0, cells, -BH * (r + 1), -BH * r))
+        for x in band: prev_j[x] = set(joints_here)
+    prev_cells = set(zs)
+DISC_TOP = max(DISC_ROWS)
 
-# ---------------- Tuerme und Traverse ----------------
+# ---------------- Ecktuerme und Traversen-Rechteck ----------------
 TRUSS_Y = -BH * 3 - 3 * 240 - 2 * PH       # Unterkante Traverse (= Oberkante Tuerme)
-for sx in (-1, 1):
-    # Sockel 2x4 im Verband (2 Steine), darauf je Turm 2 Gittertraeger nebeneinander mit Platte 2x4 dazwischen
-    base = {(X + a, Z + b) for X, Z in TOWERS if (X > 0) == (sx > 0) for a in (-1, 0) for b in (-1, 0)}
+for side in {(1 if X > 0 else -1, 1 if Z > 0 else -1) for X, Z in TOWERS}:
+    grp = [(X, Z) for X, Z in TOWERS if (1 if X > 0 else -1, 1 if Z > 0 else -1) == side]
+    base = {(X + a, Z + b) for X, Z in grp for a in (-1, 0) for b in (-1, 0)}
     for g in range(3):
         pack("08_traverse", {c: BLACK for c in base}, BRICK, -BH * (g + 1), BH, g % 2)
     yy = -BH * 3
     for k in range(3):
         yy -= 240
-        for X, Z in TOWERS:
-            if (X > 0) != (sx > 0): continue
+        for X, Z in grp:
             cells = {(X - 1, Z - 1), (X, Z - 1), (X - 1, Z), (X, Z)}
             add(Part("08_traverse", "95347", LBG, X * LDU, yy, Z * LDU, 0 if X < 0 else 180, cells, yy, yy + 240))
         if k < 2:
             yy -= PH
             plates("08_traverse", {c: LBG for c in base}, yy, 1)
-assert yy == TRUSS_Y + 2 * PH - 2 * PH, (yy, TRUSS_Y)
-TR = {(i, k) for i in range(XMIN, XMAX + 1) for k in range(-2, 2)}   # 4 breit, ueber die ganze Laenge
+assert yy == TRUSS_Y
+RING = {(i, k) for i in range(XMIN, XMAX + 1) for k in (-16, -15, 14, 15)} | \
+       {(i, k) for i in (-32, -31, 29, 30, 31) for k in range(ZMIN, ZMAX + 1)}
+# Verbindung Screen-Oberkante -> hintere Traverse (haelt den Screen oben): Steine + Platten auf der Rueckwand
+TIE = [(29, z) for z in DISC_ROWS[DISC_TOP] if -1 <= z <= 0]
+gap = -BH * (DISC_TOP + 1) - TRUSS_Y
+yy = -BH * (DISC_TOP + 1)
+while gap >= BH:
+    pack("07_screen", {c: BLACK for c in TIE}, BRICK, yy - BH, BH, 0); yy -= BH; gap -= BH
+while gap >= PH:
+    plates("07_screen", {c: BLACK for c in TIE}, yy - PH, 0); yy -= PH; gap -= PH
+assert yy == TRUSS_Y and gap == 0
 y = TRUSS_Y - PH
-t1 = plates("08_traverse", {c: LBG for c in TR}, y, 0)
+t1 = plates("08_traverse", {c: LBG for c in RING}, y, 0)
 for p in t1:
-    if not any(c in {(X - 1, Z - 1), (X, Z - 1), (X - 1, Z), (X, Z)} for (X, Z) in TOWERS for c in p.cells): p.hang = True
-t2, nc = bond_layer("08_traverse", TR, t1, y - PH, LBG)
+    if not (p.cells & (RESERVED | set(TIE))): p.hang = True
+t2, nc = bond_layer("08_traverse", RING, t1, y - PH, LBG)
 assert nc == 1
 y -= PH
-POSTS = {(i, -2 if (i - XMIN) % 6 == 0 else 1) for i in range(XMIN, XMAX + 1, 3)} | \
-        {(i, 1 if (i - XMIN) % 6 == 0 else -2) for i in range(XMIN + 1, XMAX + 1, 3)} | \
-        {(XMIN, 1), (XMAX, -2), (XMAX, 1)}
+POSTS = set()
+for i in range(XMIN, XMAX + 1, 3):
+    POSTS |= {(i, -16 if (i // 3) % 2 == 0 else -15), (i, 15 if (i // 3) % 2 == 0 else 14)}
+for k in range(ZMIN, ZMAX + 1, 3):
+    POSTS |= {(-32 if (k // 3) % 2 == 0 else -31, k), (31 if (k // 3) % 2 == 0 else 29, k)}
+POSTS |= {(XMIN, ZMIN), (XMIN, ZMAX), (XMAX, ZMIN), (XMAX, ZMAX)}
 for L in range(2):
     yt = y - BH * (L + 1)
     for c in POSTS:
         add(Part("08_traverse", "3062b", LBG, ctr(c[0]), yt, ctr(c[1]), 0, {c}, yt, yt + BH))
 y -= 2 * BH
-t3 = plates("08_traverse", {c: LBG for c in TR}, y - PH, 1)
-t4, nc = bond_layer("08_traverse", TR, t3, y - 2 * PH, LBG)
+t3 = plates("08_traverse", {c: LBG for c in RING}, y - PH, 1)
+t4, nc = bond_layer("08_traverse", RING, t3, y - 2 * PH, LBG)
 TRUSS_TOP = y - 2 * PH
 
-# Line-Arrays: 8 Boxen (Stein 2x3 schwarz + Platte 2x3 dunkelgrau), J-Kurve nach vorne
-ARRAYS_X = [27, 23, 11, 7]                 # Gitterpunkt (Mitte 2x2) ueber den Bergflanken
+
 def top_y(cells):
     return min([-BH * HF.get(c, 0) for c in cells] + [0])
-for ax in ARRAYS_X:
-    # so viele Boxen, dass unten mind. 2 Steine Luft zur Bergoberflaeche bleiben
-    J_OFF = [0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 3, 4]
-    while True:
+
+
+# Line-Arrays links und rechts vom Berg (wie PA-Anlagen), unten J-foermig zum Publikum (-x)
+ARRAYS = [(10, -15), (17, -15), (10, 15), (17, 15)]       # Gitterpunkt (Mitte 2x2) unter der Seitentraverse
+for ax, az in ARRAYS:
+    J_OFF = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 3, 4]
+    while True:                                          # Laenge: mind. 2 Steine Luft ueber allem darunter
         yy = TRUSS_Y + PH; ok = True
         for k, off in enumerate(J_OFF):
-            cz = {(ax + a, -1 + off + b) for a in (-1, 0) for b in (0, 1)}
+            cz = {(ax - off + a, az + b) for a in (-1, 0) for b in (-1, 0)}
             yy += BH + (PH if k < len(J_OFF) - 1 else 0)
             if yy > top_y(cz) - 2 * BH: ok = False; break
         if ok: break
-        J_OFF = J_OFF[:3] + J_OFF[4:]            # eine gerade Box weniger, Kurve bleibt
-
+        J_OFF = J_OFF[:3] + J_OFF[4:]
     yy = TRUSS_Y
-    add(Part("09_line_arrays", "3022", DBG, ax * LDU, yy, 0, 0, {(ax - 1, -1), (ax, -1), (ax - 1, 0), (ax, 0)},
-             yy, yy + PH, hang=True))                      # Aufhaengung (Rigging-Rahmen)
+    add(Part("09_line_arrays", "3022", DBG, ax * LDU, yy, az * LDU, 0, {(ax + a, az + b) for a in (-1, 0) for b in (-1, 0)},
+             yy, yy + PH, hang=True))
     yy += PH
     for k, off in enumerate(J_OFF):
-        z0 = -1 + off
-        cells = {(ax + a, z0 + b) for a in (-1, 0) for b in (0, 1)}
-        add(Part("09_line_arrays", "3003", BLACK, ax * LDU, yy, (z0 + 1) * LDU, 0, cells, yy, yy + BH, hang=True))
+        cells = {(ax - off + a, az + b) for a in (-1, 0) for b in (-1, 0)}
+        add(Part("09_line_arrays", "3003", BLACK, (ax - off) * LDU, yy, az * LDU, 0, cells, yy, yy + BH, hang=True))
         yy += BH
         if k < len(J_OFF) - 1:
-            nz = -1 + J_OFF[k + 1]
-            pc = {(ax + a, nz + b) for a in (-1, 0) for b in (0, 1)}
-            add(Part("09_line_arrays", "3022", DBG, ax * LDU, yy, (nz + 1) * LDU, 0, pc, yy, yy + PH, hang=True))
+            no = J_OFF[k + 1]
+            pc = {(ax - no + a, az + b) for a in (-1, 0) for b in (-1, 0)}
+            add(Part("09_line_arrays", "3022", DBG, (ax - no) * LDU, yy, az * LDU, 0, pc, yy, yy + PH, hang=True))
             yy += PH
 
-# Moving Heads ueber der Lower Stage
-HEADS_X = [-29, -25, -21, -17, -13]
-for hx in HEADS_X:
-    cells = {(hx + a, -1 + b) for a in (0, 1) for b in (0, 1)}
+# Moving Heads: an den Seitentraversen ueber der Lower Stage und an der vorderen Traverse
+HEADS = [(x, z) for x in (-28, -22, -16) for z in (-16, 14)] + [(-32, z) for z in (-6, 4)]
+for hx, hz in HEADS:
+    cells = {(hx + a, hz + b) for a in (0, 1) for b in (0, 1)}
     yy = TRUSS_Y
     for name, col, h in (("3022", BLACK, PH), ("3941", BLACK, BH), ("4032a", TCLEAR, PH)):
-        add(Part("10_licht", name, col, (hx + 1) * LDU, yy, 0, 0, cells, yy, yy + h, hang=True))
+        add(Part("10_licht", name, col, (hx + 1) * LDU, yy, (hz + 1) * LDU, 0, cells, yy, yy + h, hang=True))
         yy += h
 
 # Grundplatten
@@ -663,7 +675,7 @@ for sx in (-1, 1):
 SLING_LINKS = []
 TITLES = {"01_baseplates": "Grundplatten (2x 32x32)", "02_podest": "Buehnenpodest", "03_berg": "Mount Yeezus",
           "04_laufsteg": "Laufsteg mit Rampe", "05_lower_stage": "Lower Stage (Felsplateau)",
-          "07_screen": "Runder Screen", "08_traverse": "Tuerme und Traverse", "09_line_arrays": "Line-Arrays",
+          "07_screen": "Runder Screen (hinter dem Berg)", "08_traverse": "Ecktuerme und Traversen-Rechteck", "09_line_arrays": "Line-Arrays",
           "10_licht": "Moving Heads"}
 
 

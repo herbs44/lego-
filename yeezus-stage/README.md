@@ -1,38 +1,47 @@
 # Yeezus Stage – Mount Yeezus (LEGO MOC)
 
 Nachbau der Yeezus-Tour-Bühne auf **zwei Baseplates 32 × 32** (64 × 32 Noppen, ca. 51 × 26 cm):
-Mount Yeezus als zerklüfteter weißer Fels-Berg mit Pyramidenspitze, Simsen und Rissen, Laufsteg mit
-Rampe zur Lower Stage (Felsplateau), runder Screen mit Himmel hinter dem Berg und eine Traverse mit
-Line-Arrays und Moving Heads. Vorlage waren die Ansichtszeichnungen (Elevation) und Konzertfotos.
+Mount Yeezus als zerklüftete weiße Fels-Pyramide mit Simsen und Rissen, dahinter der runde Screen mit
+Sturmhimmel. Ein Laufsteg führt mit Rampe zur Lower Stage (Felsplateau) im Publikum, darüber hängen
+Line-Arrays und Moving Heads an einem Traversen-Rechteck. Vorlage waren die Ansichtszeichnungen
+(Elevation) und die Konzertfotos.
 
 ![Hero](renders/yeezus_hero.png)
 
-| Von vorne | Blick wie auf dem Konzertfoto |
-|---|---|
-| ![Front](renders/yeezus_front.png) | ![Foto-Perspektive](renders/yeezus_foto.png) |
+## Ausrichtung
 
-| Mount Yeezus | Lower Stage | Rückseite |
-|---|---|---|
-| ![Berg](renders/yeezus_berg.png) | ![Lower Stage](renders/yeezus_lower_stage.png) | ![Hinten](renders/yeezus_hinten.png) |
+Das Modell ist auf die **Publikumssicht** der Konzertfotos ausgerichtet:
+
+- **Vorne:** die Lower Stage im Publikum. Der Laufsteg führt zum Berg, direkt dahinter steht mittig der runde Screen.
+- **Screen:** Er zeigt zum Publikum. Die Pyramidenspitze ragt in seine untere Hälfte.
+- **Seitenansicht:** Die Ansichtszeichnung „The Yeezus Tour_Elevation“ ist die Seitenansicht. So gesehen steht der Berg links und die Lower Stage rechts.
+
+| Publikumssicht (wie auf den Fotos) | Seitenansicht (wie die Elevation-Zeichnung) |
+|---|---|
+| ![Front](renders/yeezus_front.png) | ![Seite](renders/yeezus_seite.png) |
+
+| Screen | Mount Yeezus | Lower Stage | Rückseite |
+|---|---|---|---|
+| ![Screen](renders/yeezus_screen.png) | ![Berg](renders/yeezus_berg.png) | ![Lower Stage](renders/yeezus_lower_stage.png) | ![Hinten](renders/yeezus_hinten.png) |
 
 ## Kennzahlen
 
-- **1.593 Teile**, 115 Positionen (Teil × Farbe), keine Minifiguren
-- **Grundfläche** 64 × 32 Noppen (2 Baseplates), **Höhe** ca. 36 cm
-- **Mount Yeezus** 20 Steine hoch, Gipfelplattform 2 × 2
-- Von vorne gesehen steht der Berg links und die Lower Stage rechts, wie in der Zeichnung „The Yeezus Tour_Elevation“
+- **2.004 Teile**, 116 Positionen (Teil × Farbe), keine Minifiguren
+- **Grundfläche** 64 × 32 Noppen (2 Baseplates hintereinander), **Höhe** ca. 36 cm
+- **Mount Yeezus** 20 Steine hoch, Pyramide um 45° gedreht (Grat zum Publikum), Gipfelplattform 2 × 2
+- **Screen** oval, 28 Noppen breit und 20 Lagen hoch, direkt hinter dem Berg
 
 ## Aufbau (Submodelle)
 
 1. **Grundplatten** – 2 × Baseplate 32 × 32 schwarz
-2. **Bühnenpodest** – schwarzer Block 22 × 21 Noppen, 3 Steine hoch, Kante mit dunkelgrauen Fliesen
-3. **Mount Yeezus** – Höhenfeld aus einer Pyramidenspitze und drei Felsmassen (ergibt die Simse für den Chor), Risse als dunkelgraue Kerben
-4. **Laufsteg mit Rampe** – 5 Noppen breit, mit Stufe vorne und Rampe zur Lower Stage
+2. **Bühnenpodest** – schwarzer Block 24 × 28 Noppen, 3 Steine hoch, Kante mit dunkelgrauen Fliesen
+3. **Mount Yeezus** – Pyramide mit Grat nach vorne, davor eine breite untere Stufe mit Sims (Platz für den Chor), seitlich zwei asymmetrische Felsmassen; Risse als dunkelgraue Kerben, vorne eine durchgehende Gratlinie von der Spitze nach unten
+4. **Laufsteg mit Rampe** – 5 Noppen breit, mit Stufe und Rampe zur Lower Stage
 5. **Lower Stage** – Felsplateau mit unregelmäßigem Rand und steilen Felswänden
-6. **Runder Screen** – Ø 26 Noppen, hinten schwarze Rückwand, vorne Himmel mit Wolken und hellem Licht
-7. **Türme und Traverse** – je Seite 2 Gitterträger-Stapel 95347 (3 × 10 Steine), Traverse 64 × 4 Noppen mit Pfosten im Zickzack
-8. **Line-Arrays** – 4 Stränge über den Bergflanken, die unten J-förmig nach vorne auslaufen; ihre Länge passt der Generator an die Bergoberfläche an
-9. **Moving Heads** – 5 Scheinwerfer über der Lower Stage
+6. **Runder Screen** – Wand aus 3 Noppen Tiefe, hinten schwarz. Vorne ein dunkler Sturmhimmel wie auf den Fotos: heller Sichelrand links, Wolkenband oben rechts. Er steht auf einem Sockel hinter dem Berg und ist oben an der hinteren Traverse aufgehängt
+7. **Ecktürme und Traversen-Rechteck** – vorne je 1, hinten (hinter dem Screen) je 2 Gitterträger-Stapel 95347; oben läuft ein Traversen-Rechteck mit Pfosten im Zickzack. Die Mitte bleibt frei, damit die Blickachse nicht zugestellt wird
+8. **Line-Arrays** – 4 Stränge links und rechts neben dem Berg (wie PA-Anlagen), unten J-förmig zum Publikum geneigt; ihre Länge passt der Generator an die Oberfläche darunter an
+9. **Moving Heads** – 8 Scheinwerfer an den Seitentraversen über der Lower Stage und an der vorderen Traverse
 
 ## Wie der Berg entsteht
 
@@ -55,7 +64,7 @@ Line-Arrays und Moving Heads. Vorlage waren die Ansichtszeichnungen (Elevation) 
 
 Der Generator prüft nach jedem Lauf:
 - **0 nicht verbundene Teile:** Alles hängt an den Baseplates.
-- **0 schwebende Teile:** Die 11 Ausnahmen hängen mit Klemmkraft von oben, nämlich Line-Arrays, Moving Heads und Teile der unteren Traversenlage.
+- **0 schwebende Teile:** Die 21 Ausnahmen hängen mit Klemmkraft von oben, nämlich Line-Arrays, Moving Heads und Teile der unteren Traversenlage.
 - **0 Kollisionen.**
 - **Traverse als ein Stück:** Die zwei Plattenlagen verbindet ein Verbund-Algorithmus, und das wird geprüft.
 
@@ -67,7 +76,7 @@ Die Line-Arrays enden mindestens 2 Steine über der Bergoberfläche.
 python3 yeezus-stage/generate_yeezus_stage.py
 ```
 
-Die Parameter für Berg (Flächen, Massen, Risse), Lower Stage, Screen, Traverse und Line-Arrays stehen im Skript.
+Die Parameter für Berg (Flächen, Massen, Risse), Lower Stage, Screen (Größe, Himmel), Traverse und Line-Arrays stehen im Skript.
 
 ## Hinweise
 
@@ -75,3 +84,4 @@ Die Parameter für Berg (Flächen, Massen, Risse), Lower Stage, Screen, Traverse
 - **Lichtkegel:** Die Lichtkegel der Moving Heads (rot/gelb in der Zeichnung) lassen sich nicht sinnvoll aus Steinen bauen.
   Die Scheinwerfer haben trans-klare Linsen. Wie bei der Globe Stage könnten dort echte LEDs sitzen.
 - **Geneigte Traverse:** In der Zeichnung hängt die Traverse schräg über dem Berg. Im Modell ist sie waagerecht, weil geneigte Verbindungen mit Noppen nicht stabil gehen.
+- **Echte Bühne ohne Stützen:** Auf der echten Bühne hing alles unter der Hallendecke. Das Modell braucht die Ecktürme als Stützen. Sie stehen ganz außen, damit die Sicht auf Berg und Screen frei bleibt.
