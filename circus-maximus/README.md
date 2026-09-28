@@ -24,7 +24,7 @@ die PA an einem Traversen-Raster. Das Publikum steht rundherum.
 
 ## Kennzahlen
 
-- **5.925 Teile**, 151 Positionen (Teil × Farbe), keine Minifiguren
+- **5.945 Teile**, 152 Positionen (Teil × Farbe), keine Minifiguren
 - **Maßstab** 1,5-fach gegenüber der ersten Version: **Grundfläche** 96 × 48 Noppen, **Höhe** ca. 46 cm
 - **Weg** 84 Noppen lang und 6 breit, Felsblock 18 Steine hoch
 - **Videoring** Oval 81 × 38 Noppen, 5 Bildlagen, an 20 Seilen
@@ -37,7 +37,12 @@ die PA an einem Traversen-Raster. Das Publikum steht rundherum.
 - **Probenfoto in der Arena**: graue Felswände etwa doppelt mannshoch, runder Steinkopf mit großen Augen am
   Traversen-Raster, viele Scheinwerfer und PA-Hänge
 - **Stadionfoto**: hoher Fels mit eingemeißeltem Gesicht, Travis Scott oben auf dem Gipfel
-- Beschreibungen der Produktion: 360°-Videoring, 13 fliegende Köpfe (2–4 m breit), Felsen mit strukturierter Beschichtung
+- Beschreibungen der Produktion (Rise Fabrication über RapTV, Mix Magazine, Konzertkritiken):
+  - Bühne wie eine „Cartoon-Fiebertraum-Version der Osterinsel": Felsen mit Steingesichtern, versteckte Tunnel, Lifts
+  - über 80 m handgeschnitzte Felsen, 13 CNC-gefräste Köpfe (2–4 m breit) aus Schaum mit Stahlgerüst, per Automation geflogen
+  - in den Augen der Köpfe sitzen **Crowd-Scanning-Laser**, die ins Publikum strahlen
+  - „Flammen schießen spontan aus der Felsbühne", Pyro so stark, dass man die Hitze 60 m entfernt spürt
+  - 360°-Videoring, PA-Hänge über dem Screen, Pyro und Laser von Strictly FX
 
 ## Aufbau (Submodelle)
 
@@ -48,12 +53,14 @@ die PA an einem Traversen-Raster. Das Publikum steht rundherum.
    Stufen an beiden Enden
 4. **Plattform auf dem Block** – Performer-Fläche, Rand hellgrau
 5. **Hoher Felsblock mit Durchgang** – 18 Steine hoch; der Weg führt unter 11 Bögen 1 × 8 × 2 hindurch
-6. **Gesichter (SNOT)** – Augen aus Headlight-Steinen mit runden Fliesen auf der Seitennoppe, Mund aus einer
-   Gitterfliese auf einem Stein mit Seitennoppen; am Block beidseitig, an den Findlingen zur Halle
+6. **Gesichter (SNOT)** – Osterinsel-Steingesichter: Augen aus Headlight-Steinen mit runden Fliesen auf der Seitennoppe,
+   vorspringende Nase aus einem 45°-Slope, Mund aus einer Gitterfliese auf einem Stein mit Seitennoppen; am Block beidseitig,
+   an den Findlingen zur Halle
 7. **Ovaler Videoring** – 2 Noppen dick, Feuerwand als Bild (unten Gelb/Orange, nach oben Rot bis Schwarz), zwei Plattenlagen im Verbund, hängt an 20 dünnen Seilen
 8. **Türme und Traversen-Raster** – 6 Gittertürme (je 4 × 95347), Außenrahmen plus 5 Quertraversen
 9. **Fliegende Köpfe** – 5 Köpfe (einer groß in der Mitte): runder Schädel aus Cheese-Slopes, Glotzaugen aus
-   Headlight + weißer Rundfliese, Nase als 45°-Slope, dunkler Mund
+   Headlight + weißer Rundplatte, Nase als 45°-Slope, dunkler Mund; aus jedem Auge strahlt ein **trans-grüner Laser**
+   (Stange 4L in der Hohlnoppe der Rundplatte, 15° nach unten ins Publikum)
 10. **PA-Hänge** – 8 Stränge an den Längstraversen, Lautsprechergitter per SNOT nach außen
 11. **Moving Heads** – 27 Scheinwerfer an den Quertraversen, Linsen abwechselnd trans-rot, trans-orange, trans-klar
 12. **Pyro-Flammen** – 17 Flammen (85959, trans-orange und trans-gelb) in schwarzen Rundstein-Düsen auf den Felskanten und auf dem Block
@@ -69,7 +76,8 @@ die PA an einem Traversen-Raster. Das Publikum steht rundherum.
 | **Rockwork** | Slopes nach Stufenhöhe, Überhänge auf umgedrehten Slopes, erodierte Kanten, Schattierung nach Lichtrichtung |
 | **Helligkeitsstufen** | Grauer Stein in drei Stufen, schwarzer Weg als Kontrast, weiße Augen der Köpfe als hellster Punkt |
 | **Farbe gezielt als Feuer** | Die Bühne bleibt unbunt, alle Farbe ist „Feuer": Videoring-Verlauf Gelb → Orange → Rot → Dunkelrot, Flammen, rote Uplights und Scheinwerfer – warme Farben nur dort, wo Licht und Pyro sind |
-| **Stange in Hohlnoppe** | Die Flammenteile stecken mit ihrer Stange in der Hohlnoppe eines runden Steins – legale Verbindung, Düse und Flamme in einem |
+| **Stange in Hohlnoppe** | Die Flammenteile stecken mit ihrer Stange in der Hohlnoppe eines runden Steins – legale Verbindung, Düse und Flamme in einem. Genauso sitzen die Laser-Stangen in den Rundplatten-Augen der Köpfe |
+| **Komplementärakzent** | Trans-Grün nur für die Laser – als Gegenfarbe zum roten Feuer springt es sofort ins Auge |
 | **Verbund-Plattenlagen** | Der Videoring bekommt zwei Plattenlagen, die per Verbund-Algorithmus alle Steine zu einem Stück verbinden |
 | **Dünne Aufhängung** | Ring, Köpfe und Scheinwerfer hängen an Säulen aus runden Steinen/Platten – liest sich als Seil |
 | **Verband über Treppenecken** | Der ovale Ring ist 2 Noppen dick, damit die Lagen an den Diagonalen verbunden bleiben |

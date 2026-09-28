@@ -221,7 +221,8 @@ def bond_layer(sub, cells, lower, ytop, color, max_len=6):
 # 360-Grad-Videoring, dazwischen fliegende Koepfe; getragen von einem Traversen-Raster auf 6 Tuermen.
 COLORS.update({36: ("Trans-Red", 17), 57: ("Trans-Orange", 98), 25: ("Orange", 4),
                191: ("Bright Light Orange", 110)})
-TRED, TORANGE, ORANGE, BLORANGE = 36, 57, 25, 191
+TRED, TORANGE, ORANGE, BLORANGE, TGREEN = 36, 57, 25, 191, 34
+COLORS.update({34: ("Trans-Green", 20)})
 # Farbkonzept nach den Fotos: grauer, verwitterter Stein (Dunkelgrau, Hellgrau im Licht, Schwarz in Spalten),
 # schwarzer Buehnenboden, weisse Glotzaugen der Koepfe als hellster Punkt.
 XMIN, XMAX, ZMIN, ZMAX = -48, 47, -24, 23
@@ -450,6 +451,15 @@ for bx, side in BOULDERS:
     g = min(HF[c] for c in cand) - 3
     if g >= DECK + 1 and all(free_face(c, g, d) for c in cand):
         for c in cand: EYES.append((c, g, d, LBG)); replaced.add((c, g))
+# Nasen (Osterinsel-Koepfe): 45-Grad-Slope mittig unter den Augen, kragt 1 Noppe aus der Wand
+NOSES = []
+for i in range(0, len(EYES) - 1, 2):
+    (c1, g, d, _), (c2, _, _, _) = EYES[i], EYES[i + 1]
+    if c1[1] != c2[1] or abs(c1[0] - c2[0]) < 2: continue
+    for nx in sorted({(c1[0] + c2[0]) // 2, (c1[0] + c2[0] + 1) // 2}):
+        c = (nx, c1[1]); n = (c[0] + d[0], c[1] + d[1])
+        if c in S[g - 1] and (c, g - 1) not in replaced and n not in S[g - 1] and n not in HF and n not in RESERVED:
+            NOSES.append((c, g - 1, d)); replaced.add((c, g - 1))
 
 # ---------------- Slopes an Stufenkanten ----------------
 STEP_PART = {1: "3040b", 2: "4286", 3: "60477"}
@@ -617,6 +627,10 @@ for c, g, d, col in EYES:
     tile = add(Part("06_gesichter", "98138", col, tx, y + 10, tz, 0, {o}, y, y + 20, studs=False, hang=True,
                     extra=[f"1 {col} {fmt(tx)} {fmt(y + 10)} {fmt(tz)} {mat_str(rot)} 98138.dat"]))
     SNOT_LINKS.append((tile, hl))
+for c, g, d in NOSES:
+    y = -BH * (g + 1); n = (c[0] + d[0], c[1] + d[1])
+    add(Part("06_gesichter", "3040b", rock_color(c, g=g), ctr(c[0]), y, ctr(c[1]), ROT_OUT[d], [c, n], y, y + BH,
+             studcells={c}))
 for cells, g, d in MOUTHS:
     y = -BH * (g + 1); rot = ROT_OUT[d]
     cx = sum(ctr(c[0]) for c in cells) / 2; cz = sum(ctr(c[1]) for c in cells) / 2
@@ -833,9 +847,17 @@ for hx, hz, s_, fwd, rope in HEADS:
                 hl = add(Part("09_koepfe", "4070", LBG, ctr(c[0]), yy, ctr(c[1]), ROT_OUT[fwd], {c}, yy, yy + BH, hang=True))
                 tx, tz = ctr(c[0]) + fwd[0] * 14, ctr(c[1]) + fwd[1] * 14
                 o = (c[0] + fwd[0], c[1] + fwd[1])
-                t = add(Part("09_koepfe", "98138", WHITE, tx, yy + 10, tz, 0, {o}, yy, yy + 20, studs=False, hang=True,
-                             extra=[f"1 {WHITE} {fmt(tx)} {fmt(yy + 10)} {fmt(tz)} {mat_str(ROT_OUT[fwd])} 98138.dat"]))
+                t = add(Part("09_koepfe", "6141", WHITE, tx, yy + 10, tz, 0, {o}, yy, yy + 20, studs=False, hang=True,
+                             extra=[f"1 {WHITE} {fmt(tx)} {fmt(yy + 10)} {fmt(tz)} {mat_str(ROT_OUT[fwd])} 6141.dat"]))
                 SNOT_LINKS.append((t, hl))
+                # Laser: Stange 4L steckt in der Hohlnoppe der Rundplatte (legal), zeigt 15 Grad nach unten ins Publikum
+                ca, sa = math.cos(math.radians(15)), math.sin(math.radians(15))
+                dx, dz = fwd
+                M = [[-dz, dx * ca, -dx * sa], [0, sa, ca], [dx, dz * ca, -dz * sa]]
+                bx_, bz_ = ctr(c[0]) + dx * 16, ctr(c[1]) + dz * 16
+                add(Part("09_koepfe", "30374", TGREEN, bx_, yy + 10, bz_, 0, set(), yy, yy + 20, studs=False, hang=True,
+                         extra=[f"1 {TGREEN} {fmt(bx_)} {fmt(yy + 10)} {fmt(bz_)} " +
+                                " ".join(fmt(round(M[i][j], 4)) for i in range(3) for j in range(3)) + " 30374.dat"]))
         if nm == "augen":                                        # Nase: 45-Grad-Slope, faellt nach vorne ab
             m = s_ // 2; c0, c1 = cell((0, m)), cell((0, m + 1))
             add(Part("09_koepfe", "3040b", LBG, ctr(c0[0]), yy, ctr(c0[1]), ROT_OUT[fwd], [c0, c1], yy, yy + BH,
@@ -898,7 +920,7 @@ TITLES = {"01_baseplates": "Grundplatten (2x 48x48)", "02_felsen": "Felswaende u
           "07_videoring": "Ovaler Videoring (360 Grad)", "08_traverse": "Tuerme und Traversen-Raster",
           "09_koepfe": "Fliegende Koepfe", "10_pa": "PA-Haenge", "11_licht": "Moving Heads",
           "12_pyro": "Pyro-Flammen", "13_boden": "Bodenlautsprecher, Uplights, Faesser"}
-print("Buehne:", len(MAT), "Zellen | Ueberhaenge", len(LIPS), "| Augen", len(EYES), "Muender", len(MOUTHS),
+print("Buehne:", len(MAT), "Zellen | Ueberhaenge", len(LIPS), "| Augen", len(EYES), "Nasen", len(NOSES), "Muender", len(MOUTHS),
       "| Videoring", len(SCREEN), "Zellen,", len(HANGERS), "Seile | Scheinwerfer", len(LIGHTS),
       "| Pyro", len(PYRO), "| Subs", len(SUBS), "| Uplights", len(UPLIGHTS))
 
