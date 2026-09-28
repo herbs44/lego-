@@ -244,7 +244,7 @@ def vnoise(x, z, sc=3.0, seed=0):
 # ---------------- Hoehenfeld: gewundener Fels-Pfad ----------------
 # Nach den Buehnen-Renderings: schmaler Weg, der sich durch die Halle windet, beidseitig Felswaende und
 # Findlinge mit Gesichtern; an einem Ende ein hoher Felsblock mit eingemeisselten Gesichtern und Durchgang.
-DECK = 6                                   # Laufweg (Steine) - fast auf Hoehe der Felsraender
+DECK = 3                                   # Laufweg (Steine) - Felsraender nur 1-3 Steine hoeher
 PATH = [(-44.0, -3.0), (-19.5, -3.0), (-13.5, 1.5), (-6.0, -3.0), (1.5, 3.75), (9.0, -3.0), (22.5, 0.0), (43.0, 3.0)]
 SX0, SX1 = -42, 41
 BLOCK_X = (-42, -32)                       # hoher Felsblock
@@ -963,7 +963,7 @@ def minifig(sub, cells, surf_y, rot, torso, legs, hair=None, arms=(0, 0)):
     M = RM[rot]
     cx = sum(ctr(c[0]) for c in cells) / 2; cz = sum(ctr(c[1]) for c in cells) / 2
     P = [cx, surf_y - 72, cz]
-    comps = [("3626bp01", YELLOW, (0, -24, 0), I3), ("973", torso, (0, 0, 0), I3),
+    comps = [("3626bp01", BLACK, (0, -24, 0), I3), ("973", torso, (0, 0, 0), I3),
              ("3815c01", legs, (0, 32, 0), I3)]
     for sgn, arm, a in ((-1, "3818", arms[0]), (1, "3819", arms[1])):
         A0 = [[0.985, -sgn * 0.174, 0], [sgn * 0.174, 0.985, 0], [0, 0, 1]]
@@ -972,7 +972,7 @@ def minifig(sub, cells, surf_y, rot, torso, legs, hair=None, arms=(0, 0)):
         R = rx(a)
         rel = mv(R, [hand[i] - piv[i] for i in range(3)])
         comps.append((arm, torso, piv, mm(R, A0)))
-        comps.append(("3820", YELLOW, tuple(piv[i] + rel[i] for i in range(3)), mm(R, H0)))
+        comps.append(("3820", BLACK, tuple(piv[i] + rel[i] for i in range(3)), mm(R, H0)))
     if hair is not None: comps.append(("3901", hair, (0, -24, 0), I3))
     for nm, col, off, Mi in comps:
         w = mv(M, off); pos = [P[0] + w[0], P[1] + w[1], P[2] + w[2]]
@@ -998,9 +998,9 @@ remove_tiles(pcells)
 minifig("15_performer", sorted(pcells), -BH * BLOCK_H, 90, BLACK, BLACK, hair=BLACK, arms=(-160, -160))
 
 # Fans im Innenraum rundherum, Blick zur Buehne; viele mit erhobenen Armen
-TORSOS = [BLACK, BLACK, BLACK, WHITE, RED, DBG, BLUE, 272, GREEN, TAN, YELLOW]
-LEGS = [BLUE, BLACK, BLACK, DBG, TAN, 272]
-HAIRS = [BLACK, 70, 308, TAN, BLACK, None]
+TORSOS = [BLACK]                                                  # alle Figuren komplett schwarz
+LEGS = [BLACK]
+HAIRS = [BLACK, BLACK, None]
 FANS = []
 fan_used = set()
 

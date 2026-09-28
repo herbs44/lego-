@@ -7,69 +7,69 @@ LDraw Part,BrickLink ID,Name,Farbe,Menge
 2431.dat,2431,"Tile  1 x  4 with Groove",Black,73
 2431.dat,2431,"Tile  1 x  4 with Groove",Dark Bluish Gray,1
 2445.dat,2445,"Plate  2 x 12",Dark Bluish Gray,24
-2456.dat,2456,"Brick  2 x  6",Black,57
+2456.dat,2456,"Brick  2 x  6",Black,34
 2456.dat,2456,"Brick  2 x  6",Orange,1
 2456.dat,2456,"Brick  2 x  6",Dark Bluish Gray,10
 2456.dat,2456,"Brick  2 x  6",Dark Red,1
-3001.dat,3001,"Brick  2 x  4",Black,204
+3001.dat,3001,"Brick  2 x  4",Black,146
 3001.dat,3001,"Brick  2 x  4",Red,2
 3001.dat,3001,"Brick  2 x  4",Yellow,1
 3001.dat,3001,"Brick  2 x  4",Orange,2
 3001.dat,3001,"Brick  2 x  4",Dark Bluish Gray,12
 3001.dat,3001,"Brick  2 x  4",Bright Light Orange,2
 3001.dat,3001,"Brick  2 x  4",Dark Red,3
-3002.dat,3002,"Brick  2 x  3",Black,49
+3002.dat,3002,"Brick  2 x  3",Black,40
 3002.dat,3002,"Brick  2 x  3",Red,6
 3002.dat,3002,"Brick  2 x  3",Yellow,3
 3002.dat,3002,"Brick  2 x  3",Orange,3
 3002.dat,3002,"Brick  2 x  3",Dark Bluish Gray,42
 3002.dat,3002,"Brick  2 x  3",Bright Light Orange,4
 3002.dat,3002,"Brick  2 x  3",Dark Red,5
-3003.dat,3003,"Brick  2 x  2",Black,59
+3003.dat,3003,"Brick  2 x  2",Black,44
 3003.dat,3003,"Brick  2 x  2",Red,5
 3003.dat,3003,"Brick  2 x  2",Yellow,1
 3003.dat,3003,"Brick  2 x  2",Orange,6
-3003.dat,3003,"Brick  2 x  2",Light Bluish Gray,3
-3003.dat,3003,"Brick  2 x  2",Dark Bluish Gray,1
+3003.dat,3003,"Brick  2 x  2",Light Bluish Gray,4
+3003.dat,3003,"Brick  2 x  2",Dark Bluish Gray,2
 3003.dat,3003,"Brick  2 x  2",Bright Light Orange,3
 3003.dat,3003,"Brick  2 x  2",Dark Red,3
-3004.dat,3004,"Brick  1 x  2",Black,395
+3004.dat,3004,"Brick  1 x  2",Black,308
 3004.dat,3004,"Brick  1 x  2",Red,47
 3004.dat,3004,"Brick  1 x  2",Yellow,6
 3004.dat,3004,"Brick  1 x  2",Orange,40
-3004.dat,3004,"Brick  1 x  2",Light Bluish Gray,82
-3004.dat,3004,"Brick  1 x  2",Dark Bluish Gray,190
+3004.dat,3004,"Brick  1 x  2",Light Bluish Gray,69
+3004.dat,3004,"Brick  1 x  2",Dark Bluish Gray,166
 3004.dat,3004,"Brick  1 x  2",Bright Light Orange,14
 3004.dat,3004,"Brick  1 x  2",Dark Red,24
-3005.dat,3005,"Brick  1 x  1",Black,459
+3005.dat,3005,"Brick  1 x  1",Black,320
 3005.dat,3005,"Brick  1 x  1",Red,37
 3005.dat,3005,"Brick  1 x  1",Yellow,7
 3005.dat,3005,"Brick  1 x  1",Orange,40
-3005.dat,3005,"Brick  1 x  1",Light Bluish Gray,252
-3005.dat,3005,"Brick  1 x  1",Dark Bluish Gray,485
+3005.dat,3005,"Brick  1 x  1",Light Bluish Gray,200
+3005.dat,3005,"Brick  1 x  1",Dark Bluish Gray,394
 3005.dat,3005,"Brick  1 x  1",Bright Light Orange,31
 3005.dat,3005,"Brick  1 x  1",Dark Red,48
-3006.dat,3006,"Brick  2 x 10",Black,29
-3007.dat,3007,"Brick  2 x  8",Black,29
+3006.dat,3006,"Brick  2 x 10",Black,18
+3007.dat,3007,"Brick  2 x  8",Black,37
 3007.dat,3007,"Brick  2 x  8",Dark Bluish Gray,6
-3008.dat,3008,"Brick  1 x  8",Black,62
+3008.dat,3008,"Brick  1 x  8",Black,43
 3008.dat,3008,"Brick  1 x  8",Red,1
 3008.dat,3008,"Brick  1 x  8",Yellow,1
-3008.dat,3008,"Brick  1 x  8",Light Bluish Gray,2
-3008.dat,3008,"Brick  1 x  8",Dark Bluish Gray,11
-3009.dat,3009,"Brick  1 x  6",Black,108
+3008.dat,3008,"Brick  1 x  8",Light Bluish Gray,3
+3008.dat,3008,"Brick  1 x  8",Dark Bluish Gray,9
+3009.dat,3009,"Brick  1 x  6",Black,61
 3009.dat,3009,"Brick  1 x  6",Red,3
 3009.dat,3009,"Brick  1 x  6",Yellow,1
-3009.dat,3009,"Brick  1 x  6",Light Bluish Gray,1
-3009.dat,3009,"Brick  1 x  6",Dark Bluish Gray,17
+3009.dat,3009,"Brick  1 x  6",Light Bluish Gray,2
+3009.dat,3009,"Brick  1 x  6",Dark Bluish Gray,9
 3009.dat,3009,"Brick  1 x  6",Bright Light Orange,5
 3009.dat,3009,"Brick  1 x  6",Dark Red,3
-3010.dat,3010,"Brick  1 x  4",Black,335
+3010.dat,3010,"Brick  1 x  4",Black,225
 3010.dat,3010,"Brick  1 x  4",Red,11
 3010.dat,3010,"Brick  1 x  4",Yellow,2
 3010.dat,3010,"Brick  1 x  4",Orange,6
-3010.dat,3010,"Brick  1 x  4",Light Bluish Gray,44
-3010.dat,3010,"Brick  1 x  4",Dark Bluish Gray,140
+3010.dat,3010,"Brick  1 x  4",Light Bluish Gray,30
+3010.dat,3010,"Brick  1 x  4",Dark Bluish Gray,116
 3010.dat,3010,"Brick  1 x  4",Bright Light Orange,16
 3010.dat,3010,"Brick  1 x  4",Dark Red,12
 3020.dat,3020,"Plate  2 x  4",Dark Bluish Gray,18
@@ -79,9 +79,9 @@ LDraw Part,BrickLink ID,Name,Farbe,Menge
 3023.dat,3023,"Plate  1 x  2",Dark Bluish Gray,114
 3024.dat,3024,"Plate  1 x  1",Dark Bluish Gray,197
 3034.dat,3034,"Plate  2 x  8",Dark Bluish Gray,1
-3040b.dat,3040b,"Slope Brick 45  2 x  1",Black,14
-3040b.dat,3040b,"Slope Brick 45  2 x  1",Light Bluish Gray,57
-3040b.dat,3040b,"Slope Brick 45  2 x  1",Dark Bluish Gray,126
+3040b.dat,3040b,"Slope Brick 45  2 x  1",Black,17
+3040b.dat,3040b,"Slope Brick 45  2 x  1",Light Bluish Gray,47
+3040b.dat,3040b,"Slope Brick 45  2 x  1",Dark Bluish Gray,133
 3062b.dat,3062b,"Brick  1 x  1 Round with Hollow Stud",Black,129
 3062b.dat,3062b,"Brick  1 x  1 Round with Hollow Stud",Dark Bluish Gray,352
 3068b.dat,3068,"Tile  2 x  2 with Groove",Black,16
@@ -89,70 +89,47 @@ LDraw Part,BrickLink ID,Name,Farbe,Menge
 3069b.dat,3069,"Tile  1 x  2 with Groove",Black,39
 3069b.dat,3069,"Tile  1 x  2 with Groove",Light Bluish Gray,2
 3069b.dat,3069,"Tile  1 x  2 with Groove",Dark Bluish Gray,3
-3070b.dat,3070,"Tile  1 x  1 with Groove",Black,98
+3070b.dat,3070,"Tile  1 x  1 with Groove",Black,64
 3070b.dat,3070,"Tile  1 x  1 with Groove",Dark Bluish Gray,9
 3460.dat,3460,"Plate  1 x  8",Dark Bluish Gray,8
-3622.dat,3622,"Brick  1 x  3",Black,188
+3622.dat,3622,"Brick  1 x  3",Black,125
 3622.dat,3622,"Brick  1 x  3",Red,22
 3622.dat,3622,"Brick  1 x  3",Yellow,4
 3622.dat,3622,"Brick  1 x  3",Orange,17
-3622.dat,3622,"Brick  1 x  3",Light Bluish Gray,38
-3622.dat,3622,"Brick  1 x  3",Dark Bluish Gray,108
+3622.dat,3622,"Brick  1 x  3",Light Bluish Gray,21
+3622.dat,3622,"Brick  1 x  3",Dark Bluish Gray,91
 3622.dat,3622,"Brick  1 x  3",Bright Light Orange,13
 3622.dat,3622,"Brick  1 x  3",Dark Red,7
 3623.dat,3623,"Plate  1 x  3",Dark Bluish Gray,35
-3626bp01.dat,3626bp01,"Minifig Head with Standard Grin Pattern (Blocked Hollow Stud)",Yellow,154
+3626bp01.dat,3626bp01,"Minifig Head with Standard Grin Pattern (Blocked Hollow Stud)",Black,155
 3665a.dat,3665a,"Slope Brick 45  2 x  1 Inverted without Inner Stopper Ring",Black,3
-3665a.dat,3665a,"Slope Brick 45  2 x  1 Inverted without Inner Stopper Ring",Light Bluish Gray,5
-3665a.dat,3665a,"Slope Brick 45  2 x  1 Inverted without Inner Stopper Ring",Dark Bluish Gray,15
+3665a.dat,3665a,"Slope Brick 45  2 x  1 Inverted without Inner Stopper Ring",Light Bluish Gray,8
+3665a.dat,3665a,"Slope Brick 45  2 x  1 Inverted without Inner Stopper Ring",Dark Bluish Gray,12
 3666.dat,3666,"Plate  1 x  6",Dark Bluish Gray,21
 3710.dat,3710,"Plate  1 x  4",Dark Bluish Gray,30
 3795.dat,3795,"Plate  2 x  6",Dark Bluish Gray,3
-3815c01.dat,970c00,"Minifig Hips and Legs (Obsolete)",Black,53
-3815c01.dat,970c00,"Minifig Hips and Legs (Obsolete)",Blue,26
-3815c01.dat,970c00,"Minifig Hips and Legs (Obsolete)",Tan,25
-3815c01.dat,970c00,"Minifig Hips and Legs (Obsolete)",Dark Bluish Gray,25
-3815c01.dat,970c00,"Minifig Hips and Legs (Obsolete)",Dark Blue,25
-3818.dat,3818,"Minifig Arm Right",Black,43
-3818.dat,3818,"Minifig Arm Right",Blue,14
-3818.dat,3818,"Minifig Arm Right",Green,14
-3818.dat,3818,"Minifig Arm Right",Red,14
-3818.dat,3818,"Minifig Arm Right",Yellow,13
-3818.dat,3818,"Minifig Arm Right",White,14
-3818.dat,3818,"Minifig Arm Right",Tan,14
-3818.dat,3818,"Minifig Arm Right",Dark Bluish Gray,14
-3818.dat,3818,"Minifig Arm Right",Dark Blue,14
-3819.dat,3819,"Minifig Arm Left",Black,43
-3819.dat,3819,"Minifig Arm Left",Blue,14
-3819.dat,3819,"Minifig Arm Left",Green,14
-3819.dat,3819,"Minifig Arm Left",Red,14
-3819.dat,3819,"Minifig Arm Left",Yellow,13
-3819.dat,3819,"Minifig Arm Left",White,14
-3819.dat,3819,"Minifig Arm Left",Tan,14
-3819.dat,3819,"Minifig Arm Left",Dark Bluish Gray,14
-3819.dat,3819,"Minifig Arm Left",Dark Blue,14
-3820.dat,3820,"Minifig Hand",Yellow,308
+3815c01.dat,970c00,"Minifig Hips and Legs (Obsolete)",Black,155
+3818.dat,3818,"Minifig Arm Right",Black,155
+3819.dat,3819,"Minifig Arm Left",Black,155
+3820.dat,3820,"Minifig Hand",Black,310
 3832.dat,3832,"Plate  2 x 10",Dark Bluish Gray,7
-3901.dat,3901,"Minifig Hair Male",Black,53
-3901.dat,3901,"Minifig Hair Male",Tan,25
-3901.dat,3901,"Minifig Hair Male",Reddish Brown,25
-3901.dat,3901,"Minifig Hair Male",Dark Brown,25
+3901.dat,3901,"Minifig Hair Male",Black,104
 3941.dat,3941,"Brick  2 x  2 Round without Reinforcement",Black,27
 4032a.dat,4032a,"Plate  2 x  2 Round with Axlehole",Trans-Red,9
 4032a.dat,4032a,"Plate  2 x  2 Round with Axlehole",Trans-Clear,9
 4032a.dat,4032a,"Plate  2 x  2 Round with Axlehole",Trans-Orange,9
-4070.dat,4070,"Brick  1 x  1 with Headlight",Black,3
-4070.dat,4070,"Brick  1 x  1 with Headlight",Light Bluish Gray,6
-4070.dat,4070,"Brick  1 x  1 with Headlight",Dark Bluish Gray,19
+4070.dat,4070,"Brick  1 x  1 with Headlight",Black,5
+4070.dat,4070,"Brick  1 x  1 with Headlight",Light Bluish Gray,7
+4070.dat,4070,"Brick  1 x  1 with Headlight",Dark Bluish Gray,16
 4162.dat,4162,"Tile  1 x  8",Light Bluish Gray,2
 4162.dat,4162,"Tile  1 x  8",Dark Bluish Gray,2
 4186.dat,4186,"Baseplate 48 x 48",Black,2
 4282.dat,4282,"Plate  2 x 16",Dark Bluish Gray,60
-4286.dat,4286,"Slope Brick 33  3 x  1",Black,2
-4286.dat,4286,"Slope Brick 33  3 x  1",Light Bluish Gray,5
-4286.dat,4286,"Slope Brick 33  3 x  1",Dark Bluish Gray,12
-4460b.dat,4460b,"Slope Brick 75  2 x  1 x  3 with Hollow Stud",Black,36
-4460b.dat,4460b,"Slope Brick 75  2 x  1 x  3 with Hollow Stud",Light Bluish Gray,52
+4286.dat,4286,"Slope Brick 33  3 x  1",Black,1
+4286.dat,4286,"Slope Brick 33  3 x  1",Light Bluish Gray,4
+4286.dat,4286,"Slope Brick 33  3 x  1",Dark Bluish Gray,14
+4460b.dat,4460b,"Slope Brick 75  2 x  1 x  3 with Hollow Stud",Black,39
+4460b.dat,4460b,"Slope Brick 75  2 x  1 x  3 with Hollow Stud",Light Bluish Gray,49
 4460b.dat,4460b,"Slope Brick 75  2 x  1 x  3 with Hollow Stud",Dark Bluish Gray,190
 4477.dat,4477,"Plate  1 x 10",Dark Bluish Gray,1
 54200.dat,54200,"Slope Brick 31  1 x  1 x  0.667",Black,29
@@ -161,11 +138,11 @@ LDraw Part,BrickLink ID,Name,Farbe,Menge
 60477.dat,60477,"Slope Brick 18  4 x  1",Light Bluish Gray,3
 60477.dat,60477,"Slope Brick 18  4 x  1",Dark Bluish Gray,2
 60479.dat,60479,"Plate  1 x 12",Dark Bluish Gray,41
-60481.dat,60481,"Slope Brick 65  2 x  1 x  2",Black,10
-60481.dat,60481,"Slope Brick 65  2 x  1 x  2",Light Bluish Gray,42
-60481.dat,60481,"Slope Brick 65  2 x  1 x  2",Dark Bluish Gray,77
-6111.dat,6111,"Brick  1 x 10",Black,51
-6112.dat,6112,"Brick  1 x 12",Black,42
+60481.dat,60481,"Slope Brick 65  2 x  1 x  2",Black,8
+60481.dat,60481,"Slope Brick 65  2 x  1 x  2",Light Bluish Gray,48
+60481.dat,60481,"Slope Brick 65  2 x  1 x  2",Dark Bluish Gray,73
+6111.dat,6111,"Brick  1 x 10",Black,28
+6112.dat,6112,"Brick  1 x 12",Black,14
 6141.dat,4073,"Plate  1 x  1 Round",Black,40
 63864.dat,63864,"Tile  1 x  3",Black,13
 6636.dat,6636,"Tile  1 x  6",Dark Bluish Gray,1
@@ -176,14 +153,6 @@ LDraw Part,BrickLink ID,Name,Farbe,Menge
 87079.dat,87079,"Tile  2 x  4 with Groove",Dark Bluish Gray,4
 87087.dat,87087,"Brick  1 x  1 with Stud on 1 Side",Dark Bluish Gray,14
 95347.dat,95347,"Support  2 x  2 x 10 Girder Triangular  3 Sections with Axlehole",Dark Bluish Gray,24
-973.dat,973,"Minifig Torso",Black,43
-973.dat,973,"Minifig Torso",Blue,14
-973.dat,973,"Minifig Torso",Green,14
-973.dat,973,"Minifig Torso",Red,14
-973.dat,973,"Minifig Torso",Yellow,13
-973.dat,973,"Minifig Torso",White,14
-973.dat,973,"Minifig Torso",Tan,14
-973.dat,973,"Minifig Torso",Dark Bluish Gray,14
-973.dat,973,"Minifig Torso",Dark Blue,14
+973.dat,973,"Minifig Torso",Black,155
 98138.dat,98138,"Tile  1 x  1 Round with Groove",Trans-Red,20
 98138.dat,98138,"Tile  1 x  1 Round with Groove",Light Bluish Gray,28
