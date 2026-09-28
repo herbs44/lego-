@@ -50,8 +50,9 @@ Das Cover-Bild liegt aus Urheberrechtsgründen nicht im Repo.
 
 ## Hinweise
 
-- **Weinglas:** Das Minifig-Weinglas steckt mit seinem Fuß auf der Noppe darunter. Wenn es wackelt, einen Tropfen
-  Klemmkraft mit einer Rundplatte 1 × 1 darunter ausgleichen.
+- **Weinglas:** Das Minifig-Weinglas steht mit seinem Fuß auf der Noppe darunter. Im Render ist nur Lage und
+  Ausrichtung geprüft, nicht der Halt – beim Bauen testen; hält es nicht fest, kann man es in die Hand einer
+  Minifigur-Hand-Clip-Platte stecken oder weglassen.
 - **Gesicht:** Das Gesicht der Figur ist im Original nur wenige Pixel groß – im Relief ist es ein runder Kopf mit
   Hautton und dunklem Haarknoten, keine Gesichtszüge.
 - **Pearl Gold** ist bei manchen Teilen (Viertelkreis-Fliese, Rundfliese 2 × 2) selten – die BrickLink-Liste zeigt es an.
