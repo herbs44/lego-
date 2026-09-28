@@ -6,7 +6,7 @@ LEGO-MOCs als LDraw-Dateien (`.mpd`) mit Stückliste und BrickLink-Wanted-List.
 
 | Modell | Teile | Beschreibung |
 |---|---|---|
-| [Graduation-Relief](graduation-relief/) | 25.181 | Kanye Wests Albumcover *Graduation* als 96×96-Relief-Mosaik (ca. 77 × 77 cm) im Stil von LEGO-Wandkunst – jede Noppe ein anderes Teil in anderer Höhe |
+| [Graduation-Relief](graduation-relief/) | 28.210 | Kanye Wests Albumcover *Graduation* als 96×96-3D-Relief (ca. 77 × 77 cm, bis 5 cm tief, Satellitenschüsseln am Ring) im Stil von LEGO-Wandkunst – jede Noppe ein anderes Teil in anderer Höhe |
 | [Circus Maximus (UTOPIA)](circus-maximus/) | 7.062 | Travis Scotts Arena-Bühne auf 2 Baseplates 48×48: geschwungener Weg zwischen dunklen Felsen mit 14 Steinköpfen, Felsblock mit Durchgang und Performer, 154 schwarze Fans als Minifiguren, Pyro und CO2, Videoring mit Feuerwand, Scheinwerfer und PA |
 | [Yeezus Stage](yeezus-stage/) | 2.301 | Mount Yeezus: Fels-Pyramide mit Wendelweg bis zum Gipfel vor dem runden Screen, Laufsteg mit Rampe zur Lower Stage im Publikum, Line-Arrays und Moving Heads – auf 2 Baseplates |
 | [Globe Stage](globe-stage/) | 10.876 | Stadion-Konzertbühne mit gerundeter Erdkugel-Kuppel, echter LED-Beleuchtung (Ring + 24 Scheinwerfer), einem Truss-Ring an Seilen unter einem Dach auf vier schlanken Ecktürmen und dem Album-Cover als Dach-Mosaik |

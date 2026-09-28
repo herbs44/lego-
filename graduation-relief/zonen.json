@@ -1,0 +1,336 @@
+[
+ {
+  "name": "Bär Kopf",
+  "form": "ellipse",
+  "mitte": [
+   0.135,
+   0.155
+  ],
+  "radius": [
+   0.115,
+   0.105
+  ],
+  "hoehe": 13,
+  "profil": "kuppel"
+ },
+ {
+  "name": "Bär Jacke",
+  "form": "ellipse",
+  "mitte": [
+   0.2,
+   0.35
+  ],
+  "radius": [
+   0.11,
+   0.11
+  ],
+  "hoehe": 11,
+  "profil": "kuppel"
+ },
+ {
+  "name": "Bär Beine/Schuhe",
+  "form": "ellipse",
+  "mitte": [
+   0.2,
+   0.46
+  ],
+  "radius": [
+   0.085,
+   0.05
+  ],
+  "hoehe": 9,
+  "profil": "kuppel",
+  "teile": [
+   "3062b",
+   "6141",
+   "4589",
+   "85861"
+  ]
+ },
+ {
+  "name": "Bär Auge (Schüssel)",
+  "form": "punkt",
+  "mitte": [
+   0.16,
+   0.125
+  ],
+  "radius": [
+   0.02,
+   0.02
+  ],
+  "hoehe": 13,
+  "spezial": {
+   "teil": "4740",
+   "farbe": 0,
+   "extra": 1
+  }
+ },
+ {
+  "name": "Titel",
+  "form": "rechteck",
+  "von": [
+   0.26,
+   0.035
+  ],
+  "bis": [
+   0.97,
+   0.09
+  ],
+  "farbe_rgb": [
+   230,
+   40,
+   160
+  ],
+  "toleranz": 95,
+  "hoehe": 6,
+  "teile": [
+   "3070b",
+   "98138",
+   "24246",
+   "25269"
+  ]
+ },
+ {
+  "name": "Doktorhüte",
+  "form": "punkt",
+  "mitte": [
+   0.78,
+   0.31
+  ],
+  "radius": [
+   0.025,
+   0.025
+  ],
+  "hoehe": 6,
+  "spezial": {
+   "teil": "3068b",
+   "farbe": 272
+  }
+ },
+ {
+  "name": "Doktorhut 2",
+  "form": "punkt",
+  "mitte": [
+   0.79,
+   0.44
+  ],
+  "radius": [
+   0.02,
+   0.02
+  ],
+  "hoehe": 5,
+  "spezial": {
+   "teil": "3068b",
+   "farbe": 272
+  }
+ },
+ {
+  "name": "Doktorhut 3",
+  "form": "punkt",
+  "mitte": [
+   0.89,
+   0.46
+  ],
+  "radius": [
+   0.02,
+   0.02
+  ],
+  "hoehe": 5,
+  "spezial": {
+   "teil": "3068b",
+   "farbe": 272
+  }
+ },
+ {
+  "name": "Blumenband",
+  "form": "ellipse",
+  "mitte": [
+   0.75,
+   0.58
+  ],
+  "radius": [
+   0.2,
+   0.085
+  ],
+  "hoehe": 8,
+  "profil": "kuppel",
+  "teile": [
+   "33291",
+   "24866",
+   "98138",
+   "6141"
+  ],
+  "spezial": {
+   "teil": "98262",
+   "abstand": 6
+  }
+ },
+ {
+  "name": "Raumschiff (schwarze Kuppel)",
+  "form": "ellipse",
+  "mitte": [
+   0.52,
+   0.81
+  ],
+  "radius": [
+   0.2,
+   0.2
+  ],
+  "hoehe": 11,
+  "profil": "kuppel"
+ },
+ {
+  "name": "Sternexplosion",
+  "form": "ellipse",
+  "mitte": [
+   0.5,
+   0.77
+  ],
+  "radius": [
+   0.1,
+   0.1
+  ],
+  "hoehe": 13,
+  "profil": "kuppel",
+  "teile": [
+   "4589",
+   "35464",
+   "11610",
+   "54200"
+  ]
+ },
+ {
+  "name": "Murakami-Figur",
+  "form": "ellipse",
+  "mitte": [
+   0.85,
+   0.84
+  ],
+  "radius": [
+   0.17,
+   0.18
+  ],
+  "hoehe": 9,
+  "profil": "kuppel"
+ },
+ {
+  "name": "Radar-Auge",
+  "form": "punkt",
+  "mitte": [
+   0.81,
+   0.82
+  ],
+  "radius": [
+   0.03,
+   0.03
+  ],
+  "hoehe": 12,
+  "spezial": {
+   "teil": "3960",
+   "farbe": 15,
+   "extra": 2
+  }
+ },
+ {
+  "name": "kleines Auge",
+  "form": "punkt",
+  "mitte": [
+   0.72,
+   0.895
+  ],
+  "radius": [
+   0.02,
+   0.02
+  ],
+  "hoehe": 9,
+  "spezial": {
+   "teil": "43898",
+   "farbe": 15,
+   "extra": 1
+  }
+ },
+ {
+  "name": "gelber Augenring",
+  "form": "ring",
+  "mitte": [
+   0.82,
+   0.82
+  ],
+  "radius": [
+   0.09,
+   0.065
+  ],
+  "breite": 0.018,
+  "hoehe": 12,
+  "teile": [
+   "3062b",
+   "4589"
+  ],
+  "spezial": {
+   "teil": "4740",
+   "farbe": 14,
+   "abstand": 4.5,
+   "extra": 1
+  }
+ },
+ {
+  "name": "Ring-Sockel",
+  "form": "ellipse",
+  "mitte": [
+   0.39,
+   0.625
+  ],
+  "radius": [
+   0.11,
+   0.085
+  ],
+  "hoehe": 7,
+  "profil": "kuppel"
+ },
+ {
+  "name": "Heiligenschein-Ring",
+  "form": "ring",
+  "mitte": [
+   0.39,
+   0.62
+  ],
+  "radius": [
+   0.088,
+   0.057
+  ],
+  "breite": 0.02,
+  "hoehe": 11,
+  "teile": [
+   "6141",
+   "85861",
+   "98138"
+  ],
+  "spezial": {
+   "teil": "4740",
+   "farbe": 15,
+   "abstand": 3.5,
+   "extra": 1
+  },
+  "farbe": 15
+ },
+ {
+  "name": "blauer Ring",
+  "form": "ring",
+  "mitte": [
+   0.427,
+   0.66
+  ],
+  "radius": [
+   0.052,
+   0.04
+  ],
+  "breite": 0.013,
+  "hoehe": 10,
+  "teile": [
+   "6141",
+   "4589",
+   "85861"
+  ],
+  "farbe": 1
+ }
+]

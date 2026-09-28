@@ -148,6 +148,12 @@ Regeln, die den Stil ausmachen:
 - **Aufbau real**: auf Baseplates, oder auf Platten mit Rahmen; Motiv-Rand bei Freiform-Bildern ohne Grundplatte
   direkt an die Wand (dann Platten-Unterbau im Verbund).
 
+- **Z-Achse als Gestaltungsmittel**: Hintergrund flach (0–4 Platten, helle Stellen höher = Wolken), Motive als Kuppeln
+  oder Plateaus 8–15 Platten hoch. Höhen über 3 Platten als 1×1-Steine stapeln (weniger Teile).
+- **Bedeutung durch Teilewahl** („Nice Part Usage"): Ringe mit Satellitenschüsseln besetzen, Augen als Radar-Schüssel,
+  Explosionen aus Kegeln und Doppel-Slopes, Blumenfelder aus Blumen 2×2 und Blütenplatten, Schrift aus glatten Fliesen
+  auf genopptem Grund. Pro Bildteil eine Zone mit eigenem Teile-Pool.
+
 Werkzeug: `tools/relief/make_relief.py bild.jpg ausgabe/name --breite 48 --hoehe 48 --chaos 0.35 --konfetti 0.05`
 (MPD, Stückliste, BrickLink-XML, flache Farbvorschau). Für Wandbilder frontal von oben rendern
 (`[0,88,1.0,0,-20,0,30]`) plus eine flache Schrägansicht für die Tiefe.

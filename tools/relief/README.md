@@ -14,7 +14,9 @@ python3 tools/relief/make_relief.py bild.jpg ausgabe/name --breite 48 --hoehe 48
 | `--breite`, `--hoehe` | Größe in Noppen (Grundplatten 48 × 48 werden automatisch gesetzt) |
 | `--chaos` | Anteil Zellen mit der zweitnächsten Farbe – Farbmischung statt glatter Flächen |
 | `--konfetti` | Anteil bunter Akzentfarben mit gleicher Helligkeit (Lila, Lime, Pink, Azur …) |
-| `--tiefe` | maximale Plattenlagen unter dem Abschlussteil (Relief-Tiefe) |
+| `--tiefe` | zufällige Zusatz-Platten pro Zelle (Grundrauschen) |
+| `--wolken` | Hintergrund-Relief: helle Bildstellen bis zu N Platten höher |
+| `--zonen` | JSON-Datei: Bildteile mit eigener Höhe (flach/Kuppel), Teile-Pools, Farbe und Spezialteilen (Schüsseln, Blumen …), Beispiel [`graduation-relief/zonen.json`](../../graduation-relief/zonen.json) |
 | `--farben` | eingeschränkte Palette als LDraw-Codes, z. B. `0,15,71,72,4,25` |
 | `--seed` | andere Zufallsverteilung der Teile |
 
