@@ -23,6 +23,8 @@ Bauanleitung als PDF: [`globe-stage/Bauanleitung_Globe_Stage.pdf`](globe-stage/B
 Design-Prinzipien, Statik/legale Verbindungen, eine geprüfte Teile-Bibliothek und die Generator-Pipeline
 dieses Repos. Claude Code lädt ihn automatisch, wenn in diesem Repo an LEGO-Modellen gearbeitet wird.
 
+**Weitermachen (lokal):** siehe [`WEITERMACHEN.md`](WEITERMACHEN.md).
+
 ## Werkzeuge
 
 - [`tools/relief`](tools/relief/) – Relief-Mosaik im Stil von LEGO-Wandkunst (mbrick_art): Bild → 3D-Pixel aus gemischten Teilen mit Tiefe und Konfetti-Farben.
