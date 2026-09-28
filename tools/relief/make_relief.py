@@ -9,7 +9,7 @@ Aufruf:
   python3 make_relief.py bild.jpg ausgabe/name [--breite 48] [--hoehe 48] [--seed 1] [--chaos 0.35] [--tiefe 3]
                           [--konfetti 0.05] [--farben 0,15,71,72,...]
 
-Ausgabe: name.mpd (Relief auf Grundplatte, Noppen nach oben = zum Betrachter, Bild oben = -z),
+Ausgabe: name.mpd (Relief auf Grundplatte, Noppen nach oben = zum Betrachter, Bild oben = -z, Bild links = +x; per Render geprueft: nicht gespiegelt),
 name_bom.csv, name_bricklink.xml, name_vorschau.png (flache Farbvorschau 1 Pixel = 1 Noppe, vergroessert).
 """
 import argparse, math, os, random
@@ -29,6 +29,8 @@ PALETTE = {
     322: ("Medium Azure", 156, (54, 174, 191)), 27: ("Lime", 34, (187, 233, 11)), 26: ("Magenta", 71, (144, 31, 118)),
     30: ("Medium Lavender", 157, (160, 110, 185)), 84: ("Medium Nougat", 150, (170, 125, 85)),
     308: ("Dark Brown", 120, (53, 33, 0)), 85: ("Dark Purple", 89, (63, 54, 145)),
+    29: ("Bright Pink", 104, (228, 173, 200)), 5: ("Dark Pink", 47, (200, 112, 160)), 31: ("Lavender", 154, (205, 164, 222)),
+    353: ("Coral", 220, (255, 109, 119)), 379: ("Sand Blue", 55, (112, 129, 154)), 226: ("Bright Light Yellow", 103, (255, 240, 58)),
 }
 BL_ID = {"3070b": "3070", "3069b": "3069", "3068b": "3068", "6141": "4073", "3062b": "3062b", "4032a": "4032"}
 
@@ -112,14 +114,14 @@ def main():
     def put(name, c, x, y, z, rot=0):
         lines.append(f"1 {c} {fmt(x)} {fmt(y)} {fmt(z)} {ROT[rot]} {name}.dat"); bom[(name, c)] += 1
 
-    def cx(i): return (i - W / 2 + 0.5) * LDU
-    def cz(k): return (k - H / 2 + 0.5) * LDU
+    def cx(i): return (W / 2 - i - 0.5) * LDU                   # von oben (Noppen zum Betrachter) liegt +x links
+    def cz(k): return (k - H / 2 + 0.5) * LDU                   # Bildoberkante = -z
 
-    # Grundplatten (48x48), zentriert
-    nb_x, nb_z = math.ceil(W / 48), math.ceil(H / 48)
-    for bx in range(nb_x):
-        for bz in range(nb_z):
-            put("4186", 0, (bx * 48 + 24 - W / 2) * LDU, 0, (bz * 48 + 24 - H / 2) * LDU)
+    # Grundplatten zentriert: 48x48 (4186), wenn die Groesse darauf aufgeht, sonst 32x32 (3811)
+    B, bp = (48, "4186") if W % 48 == 0 and H % 48 == 0 else (32, "3811")
+    for bx in range(math.ceil(W / B)):
+        for bz in range(math.ceil(H / B)):
+            put(bp, 0, (bx * B + B / 2 - W / 2) * LDU, 0, (bz * B + B / 2 - H / 2) * LDU)
 
     done = set()
 
@@ -143,9 +145,9 @@ def main():
             quad = [(i, k), (i + 1, k), (i, k + 1), (i + 1, k + 1)]
             if r < 0.10 and all(p in col and p not in done and col[p] == c and hgt[p] == n for p in quad):
                 for p in quad: stack(p, n)
-                top(pick(TOP_2x2), TOP_2x2, c, cx(i) + LDU / 2, -PH * n, cz(k) + LDU / 2, 0)
+                top(pick(TOP_2x2), TOP_2x2, c, cx(i) - LDU / 2, -PH * n, cz(k) + LDU / 2, 0)
                 done |= set(quad); continue
-            for pair, rot, ox, oz in (([(i, k), (i + 1, k)], 0, LDU / 2, 0), ([(i, k), (i, k + 1)], 90, 0, LDU / 2)):
+            for pair, rot, ox, oz in (([(i, k), (i + 1, k)], 0, -LDU / 2, 0), ([(i, k), (i, k + 1)], 90, 0, LDU / 2)):
                 if r < 0.35 and all(p in col and p not in done and col[p] == c and hgt[p] == n for p in pair):
                     for p in pair: stack(p, n)
                     nm = pick(TOP_1x2)
