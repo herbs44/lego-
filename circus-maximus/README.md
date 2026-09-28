@@ -1,11 +1,12 @@
 # Travis Scott – Circus Maximus Tour (UTOPIA-Bühne) als LEGO-MOC
 
-Nachbau der Arena-Bühne der Circus-Maximus-Tour (Album *UTOPIA*, 2023–2025) auf **zwei Baseplates 32 × 32**
-(64 × 32 Noppen, ca. 51 × 26 cm). Wie auf den Bühnen-Renderings windet sich ein **schmaler Weg durch die
+Nachbau der Arena-Bühne der Circus-Maximus-Tour (Album *UTOPIA*, 2023–2025) auf **zwei Baseplates 48 × 48**
+(96 × 48 Noppen, ca. 77 × 38 cm). Wie auf den Bühnen-Renderings windet sich ein **schmaler Weg durch die
 Halle**, beidseitig von grauen, verwitterten Felswänden und **Findlingen mit Gesichtern** gesäumt. An einem Ende
 steht ein **hoher Felsblock mit eingemeißelten Gesichtern und einem Durchgang**, oben eine Plattform für den
-Performer (wie auf dem Stadionfoto). Über der Bühne hängen ein **ovaler 360°-Videoring**, **fliegende Köpfe mit
-Glotzaugen**, Scheinwerfer und die PA an einem Traversen-Raster. Das Publikum steht rundherum.
+Performer (wie auf dem Stadionfoto). Auf den Felskanten schießen **Pyro-Flammen** hoch, am Boden stehen Subwoofer und rote Uplights. Über der Bühne
+hängen ein **ovaler 360°-Videoring mit Feuerwand**, **fliegende Köpfe mit Glotzaugen**, farbige Scheinwerfer und
+die PA an einem Traversen-Raster. Das Publikum steht rundherum.
 
 ![Hero](renders/cm_hero.png)
 
@@ -13,18 +14,21 @@ Glotzaugen**, Scheinwerfer und die PA an einem Traversen-Raster. Das Publikum st
 |---|---|
 | ![Block](renders/cm_block.png) | ![Pfad](renders/cm_pfad.png) |
 
-| Von oben: Grundriss des Weges | Köpfe unter dem Videoring | Blick entlang der Bühne |
+| Pyro, Subs und Uplights | Videoring mit Feuerwand | Köpfe unter dem Videoring |
 |---|---|---|
-| ![Oben](renders/cm_oben.png) | ![Köpfe](renders/cm_koepfe.png) | ![Stirnseite](renders/cm_stirnseite.png) |
+| ![Pyro](renders/cm_pyro.png) | ![Ring](renders/cm_ring.png) | ![Köpfe](renders/cm_koepfe.png) |
 
-![Seite](renders/cm_seite.png)
+| Von oben: Grundriss des Weges | Blick entlang der Bühne |
+|---|---|
+| ![Oben](renders/cm_oben.png) | ![Stirnseite](renders/cm_stirnseite.png) |
 
 ## Kennzahlen
 
-- **2.790 Teile**, 105 Positionen (Teil × Farbe), keine Minifiguren
-- **Grundfläche** 64 × 32 Noppen, **Höhe** ca. 36 cm
-- **Weg** 56 Noppen lang, Felsblock 12 Steine hoch
-- **Videoring** Oval 54 × 25 Noppen, 4 Steine hoch, an 20 Seilen
+- **5.925 Teile**, 151 Positionen (Teil × Farbe), keine Minifiguren
+- **Maßstab** 1,5-fach gegenüber der ersten Version: **Grundfläche** 96 × 48 Noppen, **Höhe** ca. 46 cm
+- **Weg** 84 Noppen lang und 6 breit, Felsblock 18 Steine hoch
+- **Videoring** Oval 81 × 38 Noppen, 5 Bildlagen, an 20 Seilen
+- **17 Pyro-Flammen**, 15 Subwoofer, 21 Uplights, 27 Scheinwerfer
 
 ## Vorlage
 
@@ -37,21 +41,23 @@ Glotzaugen**, Scheinwerfer und die PA an einem Traversen-Raster. Das Publikum st
 
 ## Aufbau (Submodelle)
 
-1. **Grundplatten** – 2 × Baseplate 32 × 32 schwarz
+1. **Grundplatten** – 2 × Baseplate 48 × 48 schwarz
 2. **Felswände und Findlinge** – grauer Stein (Dunkelgrau, im Licht Hellgrau, Schwarz in Spalten), Slopes an jeder
    Stufe, Überhänge auf umgedrehten Slopes, Kanten aus gebogenen Slopes und Cheese-Slopes; 5 Findlinge als runde Kuppen
-3. **Gewundener Laufweg** – 4 Noppen breit, schwarze Dielen im Verband, folgt der Zickzack-Linie aus dem Grundriss,
+3. **Gewundener Laufweg** – 6 Noppen breit, schwarze Dielen im Verband, folgt der Zickzack-Linie aus dem Grundriss,
    Stufen an beiden Enden
 4. **Plattform auf dem Block** – Performer-Fläche, Rand hellgrau
-5. **Hoher Felsblock mit Durchgang** – 12 Steine hoch; der Weg führt unter 8 Bögen 1 × 6 × 2 hindurch
+5. **Hoher Felsblock mit Durchgang** – 18 Steine hoch; der Weg führt unter 11 Bögen 1 × 8 × 2 hindurch
 6. **Gesichter (SNOT)** – Augen aus Headlight-Steinen mit runden Fliesen auf der Seitennoppe, Mund aus einer
    Gitterfliese auf einem Stein mit Seitennoppen; am Block beidseitig, an den Findlingen zur Halle
-7. **Ovaler Videoring** – 2 Noppen dick, 4 Steine hoch, Graustufen-Bildinhalt, hängt an 20 dünnen Seilen
-8. **Türme und Traversen-Raster** – 6 Gittertürme (95347), Außenrahmen plus 5 Quertraversen
+7. **Ovaler Videoring** – 2 Noppen dick, Feuerwand als Bild (unten Gelb/Orange, nach oben Rot bis Schwarz), zwei Plattenlagen im Verbund, hängt an 20 dünnen Seilen
+8. **Türme und Traversen-Raster** – 6 Gittertürme (je 4 × 95347), Außenrahmen plus 5 Quertraversen
 9. **Fliegende Köpfe** – 5 Köpfe (einer groß in der Mitte): runder Schädel aus Cheese-Slopes, Glotzaugen aus
    Headlight + weißer Rundfliese, Nase als 45°-Slope, dunkler Mund
 10. **PA-Hänge** – 8 Stränge an den Längstraversen, Lautsprechergitter per SNOT nach außen
-11. **Moving Heads** – 23 Scheinwerfer an den Quertraversen
+11. **Moving Heads** – 27 Scheinwerfer an den Quertraversen, Linsen abwechselnd trans-rot, trans-orange, trans-klar
+12. **Pyro-Flammen** – 17 Flammen (85959, trans-orange und trans-gelb) in schwarzen Rundstein-Düsen auf den Felskanten und auf dem Block
+13. **Bodenlautsprecher, Uplights** – Subwoofer mit SNOT-Gittern entlang der Bühne, rote Bodenstrahler (Rundfliese trans-rot) am Felsfuß
 
 ## Angewandte Techniken (Skill `lego-profi-designer`)
 
@@ -62,6 +68,9 @@ Glotzaugen**, Scheinwerfer und die PA an einem Traversen-Raster. Das Publikum st
 | **Bögen als Tunnel** | Bögen 1 × 6 × 2 überspannen den Weg im Block, die Felswände darüber sitzen auf den Noppen der Bögen |
 | **Rockwork** | Slopes nach Stufenhöhe, Überhänge auf umgedrehten Slopes, erodierte Kanten, Schattierung nach Lichtrichtung |
 | **Helligkeitsstufen** | Grauer Stein in drei Stufen, schwarzer Weg als Kontrast, weiße Augen der Köpfe als hellster Punkt |
+| **Farbe gezielt als Feuer** | Die Bühne bleibt unbunt, alle Farbe ist „Feuer": Videoring-Verlauf Gelb → Orange → Rot → Dunkelrot, Flammen, rote Uplights und Scheinwerfer – warme Farben nur dort, wo Licht und Pyro sind |
+| **Stange in Hohlnoppe** | Die Flammenteile stecken mit ihrer Stange in der Hohlnoppe eines runden Steins – legale Verbindung, Düse und Flamme in einem |
+| **Verbund-Plattenlagen** | Der Videoring bekommt zwei Plattenlagen, die per Verbund-Algorithmus alle Steine zu einem Stück verbinden |
 | **Dünne Aufhängung** | Ring, Köpfe und Scheinwerfer hängen an Säulen aus runden Steinen/Platten – liest sich als Seil |
 | **Verband über Treppenecken** | Der ovale Ring ist 2 Noppen dick, damit die Lagen an den Diagonalen verbunden bleiben |
 
@@ -84,3 +93,5 @@ python3 circus-maximus/generate_circus_maximus.py
 - **Spiral-Auge:** Das eingemeißelte Spiral-Auge lässt sich im Mikromaßstab nicht darstellen; es ist ein rundes Auge.
 - **Videoring:** Auf den Fotos nicht sichtbar, Form und Lage stammen aus den Produktionsbeschreibungen.
 - **Gitterträger in Dunkelgrau** (95347) sind seltener als in Hellgrau – Verfügbarkeit auf BrickLink prüfen.
+- **Flammen:** LDraw 85959 (Flamme 7L mit Stange); BrickLink-Nummer und Farbverfügbarkeit vor der Bestellung prüfen.
+- **Pyro-Licht:** In die Rundstein-Düsen passen kleine LEDs, dann leuchten die Flammen von unten.
