@@ -41,7 +41,7 @@ PALETTE = {
     29: ("Bright Pink", 104, (228, 173, 200)), 5: ("Dark Pink", 47, (200, 112, 160)), 31: ("Lavender", 154, (205, 164, 222)),
     353: ("Coral", 220, (255, 109, 119)), 379: ("Sand Blue", 55, (112, 129, 154)), 226: ("Bright Light Yellow", 103, (255, 240, 58)),
 }
-BL_ID = {"6141": "4073", "4032a": "4032"}
+BL_ID = {"3070b": "3070", "3069b": "3069", "3068b": "3068", "3062b": "3062", "6141": "4073", "4032a": "4032"}
 
 # Abschlussteile: Name -> (Hoehe in LDU ueber der Auflage, Ursprung unten?, Gewicht)
 TOP_1x1 = {"3062b": (24, False, 5), "6141": (8, False, 4), "85861": (8, False, 3), "4589": (24, False, 4),
