@@ -219,10 +219,9 @@ def bond_layer(sub, cells, lower, ytop, color, max_len=6):
 # Koordinaten: Zellen x in [-32, 31] (Laengsachse der Arena), z in [-16, 15]. Die Buehne liegt als lange
 # Fels-Spalte mitten im Innenraum (in-the-round, Publikum rundherum). Ueber ihr haengt ein ovaler
 # 360-Grad-Videoring, dazwischen fliegende Koepfe; getragen von einem Traversen-Raster auf 6 Tuermen.
-TRED = 36
 COLORS.update({36: ("Trans-Red", 17)})
-# Farbkonzept: Schwarz dominiert (schwarz beschichtete Felsen, Boden), Dunkelgrau als Licht-Kante und
-# Laufflaeche, Hellgrau fuer Koepfe und Bildinhalte, Trans-Rot als einziger Akzent (Augen/Laser der Koepfe).
+# Farbkonzept nach den Fotos: grauer, verwitterter Stein (Dunkelgrau, Hellgrau im Licht, Schwarz in Spalten),
+# schwarzer Buehnenboden, weisse Glotzaugen der Koepfe als hellster Punkt.
 XMIN, XMAX, ZMIN, ZMAX = -32, 31, -16, 15
 GRID = [(i, k) for i in range(XMIN, XMAX + 1) for k in range(ZMIN, ZMAX + 1)]
 DIRS = [(1, 0), (-1, 0), (0, 1), (0, -1)]
@@ -239,35 +238,53 @@ def vnoise(x, z, sc=3.0, seed=0):
     return a + (b - a) * sz
 
 
-# ---------------- Hoehenfeld: Fels-Spalte ----------------
-SX0, SX1 = -27, 26                         # Buehne in x
-DECK = 2                                   # Laufweg in der Spalte (Steine)
-WALK = (-2, 1)                             # Laufweg z-Bereich (4 breit, mittig)
-PLATFORMS = [(-19.0, -5.0, 7, 2.6), (-3.0, 5.0, 8, 2.8), (14.0, -5.0, 7, 2.6),   # (x, z, Hoehe, Radius)
-             (21.0, 5.0, 6, 2.2), (-12.0, 5.5, 5, 2.0), (5.0, -5.5, 5, 2.0)]
+# ---------------- Hoehenfeld: gewundener Fels-Pfad ----------------
+# Nach den Buehnen-Renderings: schmaler Weg, der sich durch die Halle windet, beidseitig Felswaende und
+# Findlinge mit Gesichtern; an einem Ende ein hoher Felsblock mit eingemeisselten Gesichtern und Durchgang.
+DECK = 2                                   # Laufweg (Steine)
+PATH = [(-29.0, -2.0), (-13.0, -2.0), (-9.0, 1.0), (-4.0, -2.0), (1.0, 2.5), (6.0, -2.0), (15.0, 0.0), (28.0, 2.0)]
+SX0, SX1 = -28, 27
+BLOCK_X = (-28, -21)                       # hoher Felsblock
+BLOCK_H = 12
+WALK_HW = 1.6                              # halbe Wegbreite (4 Zellen)
+BOULDERS = [(-10.0, 1), (-1.0, -1), (8.0, 1), (17.0, -1), (24.0, 1)]   # Findlings-Koepfe (x, Seite)
+
+
+def zc(x):
+    for (x0, z0), (x1, z1) in zip(PATH, PATH[1:]):
+        if x0 <= x <= x1: return z0 + (z1 - z0) * (x - x0) / (x1 - x0)
+    return PATH[-1][1]
+
+
+def in_block(x): return BLOCK_X[0] <= x < BLOCK_X[1] + 1
 
 
 def half_width(x):
-    w = 7.2 + 1.1 * math.sin(0.31 * x + 0.5) + 0.7 * math.sin(0.73 * x + 1.3)
-    return w * min(1.0, (SX1 + 1 - abs(x + 0.5)) / 5.0) if abs(x + 0.5) > SX1 - 4 else w
+    if in_block(x): return 5.6
+    w = 3.7 + 0.7 * math.sin(0.55 * x + 0.3) + 0.5 * math.sin(1.3 * x)
+    return w * min(1.0, (SX1 + 1 - x) / 3.0) if x > SX1 - 2 else w
+
+
+def boulder(x, z):
+    """Findlinge: runde Kuppen am Wegrand"""
+    h = 0.0
+    for bx, side in BOULDERS:
+        bz = zc(bx) + side * (WALK_HW + 2.0)
+        r = math.hypot(x - bx, z - bz)
+        if r < 2.4: h = max(h, DECK + 5.8 - r * 1.4)
+    return h
 
 
 def stage_f(p):
     """kontinuierliche Felshoehe (Steine); 0 = ausserhalb"""
     x, z = p
     if not (SX0 <= x <= SX1 + 1): return 0.0
-    W = half_width(x); d = abs(z)
-    if d > W: return 0.0
-    if d <= 2.0: return float(DECK)
-    t = (d - 2.0) / max(0.5, W - 2.0)
-    A = 2.6 + 2.4 * vnoise(x, z, 3.5, 3) + 1.2 * vnoise(x, z, 1.6, 4)
-    bump = 0.8 + 0.2 * (t / 0.3) if t < 0.3 else 1 - ((t - 0.3) / 0.75) ** 2
-    h = DECK + A * max(0.0, bump)
-    for px, pz, ph, pr in PLATFORMS:
-        r = math.hypot(x - px, z - pz)
-        if r < pr: h = max(h, ph)
-        elif r < pr + 2.5: h = max(h, ph - (r - pr) * 1.6)
-    return h
+    d = abs(z - zc(x)); W = half_width(x); b = boulder(x, z)
+    if d <= WALK_HW: return float(DECK)
+    if d > W: return b
+    if in_block(x): return BLOCK_H + 1.4 * (vnoise(x, z, 2.0, 5) - 0.5)
+    h = DECK + 1.3 + 2.4 * vnoise(x, z, 2.6, 3) + 0.9 * vnoise(x, z, 1.3, 4)
+    return max(h, b)
 
 
 # Ecktuerme + Mitte: je 1 Gittertraeger-Stapel (Rasterpunkt = Mitte 2x2)
@@ -279,17 +296,15 @@ for c in GRID:
     p = (c[0] + 0.5, c[1] + 0.5)
     h = stage_f(p)
     if h <= 0.5: continue
-    if WALK[0] <= c[1] <= WALK[1]: HF[c], MAT[c] = DECK, "weg"
-    else: HF[c], MAT[c] = max(DECK, int(math.floor(h + 0.5))), "fels"
-# Laufweg-Enden: je eine Stufe zum Hallenboden
-for x in (SX0 - 1, SX1 + 1):
-    for z in range(WALK[0], WALK[1] + 1): HF[(x, z)], MAT[(x, z)] = 1, "weg"
-# Plattformen flach (Performer-Flaechen)
-PLAT_CELLS = set()
-for px, pz, ph, pr in PLATFORMS:
-    for c in list(HF):
-        if MAT[c] == "fels" and math.hypot(c[0] + 0.5 - px, c[1] + 0.5 - pz) < pr:
-            HF[c] = ph; PLAT_CELLS.add(c)
+    if abs(p[1] - zc(p[0])) <= WALK_HW and SX0 <= p[0] <= SX1 + 1: HF[c], MAT[c] = DECK, "weg"
+    else: HF[c], MAT[c] = max(DECK + 1, int(math.floor(h + 0.5))), "fels"
+for x in (SX0 - 1, SX1 + 1):                                      # Stufe zum Hallenboden an beiden Enden
+    for z in range(ZMIN, ZMAX + 1):
+        if abs(z + 0.5 - zc(x + 0.5)) <= WALK_HW: HF[(x, z)], MAT[(x, z)] = 1, "weg"
+# Oberseite des Blocks flach (Performer-Plattform wie auf dem Stadionfoto)
+PLAT_CELLS = {c for c in HF if MAT[c] == "fels" and in_block(c[0] + 0.5) and abs(c[1] + 0.5 - zc(c[0] + 0.5)) < 4.3}
+for c in PLAT_CELLS: HF[c] = BLOCK_H
+TUNNEL = sorted(c for c in HF if MAT[c] == "weg" and in_block(c[0] + 0.5))
 GMAX = max(HF.values())
 S = [{c for c, h in HF.items() if h > g} for g in range(GMAX + 1)]
 
@@ -297,6 +312,7 @@ S = [{c for c, h in HF.items() if h > g} for g in range(GMAX + 1)]
 LIPS, _used = [], set()
 for c in sorted(HF):
     if MAT[c] != "fels" or HF[c] < 3 or c in PLAT_CELLS: continue
+    if in_block(c[0] + 0.5) or boulder(c[0] + 0.5, c[1] + 0.5) > 0: continue       # Gesichter frei halten
     g = HF[c] - 1
     if c not in S[g - 1] or vnoise(c[0] + 0.5, c[1] + 0.5, 2.2, 9) < 0.55: continue
     for d in DIRS:
@@ -321,15 +337,16 @@ def grad_dirs(c):
 # ---------------- Farben ----------------
 SUN = (-0.4, 0.8, -0.45)
 def rock_color(c, top=False, g=None):
-    """schwarz beschichteter Fels; Lichtkanten dunkelgrau (Helligkeitsstufe statt Farbe)"""
+    """grauer, verwitterter Stein: Dunkelgrau als Grundton, Hellgrau im Licht, Schwarz in Spalten"""
     p = (c[0] + 0.5, c[1] + 0.5)
     if top:
-        return DBG if vnoise(p[0], p[1], 2.4, 1) > 0.58 else BLACK
+        return LBG if vnoise(p[0], p[1], 2.4, 1) > 0.6 else DBG
     gx = stage_f((p[0] + 0.5, p[1])) - stage_f((p[0] - 0.5, p[1])); gz = stage_f((p[0], p[1] + 0.5)) - stage_f((p[0], p[1] - 0.5))
+    gx, gz = max(-2.0, min(2.0, gx)), max(-2.0, min(2.0, gz))    # senkrechte Waende nicht ins Schwarze kippen
     n = (-gx, 1.0, -gz); L = math.sqrt(sum(v * v for v in n))
     shade = sum(a * b for a, b in zip(n, SUN)) / L
-    shade += 0.3 * (vnoise(p[0], p[1] + (g or 0) * 0.7, 1.8, 7) - 0.5)
-    return DBG if shade > 0.62 else BLACK
+    shade += 0.35 * (vnoise(p[0], p[1] + (g or 0) * 0.7, 1.8, 7) - 0.5)
+    return LBG if shade > 0.55 else DBG if shade > -0.15 else BLACK
 
 
 ROCK = ("fels",)
@@ -368,20 +385,74 @@ for g in range(GMAX, 0, -1):
     solid[g - 1] |= {c for c in (solid[g] | pillars[g]) if (c, g) not in LIP_OUT}
     deck[g - 1] -= solid[g - 1]
 
-# ---------------- Boegen ueber der Spalte ----------------
-# "Towering archways": je zwei Boegen 1x6x2 nebeneinander ueber dem Laufweg, auf Pfeilern aus dem Fels
-ARCH_X = [(-9, -8), (8, 9)]
-ARCH_TOP = 10                                  # Oberkante Bogen (Steine)
-ARCH_Z = (WALK[0] - 1, WALK[1] + 1)            # Pfeilerzellen links/rechts des Weges
-PILLAR_CELLS = {(x, z) for xs in ARCH_X for x in xs for z in ARCH_Z}
-for c in PILLAR_CELLS:
-    assert MAT.get(c) == "fels" and HF[c] <= ARCH_TOP - 2, c
+# ---------------- Durchgang durch den Block ----------------
+# Je x ein Bogen 1x6x2 quer ueber den Weg (Lagen 6-7), darueber Steine bis zur Blockoberkante.
+replaced = set()
+ARCH_BOT = 6
+ARCHES = []
+for x in range(BLOCK_X[0], BLOCK_X[1] + 1):
+    zs = [c[1] for c in TUNNEL if c[0] == x]
+    z0, z1 = min(zs) - 1, max(zs) + 1
+    assert z1 - z0 + 1 == 6, (x, zs)
+    for z in (z0, z1):
+        assert MAT.get((x, z)) == "fels" and HF[(x, z)] >= ARCH_BOT + 3, (x, z)
+        replaced.add(((x, z), ARCH_BOT)); replaced.add(((x, z), ARCH_BOT + 1))
+    ARCHES.append((x, z0, z1))
+BRIDGE = {(x, z) for x, z0, z1 in ARCHES for z in range(z0 + 1, z1)}
+PILLAR_CELLS = set()
 
+# ---------------- Gesichter (SNOT) ----------------
+# Augen: Headlight-Stein 4070, darauf eine runde Fliese 1x1 (98138) auf der Seitennoppe.
+# Mund: Stein 1x2 mit Seitennoppen 11211, darauf Gitterfliese 2412b.
+M_FRONT = [[1, 0, 0], [0, 0, -1], [0, 1, 0]]                      # Fliese mit Oberseite nach -z
+
+
+def mat_str(rot):
+    R = RM[rot]
+    M = [[sum(R[i][k] * M_FRONT[k][j] for k in range(3)) for j in range(3)] for i in range(3)]
+    return " ".join(fmt(M[i][j]) for i in range(3) for j in range(3))
+
+
+EYES, MOUTHS = [], []                     # (Zelle, Lage, Richtung, Farbe) / ((Zelle, Zelle), Lage, Richtung)
+
+
+LIP_CG = {(c, g - 1) for c, _, _, g in LIPS} | {(o, g) for _, o, _, g in LIPS}
+
+
+def free_face(c, g, d):
+    o = (c[0] + d[0], c[1] + d[1])
+    return c in S[g] and (c, g) not in replaced and (c, g) not in LIP_CG and o not in S[g] and o not in RESERVED \
+        and o not in LIP_O
+
+
+def outer_cell(x, side):
+    zs = [z for (xx, z) in HF if xx == x and MAT[(xx, z)] == "fels" and (xx, z) not in LIP_O
+          and (z + 0.5 - zc(x + 0.5)) * side > 0]
+    return (x, max(zs, key=lambda z: z * side)) if zs else None
+
+
+# Gesichter an beiden Langseiten des Blocks
+for side in (-1, 1):
+    d = (0, side)
+    eyes = [outer_cell(x, side) for x in (-26, -23)]
+    mouth = [outer_cell(x, side) for x in (-25, -24)]
+    if None in eyes + mouth or len({c[1] for c in eyes + mouth}) != 1: continue
+    if all(free_face(c, 8, d) for c in eyes) and all(free_face(c, 5, d) for c in mouth):
+        for c in eyes: EYES.append((c, 8, d, LBG)); replaced.add((c, 8))
+        MOUTHS.append((tuple(mouth), 5, d)); replaced |= {(c, 5) for c in mouth}
+# Findlinge: zwei Augen zur Hallenseite
+for bx, side in BOULDERS:
+    d = (0, side)
+    cand = [outer_cell(x, side) for x in (int(math.floor(bx)) - 1, int(math.floor(bx)) + 1)]
+    if None in cand: continue
+    g = min(HF[c] for c in cand) - 2
+    if g >= DECK + 1 and all(free_face(c, g, d) for c in cand):
+        for c in cand: EYES.append((c, g, d, LBG)); replaced.add((c, g))
 
 # ---------------- Slopes an Stufenkanten ----------------
 STEP_PART = {1: "3040b", 2: "4286", 3: "60477"}
 STEEP_PART = {2: "60481", 3: "4460b"}
-replaced, covered, SLOPES = set(), set(), []
+covered, SLOPES = set(), []
 for (c, o, d, g) in LIPS:
     replaced.add((c, g - 1)); covered.add((o, g - 1))
 for g in range(0, GMAX + 1):
@@ -393,6 +464,7 @@ for g in range(0, GMAX + 1):
             if n in S[g]: continue
             below = S[g - 1] if g > 0 else set(GRID)
             if n not in below or (n, g) in covered or MAT.get(n) == "weg" or n in PILLAR_CELLS or n in LIP_O: continue
+            if any((q, L) in replaced for q in (c, n) for L in range(g, g + 3)): continue
             run, q = [], n
             while q in below and q not in S[g] and (q, g) not in covered and len(run) < 3 and q not in RESERVED \
                     and MAT.get(q) != "weg" and q not in PILLAR_CELLS and q not in LIP_O and XMIN <= q[0] <= XMAX and ZMIN <= q[1] <= ZMAX:
@@ -471,7 +543,7 @@ for g in range(GMAX + 1):
         if MAT[c] == "weg": PLANKS[g].add(c); continue
         if c in PLAT_CELLS:
             edge = any((c[0] + a, c[1] + b) not in PLAT_CELLS for a, b in DIRS)
-            caps[(g, "04_plattformen")][c] = DBG if edge else BLACK; continue
+            caps[(g, "04_plattformen")][c] = LBG if edge else DBG; continue
         drop = [d for d in grad_dirs(c) if (c[0] + d[0], c[1] + d[1]) not in S[g]]
         if drop and vnoise(c[0] + 0.5, c[1] + 0.5, 1.7, 8) < 0.75:
             add(Part("02_felsen", "54200", rock_color(c, top=True), ctr(c[0]), y, ctr(c[1]), ROT_OUT[drop[0]],
@@ -496,42 +568,35 @@ for g, cells in PLANKS.items():
                 n = min(first, len(run) - pos) if pos == 0 else min(4, len(run) - pos)
                 while n not in TILE_LEN: n -= 1
                 seg = run[pos:pos + n]; pos += n
-                add(Part("03_laufweg", TILE_LEN[n], DBG, sum(ctr(x) for x in seg) / n, y, ctr(z), 0,
+                add(Part("03_laufweg", TILE_LEN[n], BLACK, sum(ctr(x) for x in seg) / n, y, ctr(z), 0,
                          {(x, z) for x in seg}, y, y + PH, studs=False))
 
-# Boegen: Pfeiler (Steine 1x2 in x) vom Fels bis zur Bogenunterkante, darauf Bogen 1x6x2 quer ueber den Weg
-for xs in ARCH_X:
-    for z in ARCH_Z:
-        cells = {(x, z) for x in xs}
-        for g in range(max(HF[(x, z)] for x in xs), ARCH_TOP - 2):
-            pack("05_boegen", {c: DBG for c in cells}, BRICK, -BH * (g + 1), BH, g % 2)
-    for x in xs:
-        y = -BH * ARCH_TOP
-        cells = {(x, z) for z in range(ARCH_Z[0], ARCH_Z[1] + 1)}
-        add(Part("05_boegen", "3307", DBG, ctr(x), y, (ARCH_Z[0] + ARCH_Z[1] + 1) / 2 * LDU, 90, cells, y, y + 2 * BH,
-                 studcells=cells))
-    y = -BH * ARCH_TOP - PH
-    for z in range(ARCH_Z[0], ARCH_Z[1] + 1):
-        add(Part("05_boegen", "3069b", BLACK, (xs[0] + 1) * LDU, y, ctr(z), 0, {(x, z) for x in xs}, y, y + PH, studs=False))
+# Durchgang: Boegen, darueber Steine bis zur Blockoberkante, oben Plattform-Fliesen
+for x, z0, z1 in ARCHES:
+    y = -BH * (ARCH_BOT + 2)
+    cells = {(x, z) for z in range(z0, z1 + 1)}
+    add(Part("05_block", "3307", DBG, ctr(x), y, (z0 + z1 + 1) / 2 * LDU, 90, cells, y, y + 2 * BH, studcells=cells))
+for g in range(ARCH_BOT + 2, BLOCK_H):
+    bricks("05_block", {c: (rock_color(c, g=g) if c[0] in BLOCK_X else BLACK) for c in BRIDGE}, g)
+plates("04_plattformen", {c: DBG for c in BRIDGE}, -BH * BLOCK_H - PH, 1, table=TILE, studs=False)
 
-# Oelfaesser (schwarz, Harz-Optik) als Requisiten auf den Plattformen
-DRUMS = []
-for px, pz, ph, pr in PLATFORMS[:3]:
-    c = (int(math.floor(px)) + 1, int(math.floor(pz)) + (1 if pz < 0 else -1))
-    cells = {(c[0] + a, c[1] + b) for a in (0, 1) for b in (0, 1)}
-    if not cells <= PLAT_CELLS: continue
-    y = -BH * ph - PH
-    # Fliesen der Plattform an dieser Stelle entfernen, Fass steht auf den Noppen der Plattform
-    for p in [p for p in parts if p.sub == "04_plattformen" and p.cells & cells]:
-        parts.remove(p)
-        rest = {q: (DBG if p.color == DBG else BLACK) for q in p.cells - cells}
-        if rest: plates("04_plattformen", rest, p.ytop, 0, table=TILE, studs=False)
-    yy = -BH * ph
-    for k in range(2):
-        add(Part("06_requisiten", "3941", BLACK, (c[0] + 1) * LDU, yy - BH, (c[1] + 1) * LDU, 0, cells, yy - BH, yy))
-        yy -= BH
-    add(Part("06_requisiten", "14769", DBG, (c[0] + 1) * LDU, yy - PH, (c[1] + 1) * LDU, 0, cells, yy - PH, yy, studs=False))
-    DRUMS.append(c)
+# Augen und Muender
+for c, g, d, col in EYES:
+    y = -BH * (g + 1); rot = ROT_OUT[d]
+    hl = add(Part("06_gesichter", "4070", rock_color(c, g=g), ctr(c[0]), y, ctr(c[1]), rot, {c}, y, y + BH))
+    tx, tz = ctr(c[0]) + d[0] * 14, ctr(c[1]) + d[1] * 14
+    o = (c[0] + d[0], c[1] + d[1])
+    tile = add(Part("06_gesichter", "98138", col, tx, y + 10, tz, 0, {o}, y, y + 20, studs=False, hang=True,
+                    extra=[f"1 {col} {fmt(tx)} {fmt(y + 10)} {fmt(tz)} {mat_str(rot)} 98138.dat"]))
+    SNOT_LINKS.append((tile, hl))
+for cells, g, d in MOUTHS:
+    y = -BH * (g + 1); rot = ROT_OUT[d]
+    cx = sum(ctr(c[0]) for c in cells) / 2; cz = sum(ctr(c[1]) for c in cells) / 2
+    front = add(Part("06_gesichter", "11211", DBG, cx, y, cz, rot, set(cells), y, y + BH))
+    gx, gz = cx + d[0] * 18, cz + d[1] * 18
+    grille = add(Part("06_gesichter", "2412b", BLACK, gx, y + 10, gz, 0, {(c[0] + d[0], c[1] + d[1]) for c in cells},
+                      y, y + 20, studs=False, hang=True, extra=[f"1 {BLACK} {fmt(gx)} {fmt(y + 10)} {fmt(gz)} {mat_str(rot)} 2412b.dat"]))
+    SNOT_LINKS.append((grille, front))
 
 # ---------------- Tuerme und Traversen-Raster ----------------
 TRUSS_Y = -BH * 3 - 3 * 240 - 2 * PH       # Unterkante Traverse (= Oberkante Tuerme)
@@ -638,7 +703,7 @@ def head_layers(s):
     return [
         ("schaedel", {q: LBG for q in inner}),
         ("stirn", {q: LBG for q in sq}),
-        ("augen", {q: (TRED if q in eyes else LBG) for q in sq if q != (0, m)}),   # (0, m): Nase (Slope)
+        ("augen", {q: LBG for q in sq if q != (0, m) and q not in eyes}),   # Nase (Slope) und Augen (SNOT) extra
         ("wangen", {q: (DBG if q == (0, m) else LBG) for q in sq}),                 # Mund dunkel
         ("kinn", {**{q: LBG for q in inner}, (0, m): LBG}),
     ]
@@ -662,6 +727,15 @@ for hx, hz, s_, fwd, rope in HEADS:
                 wd = (d[0] * side[0] + d[1] * fwd[0], d[0] * side[1] + d[1] * fwd[1])
                 c = cell((u, v))
                 add(Part("09_koepfe", "54200", LBG, ctr(c[0]), yy, ctr(c[1]), ROT_OUT[wd], {c}, yy - 16, yy, studs=False))
+        if nm == "augen":                                        # Glotzaugen: Headlight + runde Fliese weiss
+            for q in ((-1, s_ // 2), (1, s_ // 2)):
+                c = cell(q)
+                hl = add(Part("09_koepfe", "4070", LBG, ctr(c[0]), yy, ctr(c[1]), ROT_OUT[fwd], {c}, yy, yy + BH, hang=True))
+                tx, tz = ctr(c[0]) + fwd[0] * 14, ctr(c[1]) + fwd[1] * 14
+                o = (c[0] + fwd[0], c[1] + fwd[1])
+                t = add(Part("09_koepfe", "98138", WHITE, tx, yy + 10, tz, 0, {o}, yy, yy + 20, studs=False, hang=True,
+                             extra=[f"1 {WHITE} {fmt(tx)} {fmt(yy + 10)} {fmt(tz)} {mat_str(ROT_OUT[fwd])} 98138.dat"]))
+                SNOT_LINKS.append((t, hl))
         if nm == "augen":                                        # Nase: 45-Grad-Slope, faellt nach vorne ab
             m = s_ // 2; c0, c1 = cell((0, m)), cell((0, m + 1))
             add(Part("09_koepfe", "3040b", LBG, ctr(c0[0]), yy, ctr(c0[1]), ROT_OUT[fwd], [c0, c1], yy, yy + BH,
@@ -671,6 +745,19 @@ for hx, hz, s_, fwd, rope in HEADS:
     yy += BH
     assert yy < top_y({cell(q) for q in head_layers(s_)[1][1]}) - 2 * BH, (hx, hz)
 
+
+# ---------------- Moving Heads am Traversen-Raster ----------------
+BUSY = set(HANGERS) | {(hx, hz) for hx, hz, *_ in HEADS}
+LIGHTS = []
+for xs in CROSS:
+    for z in (-13, -9, -6, 5, 8, 12):
+        cells = {(xs[0] + a, z + b) for a in (0, 1) for b in (0, 1)}
+        if cells & BUSY or not cells <= RING: continue
+        yy = TRUSS_Y
+        for name, col, h in (("3022", BLACK, PH), ("3941", BLACK, BH), ("4032a", TCLEAR, PH)):
+            add(Part("11_licht", name, col, (xs[0] + 1) * LDU, yy, (z + 1) * LDU, 0, cells, yy, yy + h, hang=True))
+            yy += h
+        LIGHTS.append((xs[0], z)); BUSY |= cells
 
 # ---------------- PA-Haenge ----------------
 # In-the-round: PA an den Laengstraversen ausserhalb des Rings, Lautsprecher zeigen nach aussen zum Publikum
@@ -704,12 +791,13 @@ for sx in (-1, 1):
     cells = {(i, k) for i in (range(0, 32) if sx > 0 else range(-32, 0)) for k in range(-16, 16)}
     add(Part("01_baseplates", "3811", BLACK, sx * 320, 0, 0, 0, cells, 0, 4, True))
 
-TITLES = {"01_baseplates": "Grundplatten (2x 32x32)", "02_felsen": "Fels-Spalte (Buehne)",
-          "03_laufweg": "Laufweg in der Spalte", "04_plattformen": "Plattformen", "05_boegen": "Boegen",
-          "06_requisiten": "Oelfaesser", "07_videoring": "Ovaler Videoring (360 Grad)",
-          "08_traverse": "Tuerme und Traversen-Raster", "09_koepfe": "Fliegende Koepfe", "10_pa": "PA-Haenge"}
-print("Buehne:", sum(1 for m in MAT.values()), "Zellen, Plattformen", len(PLAT_CELLS), "| Ueberhaenge", len(LIPS),
-      "| Videoring", len(SCREEN), "Zellen,", len(HANGERS), "Seile | Faesser", len(DRUMS))
+TITLES = {"01_baseplates": "Grundplatten (2x 32x32)", "02_felsen": "Felswaende und Findlinge",
+          "03_laufweg": "Gewundener Laufweg", "04_plattformen": "Plattform auf dem Block",
+          "05_block": "Hoher Felsblock mit Durchgang", "06_gesichter": "Gesichter (SNOT-Augen und -Muender)",
+          "07_videoring": "Ovaler Videoring (360 Grad)", "08_traverse": "Tuerme und Traversen-Raster",
+          "09_koepfe": "Fliegende Koepfe", "10_pa": "PA-Haenge", "11_licht": "Moving Heads"}
+print("Buehne:", len(MAT), "Zellen | Ueberhaenge", len(LIPS), "| Augen", len(EYES), "Muender", len(MOUTHS),
+      "| Videoring", len(SCREEN), "Zellen,", len(HANGERS), "Seile | Scheinwerfer", len(LIGHTS))
 
 
 # ---------------- Checks ----------------
