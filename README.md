@@ -15,6 +15,12 @@ Bauanleitung als PDF: [`globe-stage/Bauanleitung_Globe_Stage.pdf`](globe-stage/B
 
 ![Yeezus Stage](yeezus-stage/renders/yeezus_hero.png)
 
+## Skill: LEGO-Profi-Designer
+
+[`.claude/skills/lego-profi-designer`](.claude/skills/lego-profi-designer/SKILL.md) bündelt Bautechniken,
+Design-Prinzipien, Statik/legale Verbindungen, eine geprüfte Teile-Bibliothek und die Generator-Pipeline
+dieses Repos. Claude Code lädt ihn automatisch, wenn in diesem Repo an LEGO-Modellen gearbeitet wird.
+
 ## Werkzeuge
 
 - [`tools/mosaic`](tools/mosaic/make_mosaic.py) – Mosaik-Generator für 1 × 1-Fliesen: erzeugt mehrere Varianten und bewertet sie gegen die Vorlage (ΔL\* aus Abstand, SSIM im Detail).
