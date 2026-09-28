@@ -249,21 +249,22 @@ PATH = [(-44.0, -3.0), (-19.5, -3.0), (-13.5, 1.5), (-6.0, -3.0), (1.5, 3.75), (
 SX0, SX1 = -42, 41
 BLOCK_X = (-42, -32)                       # hoher Felsblock
 BLOCK_H = 18
+BLOCK_CX = (BLOCK_X[0] + BLOCK_X[1] + 1) / 2
 WALK_HW = 2.6                              # halbe Wegbreite (6 Zellen)
-BOULDERS = [(-15.0, 1), (-2.0, -1), (12.0, 1), (25.5, -1), (36.0, 1), (-26.0, -1)]   # Findlings-Koepfe (x, Seite)
+BOULDERS = [(float(x), 1 if i % 2 else -1) for i, x in enumerate(range(-27, 40, 5))]   # Steinkoepfe (x, Seite), wie Skizze
 
 
 def zc(x):
-    for (x0, z0), (x1, z1) in zip(PATH, PATH[1:]):
-        if x0 <= x <= x1: return z0 + (z1 - z0) * (x - x0) / (x1 - x0)
-    return PATH[-1][1]
+    """Mittellinie: gerade durch den Block, danach geschwungen (Skizze/Grundriss)"""
+    if x <= -30.0: return -3.0
+    return -3.0 + 4.2 * math.sin((x + 30.0) * 2 * math.pi / 34.0) + 1.2 * math.sin((x + 30.0) * 2 * math.pi / 13.0)
 
 
 def in_block(x): return BLOCK_X[0] <= x < BLOCK_X[1] + 1
 
 
 def half_width(x):
-    if in_block(x): return 8.4
+    if in_block(x): return 8.4 * math.sqrt(max(0.0, 1 - ((x - BLOCK_CX) / 7.5) ** 4))   # Ecken rund
     w = 5.6 + 1.0 * math.sin(0.37 * x + 0.3) + 0.7 * math.sin(0.87 * x)
     return w * min(1.0, (SX1 + 1 - x) / 3.0) if x > SX1 - 2 else w
 
@@ -272,9 +273,9 @@ def boulder(x, z):
     """Findlinge: runde Kuppen am Wegrand"""
     h = 0.0
     for bx, side in BOULDERS:
-        bz = zc(bx) + side * (WALK_HW + 3.0)
-        r = math.hypot(x - bx, z - bz)
-        if r < 3.6: h = max(h, DECK + 8.5 - r * 1.3)
+        bz = zc(bx) + side * (WALK_HW + 3.2)
+        r = (abs(x - bx) ** 4 + abs(z - bz) ** 4) ** 0.25          # Squircle: flache Gesichtsseite
+        if r < 3.3: h = max(h, DECK + 8.5 - r * 1.2)
     return h
 
 
@@ -285,7 +286,9 @@ def stage_f(p):
     d = abs(z - zc(x)); W = half_width(x); b = boulder(x, z)
     if d <= WALK_HW: return float(DECK)
     if d > W: return b
-    if in_block(x): return BLOCK_H + 1.4 * (vnoise(x, z, 2.0, 5) - 0.5)
+    if in_block(x):                                                     # Kuppel: Rand faellt rund ab
+        dn = d / W
+        return BLOCK_H - (0.0 if dn < 0.45 else 30.0 * (dn - 0.45) ** 2) + 1.2 * (vnoise(x, z, 2.0, 5) - 0.5)
     h = DECK + 2.0 + 3.6 * vnoise(x, z, 3.9, 3) + 1.4 * vnoise(x, z, 1.9, 4)
     return max(h, b)
 
@@ -305,7 +308,7 @@ for x in (SX0 - 1, SX1 + 1):                                      # Stufe zum Ha
     for z in range(ZMIN, ZMAX + 1):
         if abs(z + 0.5 - zc(x + 0.5)) <= WALK_HW: HF[(x, z)], MAT[(x, z)] = 1, "weg"
 # Oberseite des Blocks flach (Performer-Plattform wie auf dem Stadionfoto)
-PLAT_CELLS = {c for c in HF if MAT[c] == "fels" and in_block(c[0] + 0.5) and abs(c[1] + 0.5 - zc(c[0] + 0.5)) < 6.5}
+PLAT_CELLS = {c for c in HF if MAT[c] == "fels" and in_block(c[0] + 0.5) and abs(c[1] + 0.5 - zc(c[0] + 0.5)) < 4.2}
 for c in PLAT_CELLS: HF[c] = BLOCK_H
 TUNNEL = sorted(c for c in HF if MAT[c] == "weg" and in_block(c[0] + 0.5))
 GMAX = max(HF.values())
@@ -444,13 +447,18 @@ for side in (-1, 1):
         for c in eyes: EYES.append((c, 13, d, LBG)); replaced.add((c, 13))
         MOUTHS.append((tuple(mouth), 9, d)); replaced |= {(c, 9) for c in mouth}
 # Findlinge: zwei Augen zur Hallenseite
+SMOUTHS = []                              # Findlings-Muender 1x1: Stein mit Seitennoppe + schwarze Fliese
 for bx, side in BOULDERS:
     d = (0, side)
-    cand = [outer_cell(x, side) for x in (int(math.floor(bx)) - 1, int(math.floor(bx)) + 1)]
-    if None in cand: continue
-    g = min(HF[c] for c in cand) - 3
-    if g >= DECK + 1 and all(free_face(c, g, d) for c in cand):
+    xm = int(math.floor(bx))
+    cand = [outer_cell(x, side) for x in (xm - 1, xm + 1)]
+    mid = outer_cell(xm, side)
+    if None in cand or mid is None: continue
+    g = min(HF[c] for c in cand + [mid]) - 3
+    if g >= DECK + 2 and all(free_face(c, g, d) for c in cand):
         for c in cand: EYES.append((c, g, d, LBG)); replaced.add((c, g))
+        if cand[0][1] == cand[1][1] == mid[1] and free_face(mid, g - 2, d):
+            SMOUTHS.append((mid, g - 2, d)); replaced.add((mid, g - 2))
 # Nasen (Osterinsel-Koepfe): 45-Grad-Slope mittig unter den Augen, kragt 1 Noppe aus der Wand
 NOSES = []
 for i in range(0, len(EYES) - 1, 2):
@@ -631,6 +639,14 @@ for c, g, d in NOSES:
     y = -BH * (g + 1); n = (c[0] + d[0], c[1] + d[1])
     add(Part("06_gesichter", "3040b", rock_color(c, g=g), ctr(c[0]), y, ctr(c[1]), ROT_OUT[d], [c, n], y, y + BH,
              studcells={c}))
+for c, g, d in SMOUTHS:
+    y = -BH * (g + 1); rot = ROT_OUT[d]
+    fr = add(Part("06_gesichter", "87087", DBG, ctr(c[0]), y, ctr(c[1]), rot, {c}, y, y + BH))
+    tx, tz = ctr(c[0]) + d[0] * 18, ctr(c[1]) + d[1] * 18
+    o = (c[0] + d[0], c[1] + d[1])
+    tl = add(Part("06_gesichter", "3070b", BLACK, tx, y + 10, tz, 0, {o}, y, y + 20, studs=False, hang=True,
+                  extra=[f"1 {BLACK} {fmt(tx)} {fmt(y + 10)} {fmt(tz)} {mat_str(rot)} 3070b.dat"]))
+    SNOT_LINKS.append((tl, fr))
 for cells, g, d in MOUTHS:
     y = -BH * (g + 1); rot = ROT_OUT[d]
     cx = sum(ctr(c[0]) for c in cells) / 2; cz = sum(ctr(c[1]) for c in cells) / 2
@@ -851,7 +867,7 @@ for hx, hz, s_, fwd, rope in HEADS:
                              extra=[f"1 {WHITE} {fmt(tx)} {fmt(yy + 10)} {fmt(tz)} {mat_str(ROT_OUT[fwd])} 6141.dat"]))
                 SNOT_LINKS.append((t, hl))
                 # Laser: Stange 4L steckt in der Hohlnoppe der Rundplatte (legal), zeigt 15 Grad nach unten ins Publikum
-                ca, sa = math.cos(math.radians(15)), math.sin(math.radians(15))
+                ca, sa = math.cos(math.radians(35)), math.sin(math.radians(35))
                 dx, dz = fwd
                 M = [[-dz, dx * ca, -dx * sa], [0, sa, ca], [dx, dz * ca, -dz * sa]]
                 bx_, bz_ = ctr(c[0]) + dx * 16, ctr(c[1]) + dz * 16
@@ -920,7 +936,7 @@ TITLES = {"01_baseplates": "Grundplatten (2x 48x48)", "02_felsen": "Felswaende u
           "07_videoring": "Ovaler Videoring (360 Grad)", "08_traverse": "Tuerme und Traversen-Raster",
           "09_koepfe": "Fliegende Koepfe", "10_pa": "PA-Haenge", "11_licht": "Moving Heads",
           "12_pyro": "Pyro-Flammen", "13_boden": "Bodenlautsprecher, Uplights, Faesser"}
-print("Buehne:", len(MAT), "Zellen | Ueberhaenge", len(LIPS), "| Augen", len(EYES), "Nasen", len(NOSES), "Muender", len(MOUTHS),
+print("Buehne:", len(MAT), "Zellen | Ueberhaenge", len(LIPS), "| Augen", len(EYES), "Nasen", len(NOSES), "Muender", len(MOUTHS) + len(SMOUTHS),
       "| Videoring", len(SCREEN), "Zellen,", len(HANGERS), "Seile | Scheinwerfer", len(LIGHTS),
       "| Pyro", len(PYRO), "| Subs", len(SUBS), "| Uplights", len(UPLIGHTS))
 

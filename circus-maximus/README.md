@@ -14,23 +14,26 @@ die PA an einem Traversen-Raster. Das Publikum steht rundherum.
 |---|---|
 | ![Block](renders/cm_block.png) | ![Pfad](renders/cm_pfad.png) |
 
-| Pyro, Subs und Uplights | Videoring mit Feuerwand | Köpfe unter dem Videoring |
+| Steinköpfe mit Gesichtern am Weg | Videoring mit Feuerwand | Köpfe mit Laser-Augen |
 |---|---|---|
-| ![Pyro](renders/cm_pyro.png) | ![Ring](renders/cm_ring.png) | ![Köpfe](renders/cm_koepfe.png) |
+| ![Gesichter](renders/cm_gesichter.png) | ![Ring](renders/cm_ring.png) | ![Köpfe](renders/cm_koepfe.png) |
 
-| Von oben: Grundriss des Weges | Blick entlang der Bühne |
-|---|---|
-| ![Oben](renders/cm_oben.png) | ![Stirnseite](renders/cm_stirnseite.png) |
+| Von oben: Grundriss des Weges | Seitenansicht (wie im Bauplan) | Pyro, Subs und Uplights |
+|---|---|---|
+| ![Oben](renders/cm_oben.png) | ![Seite](renders/cm_seite.png) | ![Pyro](renders/cm_pyro.png) |
 
 ## Kennzahlen
 
-- **5.945 Teile**, 152 Positionen (Teil × Farbe), keine Minifiguren
+- **6.454 Teile**, 149 Positionen (Teil × Farbe), keine Minifiguren
 - **Maßstab** 1,5-fach gegenüber der ersten Version: **Grundfläche** 96 × 48 Noppen, **Höhe** ca. 46 cm
 - **Weg** 84 Noppen lang und 6 breit, Felsblock 18 Steine hoch
 - **Videoring** Oval 81 × 38 Noppen, 5 Bildlagen, an 20 Seilen
 - **17 Pyro-Flammen**, 15 Subwoofer, 21 Uplights, 27 Scheinwerfer
 
 ## Vorlage
+
+- **Bauplan-Skizze** (Draufsicht, Seitenansicht, Stirnansicht mit Noppenraster): geschwungener Weg, kuppelförmiger
+  Felsblock mit Rundbogen, dichte Reihen von Steinköpfen mit Gesichtern an beiden Wegseiten, Laser schräg nach unten
 
 - **Bühnen-Renderings** (Ansichten und Grundriss): langer, schmaler, gewundener Weg mit Zickzack in der Mitte,
   Felswände und runde Findlinge mit Gesichtern am Rand, an einem Ende ein hoher Block mit Gesichtern und Durchgang
@@ -47,20 +50,21 @@ die PA an einem Traversen-Raster. Das Publikum steht rundherum.
 ## Aufbau (Submodelle)
 
 1. **Grundplatten** – 2 × Baseplate 48 × 48 schwarz
-2. **Felswände und Findlinge** – grauer Stein (Dunkelgrau, im Licht Hellgrau, Schwarz in Spalten), Slopes an jeder
-   Stufe, Überhänge auf umgedrehten Slopes, Kanten aus gebogenen Slopes und Cheese-Slopes; 5 Findlinge als runde Kuppen
-3. **Gewundener Laufweg** – 6 Noppen breit, schwarze Dielen im Verband, folgt der Zickzack-Linie aus dem Grundriss,
+2. **Felswände und Steinköpfe** – grauer Stein (Dunkelgrau, im Licht Hellgrau, Schwarz in Spalten), Slopes an jeder
+   Stufe, Überhänge auf umgedrehten Slopes, Kanten aus gebogenen Slopes und Cheese-Slopes; 14 Steinköpfe (Grundriss als
+   Squircle, damit die Gesichtsseite flach ist) abwechselnd an beiden Wegseiten
+3. **Gewundener Laufweg** – 6 Noppen breit, schwarze Dielen im Verband, gerade durch den Block, danach in zwei überlagerten Wellen geschwungen wie in der Skizze,
    Stufen an beiden Enden
 4. **Plattform auf dem Block** – Performer-Fläche, Rand hellgrau
-5. **Hoher Felsblock mit Durchgang** – 18 Steine hoch; der Weg führt unter 11 Bögen 1 × 8 × 2 hindurch
+5. **Hoher Felsblock mit Durchgang** – 18 Steine hoch, Kuppelform mit runden Ecken; der Weg führt unter 11 Bögen 1 × 8 × 2 hindurch
 6. **Gesichter (SNOT)** – Osterinsel-Steingesichter: Augen aus Headlight-Steinen mit runden Fliesen auf der Seitennoppe,
-   vorspringende Nase aus einem 45°-Slope, Mund aus einer Gitterfliese auf einem Stein mit Seitennoppen; am Block beidseitig,
-   an den Findlingen zur Halle
+   vorspringende Nase aus einem 45°-Slope, Mund aus einer Gitterfliese (Block) bzw. einer schwarzen Fliese 1 × 1 auf einem
+   Stein mit Seitennoppe (Steinköpfe); 14 vollständige Gesichter an den Steinköpfen, zwei am Block
 7. **Ovaler Videoring** – 2 Noppen dick, Feuerwand als Bild (unten Gelb/Orange, nach oben Rot bis Schwarz), zwei Plattenlagen im Verbund, hängt an 20 dünnen Seilen
 8. **Türme und Traversen-Raster** – 6 Gittertürme (je 4 × 95347), Außenrahmen plus 5 Quertraversen
 9. **Fliegende Köpfe** – 5 Köpfe (einer groß in der Mitte): runder Schädel aus Cheese-Slopes, Glotzaugen aus
    Headlight + weißer Rundplatte, Nase als 45°-Slope, dunkler Mund; aus jedem Auge strahlt ein **trans-grüner Laser**
-   (Stange 4L in der Hohlnoppe der Rundplatte, 15° nach unten ins Publikum)
+   (Stange 4L in der Hohlnoppe der Rundplatte, 35° nach unten auf Bühne und Publikum)
 10. **PA-Hänge** – 8 Stränge an den Längstraversen, Lautsprechergitter per SNOT nach außen
 11. **Moving Heads** – 27 Scheinwerfer an den Quertraversen, Linsen abwechselnd trans-rot, trans-orange, trans-klar
 12. **Pyro-Flammen** – 17 Flammen (85959, trans-orange und trans-gelb) in schwarzen Rundstein-Düsen auf den Felskanten und auf dem Block
