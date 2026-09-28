@@ -38,6 +38,7 @@ Insgesamt **40 verschiedene Teilesorten**, 41 Spezialteile.
 ## Dateien
 
 - `graduation_relief.mpd` – Modell (Noppen nach oben = zum Betrachter; zum Aufhängen hochkant drehen)
+- `graduation_relief.ldr` – dasselbe als einfache LDraw-Datei für den BrickLink-Upload (BrickLink nimmt kein .mpd)
 - `graduation_relief_bom.csv`, `graduation_relief_bricklink.xml` – Stückliste und BrickLink-Wanted-List
 - `graduation_relief_vorschau.png` – flache Farbvorschau (1 Pixel = 1 Noppe)
 

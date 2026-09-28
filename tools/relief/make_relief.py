@@ -254,6 +254,9 @@ def main():
     out = [f"0 FILE {name}.ldr", f"0 Relief-Mosaik {name} ({W} x {H} Noppen)", f"0 Name: {name}.ldr",
            "0 Author: Claude Code (generiert)", "0 !LDRAW_ORG Unofficial_Model", ""] + lines + ["0 NOFILE"]
     open(a.ausgabe + ".mpd", "w").write("\n".join(out) + "\n")
+    # BrickLink-Upload akzeptiert nur .ldr: dieselben Teile als einfache LDraw-Datei ohne FILE-Bloecke
+    open(a.ausgabe + ".ldr", "w").write("\n".join([f"0 Relief-Mosaik {name} ({W} x {H} Noppen)", f"0 Name: {name}.ldr",
+                                                   "0 Author: Claude Code (generiert)", ""] + lines) + "\n")
     rows = ["LDraw Part,BrickLink ID,Farbe,Menge"]; xml = ["<INVENTORY>"]
     for (nm, c), qn in sorted(bom.items()):
         bl = BL_ID.get(nm, nm)
