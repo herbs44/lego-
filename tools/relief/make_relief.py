@@ -11,10 +11,11 @@ Aufruf:
                           [--konfetti 0.05] [--wolken 3] [--zonen zonen.json] [--farben 0,15,71,72,...]
 
 Zonen-Datei: Liste von Objekten, Koordinaten als Bruchteil der Bildbreite/-hoehe (0..1):
-  {"name": "...", "form": "ellipse" | "ring" | "rechteck" | "punkt",
+  {"name": "...", "form": "ellipse" | "ring" | "rechteck" | "rahmen" | "punkt",
    "mitte": [u, v], "radius": [ru, rv], "breite": w (nur ring), "von": [u, v], "bis": [u, v] (rechteck),
    "hoehe": Platten ueber Grund, "profil": "flach" | "kuppel",
-   "teile": ["4589", ...]  (bevorzugte 1x1-Abschlussteile), "farbe_rgb": [r,g,b], "toleranz": 80 (nur passende Pixel),
+   "teile": ["4589", "3069b", ...]  (bevorzugte Abschlussteile je Groesse 1x1/1x2/2x2), "farbe_rgb": [r,g,b], "toleranz": 80 (nur passende Pixel),
+   "mischung": {"4": 0.7, "320": 0.3} (Farbmix), "zweifarbig": [0, 15] + "schwelle": 50 (Helligkeit L*),
    "spezial": {"teil": "4740", "abstand": 4, "farbe": 15, "extra": 1}  (Spezialteile verteilt)}
 Spaetere Zonen ueberschreiben fruehere.
 
@@ -41,6 +42,10 @@ PALETTE = {
     29: ("Bright Pink", 104, (228, 173, 200)), 5: ("Dark Pink", 47, (200, 112, 160)), 31: ("Lavender", 154, (205, 164, 222)),
     353: ("Coral", 220, (255, 109, 119)), 379: ("Sand Blue", 55, (112, 129, 154)), 226: ("Bright Light Yellow", 103, (255, 240, 58)),
 }
+# Zusatzfarben: nur aktiv mit --farben-plus (die Standardpalette bleibt gleich, alte Reliefs bleiben reproduzierbar)
+EXTRA = {3: ("Dark Turquoise", 39, (6, 157, 159)), 151: ("Sand Green", 48, (160, 188, 172)),
+         92: ("Nougat", 28, (208, 145, 104)), 78: ("Light Nougat", 90, (246, 215, 179)),
+         297: ("Pearl Gold", 115, (170, 127, 46)), 47: ("Trans-Clear", 12, (238, 238, 238)), 36: ("Trans-Red", 17, (201, 26, 9))}
 BL_ID = {"3070b": "3070", "3069b": "3069", "3068b": "3068", "3062b": "3062", "6141": "4073", "4032a": "4032"}
 
 # Abschlussteile: Name -> (Hoehe in LDU ueber der Auflage, Ursprung unten?, Gewicht)
@@ -54,7 +59,7 @@ TOP_1x2 = {"3004": (24, False, 3), "3023": (8, False, 2), "3069b": (8, False, 2)
 TOP_2x2 = {"3941": (24, False, 3), "92947": (24, False, 2), "98100": (24, False, 2), "4740": (8, False, 2),
            "4032a": (8, False, 1), "18674": (8, False, 1), "4150": (8, False, 1), "98262": (24, False, 1),
            "15068": (16, True, 1), "3942c": (48, False, 1)}
-SPECIAL = {"4740": (2, 8), "3960": (4, 16), "43898": (3, 16), "98262": (2, 24), "3942c": (2, 48), "3068b": (2, 8),
+SPECIAL = {"33061": (1, 48), "2343": (1, 40), "4740": (2, 8), "3960": (4, 16), "43898": (3, 16), "98262": (2, 24), "3942c": (2, 48), "3068b": (2, 8),
            "92947": (2, 24), "4150": (2, 8), "60474": (4, 8), "14769": (2, 8), "98100": (2, 24)}   # (Groesse, Hoehe)
 ALL_TOPS = {**TOP_1x1, **TOP_1x2, **TOP_2x2}
 ROT = {0: "1 0 0 0 1 0 0 0 1", 90: "0 0 -1 0 1 0 1 0 0", 180: "-1 0 0 0 1 0 0 0 -1", 270: "0 0 1 0 1 0 -1 0 0"}
@@ -92,6 +97,11 @@ def zone_weight(z, i, k, W, H):
     if f == "rechteck":
         (u0, v0), (u1, v1) = z["von"], z["bis"]
         return 1.0 if u0 <= u <= u1 and v0 <= v <= v1 else None
+    if f == "rahmen":                                           # Rechteck-Umriss mit Breite "breite"
+        (u0, v0), (u1, v1) = z["von"], z["bis"]; b = z.get("breite", 0.02)
+        inside = u0 <= u <= u1 and v0 <= v <= v1
+        inner = u0 + b <= u <= u1 - b and v0 + b <= v <= v1 - b
+        return 1.0 if inside and not inner else None
     (mu, mv), (ru, rv) = z["mitte"], z.get("radius", [0.02, 0.02])
     d = math.hypot((u - mu) / ru, (v - mv) / rv)
     if f in ("ellipse", "punkt"):
@@ -113,10 +123,13 @@ def main():
     ap.add_argument("--farben", default="", help="LDraw-Farbcodes kommagetrennt (Standard: ganze Palette)")
     ap.add_argument("--konfetti", type=float, default=0.05, help="Anteil bunter Akzentfarben gleicher Helligkeit")
     ap.add_argument("--zonen", default="", help="JSON-Datei mit Zonen (Hoehen, Teile, Spezialteile)")
+    ap.add_argument("--farben-plus", default="", help="Zusatzfarben aktivieren, z. B. 3,151,92,78,297 (siehe EXTRA)")
     a = ap.parse_args()
     rng = random.Random(a.seed)
     W, H = a.breite, a.hoehe
-    pal = {c: v for c, v in PALETTE.items() if not a.farben or str(c) in a.farben.split(",")}
+    PALETTE.update(EXTRA)
+    plus = {int(c) for c in a.farben_plus.split(",") if c}
+    pal = {c: v for c, v in PALETTE.items() if (c not in EXTRA or c in plus) and (not a.farben or str(c) in a.farben.split(","))}
     lab = {c: srgb_to_lab(v[2]) for c, v in pal.items()}
     zones = json.load(open(a.zonen)) if a.zonen else []
 
@@ -137,6 +150,7 @@ def main():
             if rng.random() < a.konfetti:
                 acc = [cc for cc in pal if abs(lab[cc][0] - L[0]) < 16 and math.hypot(lab[cc][1], lab[cc][2]) > 25]
                 if acc: c = rng.choice(acc)
+            if c in (47, 36): c = d[0][1] if d[0][1] not in (47, 36) else 4          # Trans-Farben nur gezielt
             col[(i, k)], rgb[(i, k)], lum[(i, k)] = c, px, L[0]
 
     # ---- Hoehenkarte (in Platten) ----
@@ -156,6 +170,12 @@ def main():
             hgt[q] = max(hgt[q], int(round(base)) + rng.choice((0, 0, 1)))
             if z.get("teile"): pool[q] = z["teile"]
             if "farbe" in z: col[q] = z["farbe"]
+            if "mischung" in z:                                  # gewichteter Farbmix, z. B. Stoff aus Rot + Dunkelrot
+                cs = [int(c) for c in z["mischung"]]
+                col[q] = rng.choices(cs, weights=[z["mischung"][str(c)] for c in cs])[0]
+            if "zweifarbig" in z:                                # Hell/Dunkel-Schwelle, z. B. Aufkleber mit Schrift
+                dk, lt = z["zweifarbig"]
+                col[q] = lt if lum[q] > z.get("schwelle", 50) else dk
 
     lines, bom = [], Counter()
 
@@ -232,12 +252,12 @@ def main():
             if r < 0.08 and all(p in col and p not in done and col[p] == c and hgt[p] == n for p in quad):
                 for p in quad: stack(p, n)
                 x, zz = ctr(quad)
-                top(pick(TOP_2x2), c, x, -PH * n, zz, 0)
+                top(pick(TOP_2x2, pool.get(q)), c, x, -PH * n, zz, 0)
                 done |= set(quad); continue
             for pair, rot in (([(i, k), (i + 1, k)], 0), ([(i, k), (i, k + 1)], 90)):
                 if r < 0.30 and all(p in col and p not in done and col[p] == c and hgt[p] == n for p in pair):
                     for p in pair: stack(p, n)
-                    nm = pick(TOP_1x2)
+                    nm = pick(TOP_1x2, pool.get(q))
                     rr = rot + (180 if nm == "85984" and rng.random() < 0.5 else 0)
                     x, zz = ctr(pair)
                     top(nm, c, x, -PH * n, zz, rr % 360)

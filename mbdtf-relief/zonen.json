@@ -1,0 +1,229 @@
+[
+ {
+  "name": "Rotes Stofffeld",
+  "form": "rechteck",
+  "von": [
+   0,
+   0
+  ],
+  "bis": [
+   1,
+   1
+  ],
+  "farbe_rgb": [
+   226,
+   16,
+   61
+  ],
+  "toleranz": 70,
+  "hoehe": 0,
+  "mischung": {
+   "4": 0.72,
+   "320": 0.22,
+   "26": 0.06
+  }
+ },
+ {
+  "name": "Leinwand (vertieft im Rahmen)",
+  "form": "rechteck",
+  "von": [
+   0.3,
+   0.3
+  ],
+  "bis": [
+   0.695,
+   0.695
+  ],
+  "hoehe": 3
+ },
+ {
+  "name": "Goldrahmen",
+  "form": "rahmen",
+  "von": [
+   0.285,
+   0.285
+  ],
+  "bis": [
+   0.705,
+   0.705
+  ],
+  "breite": 0.022,
+  "hoehe": 9,
+  "teile": [
+   "3070b",
+   "25269",
+   "24246",
+   "98138",
+   "3069b",
+   "3068b",
+   "4150"
+  ],
+  "mischung": {
+   "297": 0.7,
+   "191": 0.2,
+   "19": 0.1
+  }
+ },
+ {
+  "name": "Kleid und Tutu (schwarz)",
+  "form": "rechteck",
+  "von": [
+   0.33,
+   0.33
+  ],
+  "bis": [
+   0.69,
+   0.665
+  ],
+  "farbe_rgb": [
+   26,
+   26,
+   26
+  ],
+  "toleranz": 75,
+  "hoehe": 8,
+  "teile": [
+   "3062b",
+   "4589",
+   "11610",
+   "54200",
+   "35464",
+   "92947",
+   "3941"
+  ]
+ },
+ {
+  "name": "Tutu (Rüschen)",
+  "form": "ellipse",
+  "mitte": [
+   0.535,
+   0.615
+  ],
+  "radius": [
+   0.17,
+   0.05
+  ],
+  "farbe_rgb": [
+   26,
+   26,
+   26
+  ],
+  "toleranz": 75,
+  "hoehe": 10,
+  "profil": "kuppel",
+  "teile": [
+   "54200",
+   "35464",
+   "4589",
+   "11610",
+   "85984",
+   "15068"
+  ]
+ },
+ {
+  "name": "Haut (Arme, Schulter, Beine)",
+  "form": "rechteck",
+  "von": [
+   0.33,
+   0.37
+  ],
+  "bis": [
+   0.69,
+   0.69
+  ],
+  "farbe_rgb": [
+   228,
+   190,
+   140
+  ],
+  "toleranz": 65,
+  "hoehe": 9,
+  "teile": [
+   "3062b",
+   "6141",
+   "98138",
+   "3005",
+   "3004",
+   "3941"
+  ]
+ },
+ {
+  "name": "Kopf",
+  "form": "ellipse",
+  "mitte": [
+   0.535,
+   0.365
+  ],
+  "radius": [
+   0.035,
+   0.045
+  ],
+  "hoehe": 11,
+  "profil": "kuppel",
+  "teile": [
+   "3062b",
+   "6141",
+   "98138",
+   "85861"
+  ]
+ },
+ {
+  "name": "Haarknoten",
+  "form": "punkt",
+  "mitte": [
+   0.53,
+   0.325
+  ],
+  "radius": [
+   0.012,
+   0.012
+  ],
+  "hoehe": 12,
+  "farbe": 0,
+  "teile": [
+   "3062b",
+   "4589"
+  ]
+ },
+ {
+  "name": "Weinglas",
+  "form": "punkt",
+  "mitte": [
+   0.34,
+   0.465
+  ],
+  "radius": [
+   0.012,
+   0.012
+  ],
+  "hoehe": 7,
+  "spezial": {
+   "teil": "33061",
+   "farbe": 47
+  }
+ },
+ {
+  "name": "Parental Advisory",
+  "form": "rechteck",
+  "von": [
+   0.84,
+   0.885
+  ],
+  "bis": [
+   0.975,
+   0.975
+  ],
+  "hoehe": 3,
+  "teile": [
+   "3070b",
+   "3069b",
+   "2431",
+   "3068b"
+  ],
+  "zweifarbig": [
+   0,
+   15
+  ],
+  "schwelle": 55
+ }
+]
