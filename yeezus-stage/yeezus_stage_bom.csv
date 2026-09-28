@@ -60,15 +60,15 @@ LDraw Part,BrickLink ID,Name,Farbe,Menge
 3040b.dat,3040b,"Slope Brick 45  2 x  1",Light Bluish Gray,51
 3040b.dat,3040b,"Slope Brick 45  2 x  1",Dark Bluish Gray,12
 3062b.dat,3062b,"Brick  1 x  1 Round with Hollow Stud",Dark Bluish Gray,130
-3068b.dat,3068,"Tile  2 x  2 with Groove",White,2
-3069b.dat,3069,"Tile  1 x  2 with Groove",Black,8
-3069b.dat,3069,"Tile  1 x  2 with Groove",White,26
-3069b.dat,3069,"Tile  1 x  2 with Groove",Light Bluish Gray,7
-3069b.dat,3069,"Tile  1 x  2 with Groove",Dark Bluish Gray,16
-3070b.dat,3070,"Tile  1 x  1 with Groove",Black,11
-3070b.dat,3070,"Tile  1 x  1 with Groove",White,61
-3070b.dat,3070,"Tile  1 x  1 with Groove",Light Bluish Gray,4
-3070b.dat,3070,"Tile  1 x  1 with Groove",Dark Bluish Gray,8
+3068b.dat,3068b,"Tile  2 x  2 with Groove",White,2
+3069b.dat,3069b,"Tile  1 x  2 with Groove",Black,8
+3069b.dat,3069b,"Tile  1 x  2 with Groove",White,26
+3069b.dat,3069b,"Tile  1 x  2 with Groove",Light Bluish Gray,7
+3069b.dat,3069b,"Tile  1 x  2 with Groove",Dark Bluish Gray,16
+3070b.dat,3070b,"Tile  1 x  1 with Groove",Black,11
+3070b.dat,3070b,"Tile  1 x  1 with Groove",White,61
+3070b.dat,3070b,"Tile  1 x  1 with Groove",Light Bluish Gray,4
+3070b.dat,3070b,"Tile  1 x  1 with Groove",Dark Bluish Gray,8
 3460.dat,3460,"Plate  1 x  8",Dark Bluish Gray,1
 3622.dat,3622,"Brick  1 x  3",Black,23
 3622.dat,3622,"Brick  1 x  3",White,15

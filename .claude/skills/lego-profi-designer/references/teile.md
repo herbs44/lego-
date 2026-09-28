@@ -16,8 +16,8 @@ ergänzen.
 | 3024 / 3023 / 3623 / 3710 / 3666 / 3460 / 4477 / 60479 | | Plate 1x1 … 1x12 | Lagen, Verbund |
 | 3022 / 3021 / 3020 / 3795 / 3034 / 3832 / 2445 / 4282 | | Plate 2x2 … 2x16 | Decks |
 | 3031 / 3032 / 3035 / 3030 / 3029 / 3958 / 3036 / 3033 / 3028 / 3456 / 3027 / 41539 / 92438 / 91405 | | große Platten bis 16x16 | Decks, Dächer |
-| 3070b / 3069b / 63864 / 2431 / 6636 / 4162 | 3070 / 3069 / – | Tile 1x1 … 1x8 | Abdeckung, Dielen |
-| 3068b / 87079 | 3068 / – | Tile 2x2 / 2x4 | glatte Flächen |
+| 3070b / 3069b / 63864 / 2431 / 6636 / 4162 | gleich (BrickLink führt die Rillen-Fliesen mit „b“) | Tile 1x1 … 1x8 | Abdeckung, Dielen |
+| 3068b / 87079 | gleich | Tile 2x2 / 2x4 | glatte Flächen |
 
 ## Slopes und Kurven
 
@@ -138,6 +138,10 @@ ergänzen.
 | 73 / 212 | Medium Blue / Bright Light Blue | 42 / 105 |
 | 47 / 46 | Trans-Clear / Trans-Yellow | 12 / 19 |
 | 148 / 179 | Pearl Dark Gray / Flat Silver | 77 / 95 |
+
+BrickLink-Upload: nur `.ldr`, `.io`, `.lxf`, `.bsx` oder XML – **kein `.mpd`**. XML ist am zuverlässigsten (Teilenummern und Farben
+bereits umgerechnet). Fliesen mit Rille heißen auf BrickLink 3070b/3069b/3068b (ohne „b" = alte Fliese ohne Rille!),
+Rundplatte 1×1 = 4073, Rundplatte 2×2 mit Achsloch = 4032.
 
 BrickLink-XML: keine XML-Deklaration, Struktur `<INVENTORY><ITEM><ITEMTYPE>P</ITEMTYPE><ITEMID>…</ITEMID>
 <COLOR>…</COLOR><MINQTY>…</MINQTY></ITEM></INVENTORY>`.
