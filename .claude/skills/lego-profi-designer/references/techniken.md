@@ -154,6 +154,11 @@ Regeln, die den Stil ausmachen:
   Explosionen aus Kegeln und Doppel-Slopes, Blumenfelder aus Blumen 2×2 und Blütenplatten, Schrift aus glatten Fliesen
   auf genopptem Grund. Pro Bildteil eine Zone mit eigenem Teile-Pool.
 
+- **Wie ein Maler** (Beispiel MBDTF): Pinselstriche aus langen 1×2–1×4-Teilen in Strichrichtung; Licht von links oben
+  als Farbstufe gleichen Farbtons (Schwarz nie aufhellen, Hintergrund nur Schatten → Schlagschatten des Rahmens);
+  Slopes folgen dem Gefälle; Motiv-Umriss aus nach außen fallenden Slopes; Motiv ohne Konfetti; Gesichtszüge als
+  handgesetzte Einzelteile (weiße Rundplatte mit offener Noppe = Auge mit Pupille).
+
 Werkzeug: `tools/relief/make_relief.py bild.jpg ausgabe/name --breite 48 --hoehe 48 --chaos 0.35 --konfetti 0.05`
 (MPD, Stückliste, BrickLink-XML, flache Farbvorschau). Für Wandbilder frontal von oben rendern
 (`[0,88,1.0,0,-20,0,30]`) plus eine flache Schrägansicht für die Tiefe.

@@ -1,16 +1,16 @@
 # Kanye West – My Beautiful Dark Twisted Fantasy als LEGO-Relief
 
 Das Albumcover *My Beautiful Dark Twisted Fantasy* (2010, Gemälde von George Condo) als 3D-Relief-Mosaik im Stil von
-LEGO-Wandkunst: **96 × 96 Noppen** (ca. 77 × 77 cm) auf 4 Baseplates 48 × 48, **23.188 Teile** in 28 Farben,
-37 Teilesorten, bis ca. 4,5 cm tief. Gegenstück zum [Graduation-Relief](../graduation-relief/).
+LEGO-Wandkunst: **96 × 96 Noppen** (ca. 77 × 77 cm) auf 4 Baseplates 48 × 48, **22.604 Teile** in 31 Farben,
+43 Teilesorten, bis ca. 4,5 cm tief. Gegenstück zum [Graduation-Relief](../graduation-relief/).
 
 | Das Gemälde im Goldrahmen | Ballerina (Nähe) |
 |---|---|
 | ![Bild](mbdtf_bild.png) | ![Ballerina](mbdtf_ballerina.png) |
 
-| Echtes Weinglas in der Hand | Parental-Advisory-Aufkleber | Frontal |
+| Gesicht: Glotzaugen, Rouge, Nase, Mund | Echtes Weinglas in der Hand | Parental-Advisory-Aufkleber |
 |---|---|---|
-| ![Glas](mbdtf_glas.png) | ![Aufkleber](mbdtf_aufkleber.png) | ![Front](mbdtf_front.png) |
+| ![Gesicht](mbdtf_gesicht.png) | ![Glas](mbdtf_glas.png) | ![Aufkleber](mbdtf_aufkleber.png) |
 
 | Farbvorschau (1 Pixel = 1 Noppe) | Höhenkarte (hell = hoch) |
 |---|---|
@@ -32,6 +32,18 @@ Das Cover ist ein kleines, gerahmtes Gemälde auf einem großen roten Stoff. Gen
 | **Weinglas** | 7 Platten | ein echtes **Minifig-Weinglas** (33061) in Trans-Clear steht in ihrer Hand |
 | Parental Advisory | 3 Platten | glatte schwarze und weiße Fliesen als Aufkleber auf dem Stoff |
 
+## Wie ein Maler gebaut
+
+| Technik | Umsetzung |
+|---|---|
+| **Pinselstriche** | Die Leinwand ist nicht gepixelt, sondern aus langen 1 × 2–1 × 4-Fliesen und -Platten in Strichrichtung gelegt: links senkrecht, unten waagerecht, rechts senkrecht – wie die sichtbaren Pinselzüge im Gemälde. Ausgestreckter Arm waagerecht, angewinkelter Arm und Beine senkrecht |
+| **Licht und Schatten** | Licht von links oben: zugewandte Flächen eine Farbstufe heller, abgewandte eine Stufe dunkler (gleicher Farbton), als Dithering verteilt wie Farbauftrag. Schwarz bleibt schwarz, der rote Stoff bekommt nur Schatten – dadurch wirft der Rahmen einen **Schlagschatten** nach rechts unten |
+| **Formfolge** | Cheese- und Doppel-Slopes zeigen mit dem Gefälle der Form nach: Kopf, Arme und Tutu wirken gerundet statt gestuft |
+| **Konturlinie** | Der Umriss der Figur besteht aus Slopes, die nach außen abfallen – wie eine gemalte Kontur |
+| **Gemalter Goldrahmen** | Zwei Stufen (äußeres Profil 10 Platten, innere Glanzkante 8), oben/links hell, unten/rechts dunkler; Leisten in Längsrichtung; vier Rosetten aus goldenen Schüsseln in den Ecken |
+| **Saubere Figur** | Im Motiv keine Zufallsfarben – nur die Hintergründe bekommen Konfetti |
+| **Handgesetzte Details** | Glotzaugen aus weißen Rundplatten mit offener Noppe (die Öffnung ist die Pupille), orangefarbenes Rouge, Nase als Cheese-Slope, roter Mund, dunkler Haarknoten als höchster Punkt, Rotwein-Tropfen im Glas |
+
 ## Dateien
 
 - `mbdtf_relief.mpd` – Modell (Noppen nach oben = zum Betrachter; zum Aufhängen hochkant drehen)
@@ -43,7 +55,8 @@ Das Cover ist ein kleines, gerahmtes Gemälde auf einem großen roten Stoff. Gen
 
 ```bash
 python3 tools/relief/make_relief.py cover.jpg mbdtf-relief/mbdtf_relief --breite 96 --hoehe 96 --chaos 0.3 \
-  --konfetti 0.03 --seed 5 --tiefe 2 --wolken 3 --zonen mbdtf-relief/zonen.json --farben-plus 3,151,92,78,297
+  --konfetti 0.03 --seed 5 --tiefe 2 --wolken 3 --zonen mbdtf-relief/zonen.json --farben-plus 3,151,92,78,297 \
+  --licht 1 --formfolge
 ```
 
 Das Cover-Bild liegt aus Urheberrechtsgründen nicht im Repo.
@@ -53,6 +66,6 @@ Das Cover-Bild liegt aus Urheberrechtsgründen nicht im Repo.
 - **Weinglas:** Das Minifig-Weinglas steht mit seinem Fuß auf der Noppe darunter. Im Render ist nur Lage und
   Ausrichtung geprüft, nicht der Halt – beim Bauen testen; hält es nicht fest, kann man es in die Hand einer
   Minifigur-Hand-Clip-Platte stecken oder weglassen.
-- **Gesicht:** Das Gesicht der Figur ist im Original nur wenige Pixel groß – im Relief ist es ein runder Kopf mit
-  Hautton und dunklem Haarknoten, keine Gesichtszüge.
+- **Gesicht:** Das Gesicht ist im Original nur etwa 4 × 5 Noppen groß – die Gesichtszüge sind deshalb einzelne,
+  bewusst gesetzte Teile statt Pixel.
 - **Pearl Gold** ist bei manchen Teilen (Viertelkreis-Fliese, Rundfliese 2 × 2) selten – die BrickLink-Liste zeigt es an.

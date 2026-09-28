@@ -17,7 +17,7 @@ mit der Circus-Maximus-Bühne weiter."*
 | `globe-stage/` | fertig inkl. PDF-Bauanleitung, Bully-Mosaik auf dem Dach | `generate_globe_stage.py` | 10.876 |
 | `yeezus-stage/` | Mount Yeezus mit Wendelweg, rein unbunt | `generate_yeezus_stage.py` | 2.301 |
 | `circus-maximus/` | Travis Scott UTOPIA, 2×48×48, schwarze Fans, Pyro/CO2 | `generate_circus_maximus.py` | 7.062 |
-| `mbdtf-relief/` | *MBDTF* als 96×96-3D-Relief (Bild im Bild, Goldrahmen, Weinglas) | `tools/relief/make_relief.py` + `zonen.json` | 23.188 |
+| `mbdtf-relief/` | *MBDTF* als 96×96-3D-Relief wie gemalt (Pinselstriche, Licht/Schatten, Goldrahmen, Weinglas) | `tools/relief/make_relief.py` + `zonen.json`, Optionen `--licht 1 --formfolge` | 22.604 |
 | `graduation-relief/` | Kanye *Graduation* als 96×96-3D-Relief mit Satellitenschüsseln | `tools/relief/make_relief.py` + `zonen.json` | 28.210 |
 
 Jeder Generator schreibt `.mpd`, Stückliste `_bom.csv` und `_bricklink.xml` und prüft sich selbst

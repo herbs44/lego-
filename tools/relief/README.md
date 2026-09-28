@@ -16,7 +16,10 @@ python3 tools/relief/make_relief.py bild.jpg ausgabe/name --breite 48 --hoehe 48
 | `--konfetti` | Anteil bunter Akzentfarben mit gleicher Helligkeit (Lila, Lime, Pink, Azur …) |
 | `--tiefe` | zufällige Zusatz-Platten pro Zelle (Grundrauschen) |
 | `--wolken` | Hintergrund-Relief: helle Bildstellen bis zu N Platten höher |
-| `--zonen` | JSON-Datei: Bildteile mit eigener Höhe (flach/Kuppel), Teile-Pools, Farbe und Spezialteilen (Schüsseln, Blumen …), Beispiel [`graduation-relief/zonen.json`](../../graduation-relief/zonen.json) |
+| `--licht` | Licht und Schatten wie ein Maler (Licht von links oben, Farbstufen gleichen Farbtons, gedithert); `0` = aus |
+| `--formfolge` | Slopes zeigen mit dem Gefälle der Höhenkarte (runde Formen) |
+| `--farben-plus` | Zusatzfarben: 3 Dark Turquoise, 151 Sand Green, 92 Nougat, 78 Light Nougat, 297 Pearl Gold, 47/36 Trans |
+| `--zonen` | JSON-Datei: Bildteile mit eigener Höhe (flach/Kuppel), Teile-Pools, Farbe und Spezialteilen (Schüsseln, Blumen, Weinglas …), Pinselstrichen (`striche`), Konturen (`kontur`), Farbmix (`mischung`), handgesetzten Einzelteilen (`teil`), `sauber`, `glatt`, `licht`, Beispiel [`graduation-relief/zonen.json`](../../graduation-relief/zonen.json) |
 | `--farben` | eingeschränkte Palette als LDraw-Codes, z. B. `0,15,71,72,4,25` |
 | `--seed` | andere Zufallsverteilung der Teile |
 

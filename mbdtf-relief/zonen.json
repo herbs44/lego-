@@ -3,12 +3,12 @@
   "name": "Rotes Stofffeld",
   "form": "rechteck",
   "von": [
-   0,
-   0
+   0.0,
+   0.0
   ],
   "bis": [
-   1,
-   1
+   1.0,
+   1.0
   ],
   "farbe_rgb": [
    226,
@@ -21,59 +21,327 @@
    "4": 0.72,
    "320": 0.22,
    "26": 0.06
+  },
+  "teile": [
+   "6141",
+   "85861",
+   "3024",
+   "98138",
+   "3062b",
+   "4589",
+   "54200",
+   "33291",
+   "3070b"
+  ],
+  "licht": "schatten"
+ },
+ {
+  "name": "Leinwand",
+  "form": "rechteck",
+  "von": [
+   0.3125,
+   0.3125
+  ],
+  "bis": [
+   0.6875,
+   0.6875
+  ],
+  "hoehe": 3,
+  "glatt": true
+ },
+ {
+  "name": "Pinsel links (dunkles Tuerkis)",
+  "form": "rechteck",
+  "von": [
+   0.3125,
+   0.3125
+  ],
+  "bis": [
+   0.5,
+   0.52083
+  ],
+  "hoehe": 3,
+  "glatt": true,
+  "striche": "z"
+ },
+ {
+  "name": "Pinsel unten links (Gruen)",
+  "form": "rechteck",
+  "von": [
+   0.3125,
+   0.52083
+  ],
+  "bis": [
+   0.5,
+   0.6875
+  ],
+  "hoehe": 3,
+  "glatt": true,
+  "striche": "x"
+ },
+ {
+  "name": "Pinsel rechts (helles Tuerkis)",
+  "form": "rechteck",
+  "von": [
+   0.59375,
+   0.3125
+  ],
+  "bis": [
+   0.6875,
+   0.65625
+  ],
+  "hoehe": 3,
+  "glatt": true,
+  "striche": "z"
+ },
+ {
+  "name": "Rahmen aussen oben",
+  "form": "rechteck",
+  "von": [
+   0.29167,
+   0.29167
+  ],
+  "bis": [
+   0.70833,
+   0.30208
+  ],
+  "hoehe": 10,
+  "glatt": true,
+  "striche": "x",
+  "mischung": {
+   "297": 0.5,
+   "191": 0.35,
+   "19": 0.15
+  },
+  "licht": false
+ },
+ {
+  "name": "Rahmen aussen unten",
+  "form": "rechteck",
+  "von": [
+   0.29167,
+   0.69792
+  ],
+  "bis": [
+   0.70833,
+   0.70833
+  ],
+  "hoehe": 10,
+  "glatt": true,
+  "striche": "x",
+  "mischung": {
+   "297": 0.7,
+   "28": 0.2,
+   "84": 0.1
+  },
+  "licht": false
+ },
+ {
+  "name": "Rahmen aussen links",
+  "form": "rechteck",
+  "von": [
+   0.29167,
+   0.30208
+  ],
+  "bis": [
+   0.30208,
+   0.69792
+  ],
+  "hoehe": 10,
+  "glatt": true,
+  "striche": "z",
+  "mischung": {
+   "297": 0.5,
+   "191": 0.35,
+   "19": 0.15
+  },
+  "licht": false
+ },
+ {
+  "name": "Rahmen aussen rechts",
+  "form": "rechteck",
+  "von": [
+   0.69792,
+   0.30208
+  ],
+  "bis": [
+   0.70833,
+   0.69792
+  ],
+  "hoehe": 10,
+  "glatt": true,
+  "striche": "z",
+  "mischung": {
+   "297": 0.7,
+   "28": 0.2,
+   "84": 0.1
+  },
+  "licht": false
+ },
+ {
+  "name": "Rahmen Glanzkante oben",
+  "form": "rechteck",
+  "von": [
+   0.30208,
+   0.30208
+  ],
+  "bis": [
+   0.69792,
+   0.3125
+  ],
+  "hoehe": 8,
+  "glatt": true,
+  "striche": "x",
+  "mischung": {
+   "191": 0.5,
+   "226": 0.25,
+   "297": 0.25
+  },
+  "licht": false
+ },
+ {
+  "name": "Rahmen Glanzkante unten",
+  "form": "rechteck",
+  "von": [
+   0.30208,
+   0.6875
+  ],
+  "bis": [
+   0.69792,
+   0.69792
+  ],
+  "hoehe": 8,
+  "glatt": true,
+  "striche": "x",
+  "mischung": {
+   "297": 0.6,
+   "191": 0.4
+  },
+  "licht": false
+ },
+ {
+  "name": "Rahmen Glanzkante links",
+  "form": "rechteck",
+  "von": [
+   0.30208,
+   0.3125
+  ],
+  "bis": [
+   0.3125,
+   0.6875
+  ],
+  "hoehe": 8,
+  "glatt": true,
+  "striche": "z",
+  "mischung": {
+   "191": 0.5,
+   "226": 0.25,
+   "297": 0.25
+  },
+  "licht": false
+ },
+ {
+  "name": "Rahmen Glanzkante rechts",
+  "form": "rechteck",
+  "von": [
+   0.6875,
+   0.3125
+  ],
+  "bis": [
+   0.69792,
+   0.6875
+  ],
+  "hoehe": 8,
+  "glatt": true,
+  "striche": "z",
+  "mischung": {
+   "297": 0.6,
+   "191": 0.4
+  },
+  "licht": false
+ },
+ {
+  "name": "Rahmen-Rosette oben links",
+  "form": "punkt",
+  "mitte": [
+   0.30208,
+   0.30208
+  ],
+  "radius": [
+   0.004,
+   0.004
+  ],
+  "hoehe": 10,
+  "spezial": {
+   "teil": "4740",
+   "farbe": 297,
+   "extra": 1
   }
  },
  {
-  "name": "Leinwand (vertieft im Rahmen)",
-  "form": "rechteck",
-  "von": [
-   0.3,
-   0.3
+  "name": "Rahmen-Rosette oben rechts",
+  "form": "punkt",
+  "mitte": [
+   0.69792,
+   0.30208
   ],
-  "bis": [
-   0.695,
-   0.695
+  "radius": [
+   0.004,
+   0.004
   ],
-  "hoehe": 3
+  "hoehe": 10,
+  "spezial": {
+   "teil": "4740",
+   "farbe": 297,
+   "extra": 1
+  }
  },
  {
-  "name": "Goldrahmen",
-  "form": "rahmen",
-  "von": [
-   0.285,
-   0.285
+  "name": "Rahmen-Rosette unten links",
+  "form": "punkt",
+  "mitte": [
+   0.30208,
+   0.69792
   ],
-  "bis": [
-   0.705,
-   0.705
+  "radius": [
+   0.004,
+   0.004
   ],
-  "breite": 0.022,
-  "hoehe": 9,
-  "teile": [
-   "3070b",
-   "25269",
-   "24246",
-   "98138",
-   "3069b",
-   "3068b",
-   "4150"
+  "hoehe": 10,
+  "spezial": {
+   "teil": "4740",
+   "farbe": 297,
+   "extra": 1
+  }
+ },
+ {
+  "name": "Rahmen-Rosette unten rechts",
+  "form": "punkt",
+  "mitte": [
+   0.69792,
+   0.69792
   ],
-  "mischung": {
-   "297": 0.7,
-   "191": 0.2,
-   "19": 0.1
+  "radius": [
+   0.004,
+   0.004
+  ],
+  "hoehe": 10,
+  "spezial": {
+   "teil": "4740",
+   "farbe": 297,
+   "extra": 1
   }
  },
  {
   "name": "Kleid und Tutu (schwarz)",
   "form": "rechteck",
   "von": [
-   0.33,
-   0.33
+   0.32292,
+   0.32292
   ],
   "bis": [
-   0.69,
-   0.665
+   0.6875,
+   0.67708
   ],
   "farbe_rgb": [
    26,
@@ -82,6 +350,7 @@
   ],
   "toleranz": 75,
   "hoehe": 8,
+  "kontur": true,
   "teile": [
    "3062b",
    "4589",
@@ -90,18 +359,19 @@
    "35464",
    "92947",
    "3941"
-  ]
+  ],
+  "sauber": true
  },
  {
-  "name": "Tutu (Rüschen)",
+  "name": "Tutu (Rueschen)",
   "form": "ellipse",
   "mitte": [
-   0.535,
-   0.615
+   0.51562,
+   0.625
   ],
   "radius": [
-   0.17,
-   0.05
+   0.185,
+   0.055
   ],
   "farbe_rgb": [
    26,
@@ -109,27 +379,29 @@
    26
   ],
   "toleranz": 75,
-  "hoehe": 10,
+  "hoehe": 11,
   "profil": "kuppel",
+  "kontur": true,
   "teile": [
    "54200",
    "35464",
-   "4589",
-   "11610",
    "85984",
-   "15068"
-  ]
+   "15068",
+   "54200",
+   "4589"
+  ],
+  "sauber": true
  },
  {
-  "name": "Haut (Arme, Schulter, Beine)",
+  "name": "Haut",
   "form": "rechteck",
   "von": [
-   0.33,
-   0.37
+   0.32292,
+   0.38542
   ],
   "bis": [
-   0.69,
-   0.69
+   0.6875,
+   0.69792
   ],
   "farbe_rgb": [
    228,
@@ -138,63 +410,268 @@
   ],
   "toleranz": 65,
   "hoehe": 9,
+  "kontur": true,
   "teile": [
    "3062b",
    "6141",
    "98138",
    "3005",
-   "3004",
    "3941"
-  ]
+  ],
+  "sauber": true
+ },
+ {
+  "name": "Arm ausgestreckt",
+  "form": "rechteck",
+  "von": [
+   0.34375,
+   0.44792
+  ],
+  "bis": [
+   0.53125,
+   0.51042
+  ],
+  "farbe_rgb": [
+   228,
+   190,
+   140
+  ],
+  "toleranz": 65,
+  "hoehe": 9,
+  "glatt": true,
+  "striche": "x",
+  "sauber": true
+ },
+ {
+  "name": "Arm angewinkelt",
+  "form": "rechteck",
+  "von": [
+   0.57292,
+   0.44792
+  ],
+  "bis": [
+   0.625,
+   0.60417
+  ],
+  "farbe_rgb": [
+   228,
+   190,
+   140
+  ],
+  "toleranz": 65,
+  "hoehe": 9,
+  "glatt": true,
+  "striche": "z",
+  "sauber": true
+ },
+ {
+  "name": "Beine",
+  "form": "rechteck",
+  "von": [
+   0.47917,
+   0.65625
+  ],
+  "bis": [
+   0.61458,
+   0.69792
+  ],
+  "farbe_rgb": [
+   228,
+   190,
+   140
+  ],
+  "toleranz": 70,
+  "hoehe": 6,
+  "glatt": true,
+  "striche": "z",
+  "sauber": true
  },
  {
   "name": "Kopf",
   "form": "ellipse",
   "mitte": [
-   0.535,
-   0.365
+   0.54167,
+   0.36979
   ],
   "radius": [
-   0.035,
-   0.045
+   0.03,
+   0.036
   ],
-  "hoehe": 11,
+  "hoehe": 12,
   "profil": "kuppel",
   "teile": [
    "3062b",
    "6141",
    "98138",
    "85861"
-  ]
+  ],
+  "sauber": true
+ },
+ {
+  "name": "Haar",
+  "form": "rechteck",
+  "von": [
+   0.51042,
+   0.3125
+  ],
+  "bis": [
+   0.57292,
+   0.35417
+  ],
+  "farbe_rgb": [
+   26,
+   26,
+   26
+  ],
+  "toleranz": 90,
+  "hoehe": 12,
+  "teile": [
+   "3062b",
+   "4589",
+   "6141"
+  ],
+  "sauber": true
  },
  {
   "name": "Haarknoten",
   "form": "punkt",
   "mitte": [
-   0.53,
-   0.325
+   0.53646,
+   0.31771
   ],
   "radius": [
-   0.012,
-   0.012
+   0.004,
+   0.004
+  ],
+  "hoehe": 13,
+  "farbe": 0,
+  "teil": "3062b"
+ },
+ {
+  "name": "Auge links (Glotzauge: weisse Rundplatte, offene Noppe = Pupille)",
+  "form": "punkt",
+  "mitte": [
+   0.52604,
+   0.36979
+  ],
+  "radius": [
+   0.004,
+   0.004
   ],
   "hoehe": 12,
-  "farbe": 0,
+  "farbe": 15,
+  "teil": "85861"
+ },
+ {
+  "name": "Auge rechts",
+  "form": "punkt",
+  "mitte": [
+   0.54688,
+   0.36979
+  ],
+  "radius": [
+   0.004,
+   0.004
+  ],
+  "hoehe": 12,
+  "farbe": 15,
+  "teil": "85861"
+ },
+ {
+  "name": "Wange (Rouge)",
+  "form": "punkt",
+  "mitte": [
+   0.53646,
+   0.38021
+  ],
+  "radius": [
+   0.004,
+   0.004
+  ],
+  "hoehe": 12,
+  "farbe": 25,
+  "teil": "6141"
+ },
+ {
+  "name": "Nase",
+  "form": "punkt",
+  "mitte": [
+   0.54688,
+   0.38021
+  ],
+  "radius": [
+   0.004,
+   0.004
+  ],
+  "hoehe": 12,
+  "farbe": 92,
+  "teil": "54200"
+ },
+ {
+  "name": "Mund",
+  "form": "punkt",
+  "mitte": [
+   0.53646,
+   0.39062
+  ],
+  "radius": [
+   0.004,
+   0.004
+  ],
+  "hoehe": 11,
+  "farbe": 4,
+  "teil": "98138"
+ },
+ {
+  "name": "Hand",
+  "form": "rechteck",
+  "von": [
+   0.33333,
+   0.45833
+  ],
+  "bis": [
+   0.36458,
+   0.48958
+  ],
+  "farbe_rgb": [
+   228,
+   190,
+   140
+  ],
+  "toleranz": 80,
+  "hoehe": 9,
   "teile": [
-   "3062b",
-   "4589"
-  ]
+   "24246",
+   "6141",
+   "98138"
+  ],
+  "sauber": true
+ },
+ {
+  "name": "Rotwein",
+  "form": "punkt",
+  "mitte": [
+   0.31771,
+   0.46354
+  ],
+  "radius": [
+   0.004,
+   0.004
+  ],
+  "hoehe": 8,
+  "farbe": 36,
+  "teil": "98138"
  },
  {
   "name": "Weinglas",
   "form": "punkt",
   "mitte": [
-   0.34,
-   0.465
+   0.31771,
+   0.48438
   ],
   "radius": [
-   0.012,
-   0.012
+   0.004,
+   0.004
   ],
   "hoehe": 7,
   "spezial": {
@@ -206,24 +683,26 @@
   "name": "Parental Advisory",
   "form": "rechteck",
   "von": [
-   0.84,
-   0.885
+   0.84375,
+   0.88542
   ],
   "bis": [
-   0.975,
-   0.975
+   0.97917,
+   0.97917
   ],
   "hoehe": 3,
+  "glatt": true,
+  "zweifarbig": [
+   0,
+   15
+  ],
+  "schwelle": 55,
   "teile": [
    "3070b",
    "3069b",
    "2431",
    "3068b"
   ],
-  "zweifarbig": [
-   0,
-   15
-  ],
-  "schwelle": 55
+  "licht": false
  }
 ]
