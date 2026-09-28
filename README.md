@@ -6,7 +6,7 @@ LEGO-MOCs als LDraw-Dateien (`.mpd`) mit Stückliste und BrickLink-Wanted-List.
 
 | Modell | Teile | Beschreibung |
 |---|---|---|
-| [Circus Maximus (UTOPIA)](circus-maximus/) | 6.454 | Travis Scotts Arena-Bühne auf 2 Baseplates 48×48: gewundener Weg durch graue Felswände, hoher Felsblock mit Gesichtern und Durchgang, 17 Pyro-Flammen, Videoring mit Feuerwand, fliegende Köpfe mit Laser-Augen, Osterinsel-Steingesichter, farbige Scheinwerfer, Subs und PA |
+| [Circus Maximus (UTOPIA)](circus-maximus/) | 7.995 | Travis Scotts Arena-Bühne auf 2 Baseplates 48×48: geschwungener Weg fast auf Felshöhe, dunkle Felsen mit 14 Steinköpfen, Felsblock mit Durchgang und Performer, 153 Fans als Minifiguren, Pyro und CO2, Videoring mit Feuerwand, Scheinwerfer und PA |
 | [Yeezus Stage](yeezus-stage/) | 2.301 | Mount Yeezus: Fels-Pyramide mit Wendelweg bis zum Gipfel vor dem runden Screen, Laufsteg mit Rampe zur Lower Stage im Publikum, Line-Arrays und Moving Heads – auf 2 Baseplates |
 | [Globe Stage](globe-stage/) | 10.876 | Stadion-Konzertbühne mit gerundeter Erdkugel-Kuppel, echter LED-Beleuchtung (Ring + 24 Scheinwerfer), einem Truss-Ring an Seilen unter einem Dach auf vier schlanken Ecktürmen und dem Album-Cover als Dach-Mosaik |
 

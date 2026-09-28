@@ -244,7 +244,7 @@ def vnoise(x, z, sc=3.0, seed=0):
 # ---------------- Hoehenfeld: gewundener Fels-Pfad ----------------
 # Nach den Buehnen-Renderings: schmaler Weg, der sich durch die Halle windet, beidseitig Felswaende und
 # Findlinge mit Gesichtern; an einem Ende ein hoher Felsblock mit eingemeisselten Gesichtern und Durchgang.
-DECK = 3                                   # Laufweg (Steine)
+DECK = 6                                   # Laufweg (Steine) - fast auf Hoehe der Felsraender
 PATH = [(-44.0, -3.0), (-19.5, -3.0), (-13.5, 1.5), (-6.0, -3.0), (1.5, 3.75), (9.0, -3.0), (22.5, 0.0), (43.0, 3.0)]
 SX0, SX1 = -42, 41
 BLOCK_X = (-42, -32)                       # hoher Felsblock
@@ -289,7 +289,7 @@ def stage_f(p):
     if in_block(x):                                                     # Kuppel: Rand faellt rund ab
         dn = d / W
         return BLOCK_H - (0.0 if dn < 0.45 else 30.0 * (dn - 0.45) ** 2) + 1.2 * (vnoise(x, z, 2.0, 5) - 0.5)
-    h = DECK + 2.0 + 3.6 * vnoise(x, z, 3.9, 3) + 1.4 * vnoise(x, z, 1.9, 4)
+    h = DECK + 0.6 + 2.2 * vnoise(x, z, 3.9, 3) + 1.0 * vnoise(x, z, 1.9, 4)
     return max(h, b)
 
 
@@ -304,9 +304,10 @@ for c in GRID:
     if h <= 0.5: continue
     if abs(p[1] - zc(p[0])) <= WALK_HW and SX0 <= p[0] <= SX1 + 1: HF[c], MAT[c] = DECK, "weg"
     else: HF[c], MAT[c] = max(DECK + 1, int(math.floor(h + 0.5))), "fels"
-for x in (SX0 - 1, SX1 + 1):                                      # Stufe zum Hallenboden an beiden Enden
-    for z in range(ZMIN, ZMAX + 1):
-        if abs(z + 0.5 - zc(x + 0.5)) <= WALK_HW: HF[(x, z)], MAT[(x, z)] = 1, "weg"
+for k in range(1, DECK):                                           # Treppen zum Hallenboden an beiden Enden
+    for x in (SX0 - k, SX1 + k):
+        for z in range(ZMIN, ZMAX + 1):
+            if abs(z + 0.5 - zc(x + 0.5)) <= WALK_HW and (x, z) not in RESERVED: HF[(x, z)], MAT[(x, z)] = DECK - k, "weg"
 # Oberseite des Blocks flach (Performer-Plattform wie auf dem Stadionfoto)
 PLAT_CELLS = {c for c in HF if MAT[c] == "fels" and in_block(c[0] + 0.5) and abs(c[1] + 0.5 - zc(c[0] + 0.5)) < 4.2}
 for c in PLAT_CELLS: HF[c] = BLOCK_H
@@ -346,13 +347,14 @@ def rock_color(c, top=False, g=None):
     """grauer, verwitterter Stein: Dunkelgrau als Grundton, Hellgrau im Licht, Schwarz in Spalten"""
     p = (c[0] + 0.5, c[1] + 0.5)
     if top:
-        return LBG if vnoise(p[0], p[1], 2.4, 1) > 0.6 else DBG
+        v = vnoise(p[0], p[1], 2.4, 1)
+        return LBG if v > 0.86 else DBG if v > 0.42 else BLACK
     gx = stage_f((p[0] + 0.5, p[1])) - stage_f((p[0] - 0.5, p[1])); gz = stage_f((p[0], p[1] + 0.5)) - stage_f((p[0], p[1] - 0.5))
     gx, gz = max(-2.0, min(2.0, gx)), max(-2.0, min(2.0, gz))    # senkrechte Waende nicht ins Schwarze kippen
     n = (-gx, 1.0, -gz); L = math.sqrt(sum(v * v for v in n))
     shade = sum(a * b for a, b in zip(n, SUN)) / L
     shade += 0.35 * (vnoise(p[0], p[1] + (g or 0) * 0.7, 1.8, 7) - 0.5)
-    return LBG if shade > 0.55 else DBG if shade > -0.15 else BLACK
+    return LBG if shade > 0.82 else DBG if shade > 0.08 else BLACK
 
 
 ROCK = ("fels",)
@@ -394,7 +396,7 @@ for g in range(GMAX, 0, -1):
 # ---------------- Durchgang durch den Block ----------------
 # Je x ein Bogen 1x6x2 quer ueber den Weg (Lagen 6-7), darueber Steine bis zur Blockoberkante.
 replaced = set()
-ARCH_BOT = 9
+ARCH_BOT = DECK + 6
 ARCHES = []
 for x in range(BLOCK_X[0], BLOCK_X[1] + 1):
     zs = [c[1] for c in TUNNEL if c[0] == x]
@@ -551,7 +553,7 @@ def pyro_ok(c):
     return g
 
 
-for i, x0 in enumerate(range(SX0 + 13, SX1 - 1, 4)):
+for i, x0 in enumerate(range(SX0 + 14, SX1 - 1, 9)):
     side = 1 if i % 2 else -1
     done_ = False
     for x in (x0, x0 + 1, x0 - 1):
@@ -564,6 +566,17 @@ _pz = sorted(PLAT_CELLS)
 for c in [min((q for q in _pz if q[0] == BLOCK_X[0]), key=lambda q: q[1]), max((q for q in _pz if q[0] == BLOCK_X[0]), key=lambda q: q[1])]:
     PYRO.append((c, BLOCK_H - 1))
 PYRO_CELLS = {c for c, g in PYRO}
+
+# Bodenmonitore: Cheese-Slope 1x2 schwarz am Wegrand, Schraege zur Wegmitte
+MONITORS = []
+for i, x in enumerate(range(SX0 + 13, SX1 - 3, 8)):
+    side = 1 if i % 2 else -1
+    for dz in (2.1, 1.1):
+        z = int(math.floor(zc(x + 1.0) + side * dz))
+        cc = [(x, z), (x + 1, z)]
+        if all(MAT.get(q) == "weg" and HF[q] == DECK for q in cc):
+            MONITORS.append((cc, side)); break
+MON_CELLS = {q for cc, _ in MONITORS for q in cc}
 
 # Kappen: Felskanten mit Curved/Cheese (Rauschen verteilt), Plattformen schwarz mit dunkelgrauem Rand,
 # Laufweg als Dielen im Verband
@@ -586,7 +599,9 @@ for g in range(GMAX + 1):
         done |= {c, i}
     for c in open_:
         if c in done: continue
-        if MAT[c] == "weg": PLANKS[g].add(c); continue
+        if MAT[c] == "weg":
+            if c not in MON_CELLS: PLANKS[g].add(c)
+            continue
         if c in PLAT_CELLS:
             edge = any((c[0] + a, c[1] + b) not in PLAT_CELLS for a, b in DIRS)
             caps[(g, "04_plattformen")][c] = LBG if edge else DBG; continue
@@ -616,6 +631,11 @@ for g, cells in PLANKS.items():
                 seg = run[pos:pos + n]; pos += n
                 add(Part("03_laufweg", TILE_LEN[n], BLACK, sum(ctr(x) for x in seg) / n, y, ctr(z), 0,
                          {(x, z) for x in seg}, y, y + PH, studs=False))
+
+for cc, side in MONITORS:
+    y = -BH * DECK
+    add(Part("03_laufweg", "85984", BLACK, (cc[0][0] + 1) * LDU, y, ctr(cc[0][1]), 0 if side > 0 else 180, set(cc),
+             y - 16, y, studs=False))
 
 # Durchgang: Boegen, darueber Steine bis zur Blockoberkante, oben Plattform-Fliesen
 for x, z0, z1 in ARCHES:
@@ -663,7 +683,7 @@ for k, (c, g) in enumerate(PYRO):
     y = -BH * (g + 1)
     add(Part("12_pyro", "3062b", BLACK, ctr(c[0]), y - BH, ctr(c[1]), 0, {c}, y - BH, y))
     fy = y - BH - 4
-    add(Part("12_pyro", "85959", TORANGE if k % 2 == 0 else TYELLOW, ctr(c[0]), fy, ctr(c[1]), (k * 90) % 360, {c},
+    add(Part("12_pyro", "85959", (TCLEAR, TORANGE, TYELLOW)[k % 3], ctr(c[0]), fy, ctr(c[1]), (k * 90) % 360, {c},
              fy - 134, y - BH, studs=False))
 
 # ---------------- Bodenlautsprecher (Subs/Front-Fills) ----------------
@@ -820,8 +840,7 @@ SLING_LINKS = SNOT_LINKS
 # Dystopische Riesenkoepfe (Stein-Optik, hellgrau) haengen an den Quertraversen; Augen trans-rot (Laser).
 # Aufbau von oben: Seil aus runden Steinen -> Schaedel -> Stirn mit Nasenwurzel -> Augen + Nase -> Wangen/Mund
 # -> Kinn -> Hals. Alles haengt mit Klemmkraft von oben.
-HEADS = [(-33, 0, 5, (-1, 0), 14), (-17, 5, 5, (0, 1), 14), (-1, 0, 7, (0, -1), 14), (15, -5, 5, (0, -1), 14),
-         (31, 0, 5, (1, 0), 14)]                                   # (x, z Mitte, Groesse, Blickrichtung, Seil-Steine)
+HEADS = []                                                        # entfernt (Nutzerwunsch)                                   # (x, z Mitte, Groesse, Blickrichtung, Seil-Steine)
 
 
 def head_layers(s):
@@ -925,6 +944,95 @@ for ax, az in PA:
                      {(ax + a, az + b) for a in (-1, 0) for b in (0, 1)}, yy, yy + PH, hang=True))
             yy += PH
 
+# ---------------- Minifiguren: Fans und Performer ----------------
+def mm(A, B): return [[sum(A[i][k] * B[k][j] for k in range(3)) for j in range(3)] for i in range(3)]
+def mstr(M): return " ".join(fmt(round(v, 4)) for r in M for v in r)
+def mv(M, v): return [sum(M[i][k] * v[k] for k in range(3)) for i in range(3)]
+
+
+def rx(deg):
+    c, s_ = math.cos(math.radians(deg)), math.sin(math.radians(deg))
+    return [[1, 0, 0], [0, c, -s_], [0, s_, c]]
+
+
+I3 = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+
+
+def minifig(sub, cells, surf_y, rot, torso, legs, hair=None, arms=(0, 0)):
+    """Minifigur auf den Noppen 'cells' (2 Zellen), Blick nach -z (lokal), arms = Hebewinkel links/rechts"""
+    M = RM[rot]
+    cx = sum(ctr(c[0]) for c in cells) / 2; cz = sum(ctr(c[1]) for c in cells) / 2
+    P = [cx, surf_y - 72, cz]
+    comps = [("3626bp01", YELLOW, (0, -24, 0), I3), ("973", torso, (0, 0, 0), I3),
+             ("3815c01", legs, (0, 32, 0), I3)]
+    for sgn, arm, a in ((-1, "3818", arms[0]), (1, "3819", arms[1])):
+        A0 = [[0.985, -sgn * 0.174, 0], [sgn * 0.174, 0.985, 0], [0, 0, 1]]
+        H0 = [[0.985, -sgn * 0.174, 0], [-sgn * -0.133, 0.754, -0.643], [-sgn * -0.112, 0.633, 0.766]]
+        piv = (sgn * 15.552, 9, 0); hand = (sgn * 23.1, 24.7, -10)
+        R = rx(a)
+        rel = mv(R, [hand[i] - piv[i] for i in range(3)])
+        comps.append((arm, torso, piv, mm(R, A0)))
+        comps.append(("3820", YELLOW, tuple(piv[i] + rel[i] for i in range(3)), mm(R, H0)))
+    if hair is not None: comps.append(("3901", hair, (0, -24, 0), I3))
+    for nm, col, off, Mi in comps:
+        w = mv(M, off); pos = [P[0] + w[0], P[1] + w[1], P[2] + w[2]]
+        leg = nm == "3815c01"
+        add(Part(sub, nm, col, pos[0], pos[1], pos[2], rot, set(cells) if leg else set(), surf_y - 96 if leg else 0,
+                 surf_y if leg else 0, studs=False,
+                 extra=[f"1 {col} {fmt(pos[0])} {fmt(pos[1])} {fmt(pos[2])} {mstr(mm(M, Mi))} {nm}.dat"]))
+
+
+def remove_tiles(cells):
+    """Fliesen ueber 'cells' entfernen und den Rest neu belegen (Figur/Anbau steht auf den Noppen darunter)"""
+    for p in [p for p in parts if p.name in TILE.values() and p.cells & cells]:
+        parts.remove(p)
+        rest = {q: p.color for q in p.cells - cells}
+        if rest: plates(p.sub, rest, p.ytop, 0, table=TILE, studs=False)
+
+
+# Performer oben auf dem Block, Blick den Weg entlang (+x), beide Arme oben
+pc = (int(math.floor(BLOCK_CX)) + 1, int(math.floor(zc(BLOCK_CX))))
+pcells = {pc, (pc[0], pc[1] + 1)}
+assert pcells <= (PLAT_CELLS | BRIDGE) and not pcells & PYRO_CELLS, pcells
+remove_tiles(pcells)
+minifig("15_performer", sorted(pcells), -BH * BLOCK_H, 90, BLACK, BLACK, hair=BLACK, arms=(-160, -160))
+
+# Fans im Innenraum rundherum, Blick zur Buehne; viele mit erhobenen Armen
+TORSOS = [BLACK, BLACK, BLACK, WHITE, RED, DBG, BLUE, 272, GREEN, TAN, YELLOW]
+LEGS = [BLUE, BLACK, BLACK, DBG, TAN, 272]
+HAIRS = [BLACK, 70, 308, TAN, BLACK, None]
+FANS = []
+fan_used = set()
+
+
+def crowd_ok(cells):
+    for q in cells:
+        if not (XMIN + 1 <= q[0] <= XMAX - 1 and ZMIN + 1 <= q[1] <= ZMAX - 1): return False
+        for a in range(-2, 3):
+            for b in range(-2, 3):
+                n = (q[0] + a, q[1] + b)
+                if n in HF or n in RESERVED or n in FLOOR_USED: return False
+                if abs(a) <= 1 and abs(b) <= 1 and n in fan_used: return False
+    return True
+
+
+k = 0
+for x in range(XMIN + 1, XMAX - 1, 3):
+    for z in range(ZMIN + 1, ZMAX - 1, 3):
+        j = (math.sin(x * 12.9898 + z * 78.233) * 43758.5453) % 1.0
+        x0, z0 = x + (1 if j > 0.66 else 0), z + (1 if 0.33 < j <= 0.66 else 0)
+        if x0 < SX0 - 8: rot, cells = 90, [(x0, z0), (x0, z0 + 1)]                     # Stirnseite West
+        elif x0 > SX1 + 8: rot, cells = 270, [(x0, z0), (x0, z0 + 1)]                  # Stirnseite Ost
+        else:
+            rot = 0 if z0 > zc(x0 + 1.0) else 180
+            cells = [(x0, z0), (x0 + 1, z0)]
+        if not crowd_ok(cells): continue
+        u = (math.sin(x0 * 3.1 + z0 * 7.7) * 9173.3) % 1.0
+        arms = (-165, -165) if u < 0.35 else ((-150, 0) if u < 0.6 else ((0, -140) if u < 0.75 else (0, 0)))
+        minifig("14_fans", cells, 0, rot, TORSOS[k % len(TORSOS)], LEGS[(k * 7) % len(LEGS)],
+                hair=HAIRS[(k * 5) % len(HAIRS)], arms=arms)
+        fan_used |= set(cells); FANS.append(cells); k += 1
+
 # Grundplatten
 for sx in (-1, 1):
     cells = {(i, k) for i in (range(0, 48) if sx > 0 else range(-48, 0)) for k in range(-24, 24)}
@@ -935,10 +1043,11 @@ TITLES = {"01_baseplates": "Grundplatten (2x 48x48)", "02_felsen": "Felswaende u
           "05_block": "Hoher Felsblock mit Durchgang", "06_gesichter": "Gesichter (SNOT-Augen und -Muender)",
           "07_videoring": "Ovaler Videoring (360 Grad)", "08_traverse": "Tuerme und Traversen-Raster",
           "09_koepfe": "Fliegende Koepfe", "10_pa": "PA-Haenge", "11_licht": "Moving Heads",
-          "12_pyro": "Pyro-Flammen", "13_boden": "Bodenlautsprecher, Uplights, Faesser"}
+          "12_pyro": "Pyro-Flammen und CO2", "13_boden": "Bodenlautsprecher, Uplights, Faesser",
+          "14_fans": "Fans (Minifiguren)", "15_performer": "Performer"}
 print("Buehne:", len(MAT), "Zellen | Ueberhaenge", len(LIPS), "| Augen", len(EYES), "Nasen", len(NOSES), "Muender", len(MOUTHS) + len(SMOUTHS),
       "| Videoring", len(SCREEN), "Zellen,", len(HANGERS), "Seile | Scheinwerfer", len(LIGHTS),
-      "| Pyro", len(PYRO), "| Subs", len(SUBS), "| Uplights", len(UPLIGHTS))
+      "| Pyro", len(PYRO), "| Subs", len(SUBS), "| Uplights", len(UPLIGHTS), "| Monitore", len(MONITORS), "| Fans", len(FANS))
 
 
 # ---------------- Checks ----------------
