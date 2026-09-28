@@ -15,7 +15,7 @@ Stückliste und BrickLink-XML schreibt und sich selbst prüft.
 | Datei | Inhalt | Lesen, wenn … |
 |---|---|---|
 | `references/geometrie.md` | Maße, LDU, Teile-Ursprünge, Rotationen, SNOT-Mathe, Versatz, Pythagoras-Winkel, Clip/Stange | du Teile platzierst, SNOT oder Winkel baust |
-| `references/techniken.md` | Technik-Katalog mit Teilen und Einsatzzweck | du Details, Oberflächen, Formen oder Effekte planst |
+| `references/techniken.md` | Technik-Katalog mit Teilen und Einsatzzweck, inkl. Relief-Mosaik (Chaos-Pixel-Art) | du Details, Oberflächen, Formen, Effekte oder LEGO-Wandkunst planst |
 | `references/design.md` | Silhouette, Maßstab, Farbe, Komposition, Detaildichte, Kritik-Methode | du ein Modell entwirfst oder bewertest |
 | `references/statik-und-legal.md` | Legale/illegale Verbindungen, Stabilität, Spannweiten, Aufhängen | du Tragwerke, Überhänge oder Hängendes baust |
 | `references/teile.md` | Geprüfte Teile-Bibliothek (LDraw-ID, BrickLink-ID, Name, Einsatz) | du Teile auswählst oder die Stückliste baust |

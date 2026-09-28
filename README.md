@@ -24,6 +24,7 @@ dieses Repos. Claude Code lädt ihn automatisch, wenn in diesem Repo an LEGO-Mod
 
 ## Werkzeuge
 
+- [`tools/relief`](tools/relief/) – Relief-Mosaik im Stil von LEGO-Wandkunst (mbrick_art): Bild → 3D-Pixel aus gemischten Teilen mit Tiefe und Konfetti-Farben.
 - [`tools/mosaic`](tools/mosaic/make_mosaic.py) – Mosaik-Generator für 1 × 1-Fliesen: erzeugt mehrere Varianten und bewertet sie gegen die Vorlage (ΔL\* aus Abstand, SSIM im Detail).
 - [`tools/ldraw-render`](tools/ldraw-render/) – Headless-Renderer für LDraw/MPD (three.js + Chromium) und
   `ldbbox.py` zum Nachschlagen von Teil-Abmessungen und Ursprüngen.

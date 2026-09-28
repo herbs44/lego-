@@ -127,3 +127,27 @@ Zweck: glatte Fronten, Details in Wänden, Flächen in jeder Richtung, feinere A
 - Verlauf über Zwischenstufen (Weiß → LBG → DBG → Schwarz) mit Rausch-Übergang statt harter Linie.
 - Alterung: einzelne Steine in Nachbarfarbe (Dark Tan in Tan, DBG in LBG), bevorzugt unten und an
   Kanten, wo Wasser läuft.
+
+## 15. Relief-Mosaik („Chaos-Pixel-Art", Stil mbrick_art)
+
+Wandbild aus lauter gemischten Einzelteilen, Noppen zum Betrachter. Aus der Entfernung liest man das Motiv
+(z. B. den Porsche 911 von mbrick_art, „über 7.500 Pixel"), aus der Nähe eine wilde Textur aus Rundsteinen,
+Kegeln, Technic-Steinen, Gittern, Slopes und Blüten.
+
+Regeln, die den Stil ausmachen:
+- **1 Noppe = 1 Pixel**, aber jede Zelle hat ein **anderes Abschlussteil** und eine **andere Höhe** (0–3 Platten + Teil).
+  Die Tiefe erzeugt Schatten und macht das Bild lebendig; Hohlnoppen, Löcher und Kegel geben Mikrotextur.
+- **Farbe zuerst nach Helligkeit**: Pixel auf die nächste Palettenfarbe (Lab) abbilden. Ein Teil der Zellen bekommt
+  die zweitnächste Farbe („Chaos") – so entstehen Mischflächen statt glatter Farbfelder.
+- **Konfetti**: ein paar Prozent Zellen in bunten Akzentfarben (Lila, Lime, Pink, Azur, Orange) mit **gleicher
+  Helligkeit** wie das Originalpixel. Im Detail farbig, aus der Entfernung stört es das Motiv nicht.
+- **Mitunter größere Teile**: benachbarte gleichfarbige Zellen gleicher Höhe teils als 1×2 (Stein, Technic-Stein,
+  Gitter, Cheese 1×2, Jumper) oder 2×2 (Rundstein, Rundplatte) – bricht das Raster auf.
+- **Lichtpunkte** (Scheinwerfer, Blinker): helle, gesättigte Farben (Orange, Gelb) gezielt, gern etwas höher.
+- **Motiv-Kontur**: dunkles Motiv vor hellem Grund – der Rand darf ausfransen (Teile stehen einzeln über).
+- **Aufbau real**: auf Baseplates, oder auf Platten mit Rahmen; Motiv-Rand bei Freiform-Bildern ohne Grundplatte
+  direkt an die Wand (dann Platten-Unterbau im Verbund).
+
+Werkzeug: `tools/relief/make_relief.py bild.jpg ausgabe/name --breite 48 --hoehe 48 --chaos 0.35 --konfetti 0.05`
+(MPD, Stückliste, BrickLink-XML, flache Farbvorschau). Für Wandbilder frontal von oben rendern
+(`[0,88,1.0,0,-20,0,30]`) plus eine flache Schrägansicht für die Tiefe.
