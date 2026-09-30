@@ -34,3 +34,15 @@ Materialien: ABS mit leichtem Klarlack (Rauheit 0,22), Trans-Farben als Glas (Tr
 metallisch. Farbmanagement „Khronos PBR Neutral" für farbtreue LEGO-Farben. Maßstab: 1 LDU = 0,4 mm.
 
 Dauer (4 CPU-Kerne): Laden von ca. 22.000 Teilen ~20 s, ein Bild 1600 × 1600 mit 96 Samples einige Minuten.
+
+## Lokal ohne Server: `ldraw_blender.py`, `render_cycles.py` und die Videos
+
+Für lokales Arbeiten mit installiertem Blender (Windows, GPU) gibt es eine zweite Variante, die die LDraw-Bibliothek
+direkt von der Platte liest (`$LDRAWDIR`, sonst die von Stud.io, sonst der Cache von `tools/ldraw-render`):
+
+- `ldraw_blender.py` – gemeinsamer Import: BFC-Windungsrichtung, LDConfig-Farben, je Farbe ein Objekt, Teil-Attribute
+  (z. B. Einbauzeit), Aufbau-Animation per Geometry Nodes (`add_build_anim`), Alpha-Glas für EEVEE, GPU-Auswahl.
+- `render_cycles.py` – Standbilder mit Cycles auf der GPU; Reliefs und Bühnen werden automatisch gerahmt:
+  `blender -b -P tools/blender-render/render_cycles.py -- modell.mpd out/name [--views '{"hero":[-55,24,1]}'] [--res 1600x1200]`
+- Videos (EEVEE, Timing aus der Musik, Musik bleibt lokal): `mbdtf-relief/video/runaway_video.py`,
+  `yeezus-stage/video/coldest_winter_video.py` – jeweils mit `--probe` für Standbilder und `--blend` zum Nachbearbeiten.

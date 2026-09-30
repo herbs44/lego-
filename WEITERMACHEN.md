@@ -15,7 +15,7 @@ mit der Circus-Maximus-Bühne weiter."*
 | Ordner | Stand | Generator | Teile |
 |---|---|---|---|
 | `globe-stage/` | fertig inkl. PDF-Bauanleitung, Bully-Mosaik auf dem Dach | `generate_globe_stage.py` | 10.876 |
-| `yeezus-stage/` | Mount Yeezus mit Wendelweg, rein unbunt | `generate_yeezus_stage.py` | 2.301 |
+| `yeezus-stage/` | Mount Yeezus mit Wendelweg, rein unbunt; Stud.io-Bauanleitung (`yeezus_stage_anleitung.mpd`) und 360°-Video | `generate_yeezus_stage.py` | 2.301 |
 | `circus-maximus/` | Travis Scott UTOPIA, 2×48×48, schwarze Fans, Pyro/CO2 | `generate_circus_maximus.py` | 7.062 |
 | `mbdtf-relief/` | *MBDTF* als 128×128-3D-Relief wie gemalt (Pinselstriche, Licht/Schatten, Goldrahmen, Weinglas) | `tools/relief/make_relief.py` + `zonen.json`, Optionen `--licht 1 --formfolge` | 40.417 |
 | `mbdtf-diorama/` | MBDTF-Szene „Runaway“: Reliefwand (48×48, SNOT), Kanye am Flügel, 21 Ballerinen, Dinnertafel, Phoenix | `generate_mbdtf_diorama.py` + `wand_relief.mpd` | 7.813 |
@@ -40,6 +40,22 @@ python3 tools/relief/make_relief.py cover.jpg graduation-relief/graduation_relie
 - `tools/relief/make_relief.py` – Bild → Relief-Mosaik (Zonen, Spezialteile, Höhenkarte, `.ldr` für BrickLink).
 - `tools/mosaic/make_mosaic.py` – flache 1×1-Fliesen-Mosaike mit Bewertung.
 - `tools/ldraw-render/ldbbox.py <teil>` – Ursprung und Maße eines Teils nachschlagen.
+- `tools/blender-render/render_cycles.py` – fotorealistische Standbilder in Blender (Cycles, GPU, lokale LDraw-Bibliothek):
+  `blender -b -P tools/blender-render/render_cycles.py -- modell.mpd out/name [--views '{"hero":[-55,24,1]}']`.
+  LDraw-Import, Farben und Aufbau-Animation liegen in `tools/blender-render/ldraw_blender.py`
+  (Bibliothek: `$LDRAWDIR`, sonst die von Stud.io).
+- `yeezus-stage/anleitung/plan_steps.py` – Bauschritte planen und prüfen, schreibt `yeezus_stage_anleitung.mpd`
+  mit `0 STEP` für den Stud.io Instruction Maker (Traverse, Moving Head, Line-Array als Baugruppen) und
+  `schritte.txt` mit Titeln und Hinweisen je Schritt.
+
+## Videos (Blender/EEVEE, Musik nicht im Repo)
+
+- `mbdtf-relief/video/runaway_video.py` – 20-s-Clip zu *Runaway*: Relief baut sich auf den Klaviertönen auf,
+  Drop, 2 Takte, Schnitt auf Schwarz. `blender -b -P mbdtf-relief/video/runaway_video.py -- "<runaway.mp3>" out/runaway20`
+- `yeezus-stage/video/coldest_winter_video.py` – 360°-Diorama zu *Coldest Winter*, Zeitraffer-Aufbau auf einen
+  Lego-Bau-Sound, Lichtkegel im Dunst. `blender -b -P yeezus-stage/video/coldest_winter_video.py -- "<Coldest Winter.mp3>" "<lego-build.mp3>" out/coldest_winter`
+- Beide mit `--probe` (Standbilder zum Prüfen) und `--blend` (Szene mit Kamera-Markern und Ton im Sequencer).
+  Timing wird aus der Musik gelesen; Ausgabe landet in `out/` (nicht im Repo).
 
 ## Skill
 
