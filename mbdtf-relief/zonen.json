@@ -66,7 +66,8 @@
    0.6875
   ],
   "hoehe": 3,
-  "glatt": true
+  "glatt": true,
+  "sauber": true
  },
  {
   "name": "Pinsel links (dunkles Tuerkis)",
@@ -81,7 +82,8 @@
   ],
   "hoehe": 3,
   "glatt": true,
-  "striche": "z"
+  "striche": "z",
+  "sauber": true
  },
  {
   "name": "Pinsel unten links (Gruen)",
@@ -96,7 +98,8 @@
   ],
   "hoehe": 3,
   "glatt": true,
-  "striche": "x"
+  "striche": "x",
+  "sauber": true
  },
  {
   "name": "Pinsel rechts (helles Tuerkis)",
@@ -111,7 +114,8 @@
   ],
   "hoehe": 3,
   "glatt": true,
-  "striche": "z"
+  "striche": "z",
+  "sauber": true
  },
  {
   "name": "Rahmen aussen oben",
@@ -696,136 +700,6 @@
   "spezial": {
    "teil": "33061",
    "farbe": 47
-  }
- },
- {
-  "name": "Krone mit Schwert (Condo-Cover 'Krone und Schwert')",
-  "form": "bitmap",
-  "ursprung": [
-   6,
-   6
-  ],
-  "pixel": [
-   "..............SS",
-   ".............SS.",
-   "..G...G...G.SS..",
-   "..GG.GGG.GGSS...",
-   "..GGGGGGGGSG....",
-   "..GRGGBGGSGG....",
-   "..GGGGGGSGGG....",
-   "..GGGGGSGGGG....",
-   "......S.........",
-   ".....S..........",
-   "...HHH..........",
-   "...H............",
-   "..H............."
-  ],
-  "farben": {
-   "G": 297,
-   "S": 179,
-   "H": 0,
-   "R": 36,
-   "B": 272
-  },
-  "hoehe": 5,
-  "hoehen": {
-   "S": 8,
-   "H": 7,
-   "R": 6,
-   "B": 6
-  },
-  "teile_je": {
-   "G": [
-    "3062b",
-    "4589",
-    "3070b",
-    "98138"
-   ],
-   "S": [
-    "3070b",
-    "24246",
-    "3069b"
-   ],
-   "H": [
-    "3062b"
-   ],
-   "R": [
-    "98138"
-   ],
-   "B": [
-    "98138"
-   ]
-  }
- },
- {
-  "name": "Phoenix-Fluegel (Condo-Cover 'Phoenix', Runaway-Film)",
-  "form": "bitmap",
-  "ursprung": [
-   3,
-   76
-  ],
-  "pixel": [
-   "..........................WW",
-   ".....................WWWWWW.",
-   ".................WWWWWWWWW..",
-   ".............WWWWWWWWWWLL...",
-   "..........WWWWWWWWWLLL......",
-   ".......WWWWWWWLLLW.W.W......",
-   ".....WWWWWLLLW.W.W..........",
-   "...WWWWLLW.W.W..............",
-   "..WWWLW.W...................",
-   ".WWW.W......................",
-   "WW.........................."
-  ],
-  "farben": {
-   "W": 15,
-   "L": 71
-  },
-  "hoehe": 6,
-  "hoehen": {
-   "L": 5
-  },
-  "teile_je": {
-   "W": [
-    "54200",
-    "35464",
-    "3070b",
-    "24246",
-    "33291"
-   ],
-   "L": [
-    "54200"
-   ]
-  }
- },
- {
-  "name": "Runaway-Ballerinen",
-  "form": "bitmap",
-  "ursprung": [
-   70,
-   84
-  ],
-  "pixel": [
-   "..W.....W.....W.....W...",
-   "..W.....W.....W.....W...",
-   ".WWW...WWW...WWW...WWW..",
-   "W.W.W.W.W.W.W.W.W.W.W.W.",
-   ".WWW...WWW...WWW...WWW..",
-   "WWWWW.WWWWW.WWWWW.WWWWW.",
-   "..W.....W.....W.....W...",
-   ".W.W...W.W...W.W...W.W.."
-  ],
-  "farben": {
-   "W": 15
-  },
-  "hoehe": 4,
-  "teile_je": {
-   "W": [
-    "6141",
-    "98138",
-    "3070b",
-    "3024"
-   ]
   }
  }
 ]
