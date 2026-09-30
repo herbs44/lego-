@@ -36,6 +36,25 @@
   "licht": "schatten"
  },
  {
+  "name": "Label entfernt: Stoff statt Aufkleber",
+  "form": "rechteck",
+  "von": [
+   0.8333333333333334,
+   0.875
+  ],
+  "bis": [
+   0.9791666666666666,
+   0.9791666666666666
+  ],
+  "hoehe": 0,
+  "mischung": {
+   "4": 0.72,
+   "320": 0.22,
+   "26": 0.06
+  },
+  "licht": "schatten"
+ },
+ {
   "name": "Leinwand",
   "form": "rechteck",
   "von": [
@@ -680,29 +699,133 @@
   }
  },
  {
-  "name": "Parental Advisory",
-  "form": "rechteck",
-  "von": [
-   0.84375,
-   0.88542
+  "name": "Krone mit Schwert (Condo-Cover 'Krone und Schwert')",
+  "form": "bitmap",
+  "ursprung": [
+   6,
+   6
   ],
-  "bis": [
-   0.97917,
-   0.97917
+  "pixel": [
+   "..............SS",
+   ".............SS.",
+   "..G...G...G.SS..",
+   "..GG.GGG.GGSS...",
+   "..GGGGGGGGSG....",
+   "..GRGGBGGSGG....",
+   "..GGGGGGSGGG....",
+   "..GGGGGSGGGG....",
+   "......S.........",
+   ".....S..........",
+   "...HHH..........",
+   "...H............",
+   "..H............."
   ],
-  "hoehe": 3,
-  "glatt": true,
-  "zweifarbig": [
-   0,
-   15
+  "farben": {
+   "G": 297,
+   "S": 179,
+   "H": 0,
+   "R": 36,
+   "B": 272
+  },
+  "hoehe": 5,
+  "hoehen": {
+   "S": 8,
+   "H": 7,
+   "R": 6,
+   "B": 6
+  },
+  "teile_je": {
+   "G": [
+    "3062b",
+    "4589",
+    "3070b",
+    "98138"
+   ],
+   "S": [
+    "3070b",
+    "24246",
+    "3069b"
+   ],
+   "H": [
+    "3062b"
+   ],
+   "R": [
+    "98138"
+   ],
+   "B": [
+    "98138"
+   ]
+  }
+ },
+ {
+  "name": "Phoenix-Fluegel (Condo-Cover 'Phoenix', Runaway-Film)",
+  "form": "bitmap",
+  "ursprung": [
+   3,
+   76
   ],
-  "schwelle": 55,
-  "teile": [
-   "3070b",
-   "3069b",
-   "2431",
-   "3068b"
+  "pixel": [
+   "..........................WW",
+   ".....................WWWWWW.",
+   ".................WWWWWWWWW..",
+   ".............WWWWWWWWWWLL...",
+   "..........WWWWWWWWWLLL......",
+   ".......WWWWWWWLLLW.W.W......",
+   ".....WWWWWLLLW.W.W..........",
+   "...WWWWLLW.W.W..............",
+   "..WWWLW.W...................",
+   ".WWW.W......................",
+   "WW.........................."
   ],
-  "licht": false
+  "farben": {
+   "W": 15,
+   "L": 71
+  },
+  "hoehe": 6,
+  "hoehen": {
+   "L": 5
+  },
+  "teile_je": {
+   "W": [
+    "54200",
+    "35464",
+    "3070b",
+    "24246",
+    "33291"
+   ],
+   "L": [
+    "54200"
+   ]
+  }
+ },
+ {
+  "name": "Runaway-Ballerinen",
+  "form": "bitmap",
+  "ursprung": [
+   70,
+   84
+  ],
+  "pixel": [
+   "..W.....W.....W.....W...",
+   "..W.....W.....W.....W...",
+   ".WWW...WWW...WWW...WWW..",
+   "W.W.W.W.W.W.W.W.W.W.W.W.",
+   ".WWW...WWW...WWW...WWW..",
+   "WWWWW.WWWWW.WWWWW.WWWWW.",
+   "..W.....W.....W.....W...",
+   ".W.W...W.W...W.W...W.W.."
+  ],
+  "farben": {
+   "W": 15
+  },
+  "hoehe": 4,
+  "teile_je": {
+   "W": [
+    "6141",
+    "98138",
+    "3070b",
+    "3024"
+   ]
+  }
  }
 ]

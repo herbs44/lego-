@@ -47,7 +47,7 @@ PALETTE = {
 # Zusatzfarben: nur aktiv mit --farben-plus (die Standardpalette bleibt gleich, alte Reliefs bleiben reproduzierbar)
 EXTRA = {3: ("Dark Turquoise", 39, (6, 157, 159)), 151: ("Sand Green", 48, (160, 188, 172)),
          92: ("Nougat", 28, (208, 145, 104)), 78: ("Light Nougat", 90, (246, 215, 179)),
-         297: ("Pearl Gold", 115, (170, 127, 46)), 47: ("Trans-Clear", 12, (238, 238, 238)), 36: ("Trans-Red", 17, (201, 26, 9))}
+         297: ("Pearl Gold", 115, (170, 127, 46)), 179: ("Flat Silver", 95, (137, 135, 136)), 47: ("Trans-Clear", 12, (238, 238, 238)), 36: ("Trans-Red", 17, (201, 26, 9))}
 BL_ID = {"3070b": "3070", "3069b": "3069", "3068b": "3068", "3062b": "3062", "6141": "4073", "4032a": "4032"}
 
 # Abschlussteile: Name -> (Hoehe in LDU ueber der Auflage, Ursprung unten?, Gewicht)
@@ -104,6 +104,10 @@ def zone_weight(z, i, k, W, H):
     if f == "rechteck":
         (u0, v0), (u1, v1) = z["von"], z["bis"]
         return 1.0 if u0 <= u <= u1 and v0 <= v <= v1 else None
+    if f == "bitmap":                                           # Pixel-Motiv: Zeichen je Noppe, "." = frei
+        i0, k0 = z["ursprung"]; px = z["pixel"]
+        r, c = k - k0, i - i0
+        return 1.0 if 0 <= r < len(px) and 0 <= c < len(px[r]) and px[r][c] != "." else None
     if f == "rahmen":                                           # Rechteck-Umriss mit Breite "breite"
         (u0, v0), (u1, v1) = z["von"], z["bis"]; b = z.get("breite", 0.02)
         inside = u0 <= u <= u1 and v0 <= v <= v1
@@ -193,6 +197,12 @@ def main():
                 Lq = srgb_to_lab(rgb[q])
                 col[q] = min((c for c in pal if c not in (47, 36)), key=lambda c: sum((u - v) ** 2 for u, v in zip(Lq, lab[c])))
             if "farbe" in z: col[q] = z["farbe"]
+            if z["form"] == "bitmap":
+                ch = z["pixel"][q[1] - z["ursprung"][1]][q[0] - z["ursprung"][0]]
+                col[q] = z["farben"][ch]
+                hgt[q] = z.get("hoehen", {}).get(ch, z.get("hoehe", 0))
+                if ch in z.get("teile_je", {}): pool[q] = z["teile_je"][ch]
+                lmode[q] = False
             if "mischung" in z:                                  # gewichteter Farbmix, z. B. Stoff aus Rot + Dunkelrot
                 cs = [int(c) for c in z["mischung"]]
                 col[q] = rng.choices(cs, weights=[z["mischung"][str(c)] for c in cs])[0]

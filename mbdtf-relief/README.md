@@ -1,16 +1,20 @@
 # Kanye West – My Beautiful Dark Twisted Fantasy als LEGO-Relief
 
 Das Albumcover *My Beautiful Dark Twisted Fantasy* (2010, Gemälde von George Condo) als 3D-Relief-Mosaik im Stil von
-LEGO-Wandkunst: **96 × 96 Noppen** (ca. 77 × 77 cm) auf 4 Baseplates 48 × 48, **22.604 Teile** in 31 Farben,
-43 Teilesorten, bis ca. 4,5 cm tief. Gegenstück zum [Graduation-Relief](../graduation-relief/).
+LEGO-Wandkunst: **96 × 96 Noppen** (ca. 77 × 77 cm) auf 4 Baseplates 48 × 48, **22.939 Teile** in 32 Farben,
+41 Teilesorten, bis ca. 4,5 cm tief. Gegenstück zum [Graduation-Relief](../graduation-relief/).
 
 | Das Gemälde im Goldrahmen | Ballerina (Nähe) |
 |---|---|
 | ![Bild](mbdtf_bild.png) | ![Ballerina](mbdtf_ballerina.png) |
 
-| Gesicht: Glotzaugen, Rouge, Nase, Mund | Echtes Weinglas in der Hand | Parental-Advisory-Aufkleber |
+| Gesicht: Glotzaugen, Rouge, Nase, Mund | Echtes Weinglas in der Hand |
+|---|---|
+| ![Gesicht](mbdtf_gesicht.png) | ![Glas](mbdtf_glas.png) |
+
+| Krone mit Schwert | Phoenix-Flügel | Runaway-Ballerinen |
 |---|---|---|
-| ![Gesicht](mbdtf_gesicht.png) | ![Glas](mbdtf_glas.png) | ![Aufkleber](mbdtf_aufkleber.png) |
+| ![Krone](mbdtf_krone.png) | ![Flügel](mbdtf_fluegel.png) | ![Ballerinen](mbdtf_ballerinen.png) |
 
 | Farbvorschau (1 Pixel = 1 Noppe) | Höhenkarte (hell = hoch) |
 |---|---|
@@ -30,7 +34,18 @@ Das Cover ist ein kleines, gerahmtes Gemälde auf einem großen roten Stoff. Gen
 | Haut (Arme, Schulter, Beine) | 9 Platten | Rundsteine und Rundplatten in Nougat-Tönen – die Figur steht als Silhouette vor der Leinwand |
 | Kopf mit Haarknoten | 11–12 Platten | höchster Punkt des Bildes |
 | **Weinglas** | 7 Platten | ein echtes **Minifig-Weinglas** (33061) in Trans-Clear steht in ihrer Hand |
-| Parental Advisory | 3 Platten | glatte schwarze und weiße Fliesen als Aufkleber auf dem Stoff |
+
+## MBDTF-Merkmale auf dem Stoff
+
+George Condo malte fünf austauschbare Cover für das Album; ihre Motive sind als kleine, erhabene Pixel-Motive
+auf dem roten Stoff verteilt (Quellen: [Wikipedia](https://en.wikipedia.org/wiki/My_Beautiful_Dark_Twisted_Fantasy),
+[Hypebeast/New York Magazine](https://hypebeast.com/2010/11/new-york-magazine-george-condo-explains-his-five-covers-for-kanye-wests-twisted-fantasy)):
+
+| Motiv | Herkunft | Umsetzung |
+|---|---|---|
+| **Krone mit Schwert** (oben links) | Cover mit dem gekrönten, vom Schwert durchbohrten Kopf („Shakespearian thing") | Pearl-Gold-Krone mit rotem und blauem Juwel, Schwert in Flat Silver quer hindurch, schwarzer Griff; Klinge am höchsten |
+| **Phoenix-Flügel** (unten links) | Phoenix-Cover und die Phoenix-Figur im Kurzfilm *Runaway* | weißer Flügel aus Cheese- und Doppel-Slopes, Federkanten in Hellgrau |
+| **Runaway-Ballerinen** (unten rechts) | die Ballerinen aus dem *Runaway*-Film – zurückgehend auf das Ballerina-Cover | vier weiße Tänzerinnen mit Tutu, statt des Parental-Advisory-Aufklebers |
 
 ## Wie ein Maler gebaut
 

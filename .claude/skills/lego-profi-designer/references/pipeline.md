@@ -43,6 +43,15 @@ node shoot.js modell.mpd out/praefix '{"hero":[62,16,0.9],"front":[90,1,0.62,-30
 - Standardansichten pro Projekt festlegen und immer gleich rendern (vorher/nachher vergleichbar).
 - Jeden Render selbst ansehen; bei Detailfragen gezielte Nahansichten rendern.
 
+## Fotorealistisch mit Blender
+
+`tools/blender-render/render_blender.py` (bpy 5.0.1 in Python-3.11-venv, kein Add-on nötig): lädt Teile über den
+Render-Server, ein Mesh pro Teilesorte (geteilte Daten), Materialslot 0 = Teilfarbe per Objekt, ABS/Trans/Pearl-
+Materialien, Cycles + Denoiser, „Khronos PBR Neutral". `--ansicht wand` für Reliefs (Noppen → +Y, Bild oben → +Z,
+Bild links → +X; Kamera bei +Y sieht es seitenrichtig), `--ansicht oben` für Bühnen. Kameras als JSON
+(`cam`, `ziel`, `brennweite`, `blende` für Tiefenunschärfe). Lichtstärken klein halten (~100 W · Größe² für das
+Hauptlicht), sonst überstrahlt es.
+
 ## Stolperfallen (alle in diesem Repo passiert)
 
 | Problem | Lösung |
