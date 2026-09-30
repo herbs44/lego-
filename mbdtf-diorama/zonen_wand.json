@@ -1,0 +1,614 @@
+[
+ {
+  "name": "Rotes Stofffeld",
+  "form": "rechteck",
+  "von": [
+   0.0,
+   0.0
+  ],
+  "bis": [
+   1.0,
+   1.0
+  ],
+  "farbe_rgb": [
+   226,
+   16,
+   61
+  ],
+  "toleranz": 70,
+  "hoehe": 0,
+  "mischung": {
+   "4": 0.72,
+   "320": 0.22,
+   "26": 0.06
+  },
+  "teile": [
+   "6141",
+   "85861",
+   "3024",
+   "98138",
+   "3062b",
+   "4589",
+   "54200",
+   "33291",
+   "3070b"
+  ],
+  "licht": "schatten"
+ },
+ {
+  "name": "Leinwand",
+  "form": "rechteck",
+  "von": [
+   0.1875,
+   0.125
+  ],
+  "bis": [
+   0.8125,
+   0.75
+  ],
+  "hoehe": 3,
+  "glatt": true,
+  "sauber": true
+ },
+ {
+  "name": "Pinsel links (dunkles Tuerkis)",
+  "form": "rechteck",
+  "von": [
+   0.1875,
+   0.125
+  ],
+  "bis": [
+   0.5,
+   0.47222
+  ],
+  "hoehe": 3,
+  "glatt": true,
+  "striche": "z",
+  "sauber": true
+ },
+ {
+  "name": "Pinsel unten links (Gruen)",
+  "form": "rechteck",
+  "von": [
+   0.1875,
+   0.47222
+  ],
+  "bis": [
+   0.5,
+   0.75
+  ],
+  "hoehe": 3,
+  "glatt": true,
+  "striche": "x",
+  "sauber": true
+ },
+ {
+  "name": "Pinsel rechts (helles Tuerkis)",
+  "form": "rechteck",
+  "von": [
+   0.65625,
+   0.125
+  ],
+  "bis": [
+   0.8125,
+   0.69792
+  ],
+  "hoehe": 3,
+  "glatt": true,
+  "striche": "z",
+  "sauber": true
+ },
+ {
+  "name": "Rahmen aussen oben",
+  "form": "rechteck",
+  "von": [
+   0.15278,
+   0.09028
+  ],
+  "bis": [
+   0.84722,
+   0.10763
+  ],
+  "hoehe": 10,
+  "glatt": true,
+  "striche": "x",
+  "mischung": {
+   "297": 0.5,
+   "191": 0.35,
+   "19": 0.15
+  },
+  "licht": false
+ },
+ {
+  "name": "Rahmen aussen unten",
+  "form": "rechteck",
+  "von": [
+   0.15278,
+   0.76737
+  ],
+  "bis": [
+   0.84722,
+   0.78472
+  ],
+  "hoehe": 10,
+  "glatt": true,
+  "striche": "x",
+  "mischung": {
+   "297": 0.7,
+   "28": 0.2,
+   "84": 0.1
+  },
+  "licht": false
+ },
+ {
+  "name": "Rahmen aussen links",
+  "form": "rechteck",
+  "von": [
+   0.15278,
+   0.10763
+  ],
+  "bis": [
+   0.17013,
+   0.76737
+  ],
+  "hoehe": 10,
+  "glatt": true,
+  "striche": "z",
+  "mischung": {
+   "297": 0.5,
+   "191": 0.35,
+   "19": 0.15
+  },
+  "licht": false
+ },
+ {
+  "name": "Rahmen aussen rechts",
+  "form": "rechteck",
+  "von": [
+   0.82987,
+   0.10763
+  ],
+  "bis": [
+   0.84722,
+   0.76737
+  ],
+  "hoehe": 10,
+  "glatt": true,
+  "striche": "z",
+  "mischung": {
+   "297": 0.7,
+   "28": 0.2,
+   "84": 0.1
+  },
+  "licht": false
+ },
+ {
+  "name": "Rahmen Glanzkante oben",
+  "form": "rechteck",
+  "von": [
+   0.17013,
+   0.10763
+  ],
+  "bis": [
+   0.82987,
+   0.125
+  ],
+  "hoehe": 8,
+  "glatt": true,
+  "striche": "x",
+  "mischung": {
+   "191": 0.5,
+   "226": 0.25,
+   "297": 0.25
+  },
+  "licht": false
+ },
+ {
+  "name": "Rahmen Glanzkante unten",
+  "form": "rechteck",
+  "von": [
+   0.17013,
+   0.75
+  ],
+  "bis": [
+   0.82987,
+   0.76737
+  ],
+  "hoehe": 8,
+  "glatt": true,
+  "striche": "x",
+  "mischung": {
+   "297": 0.6,
+   "191": 0.4
+  },
+  "licht": false
+ },
+ {
+  "name": "Rahmen Glanzkante links",
+  "form": "rechteck",
+  "von": [
+   0.17013,
+   0.125
+  ],
+  "bis": [
+   0.1875,
+   0.75
+  ],
+  "hoehe": 8,
+  "glatt": true,
+  "striche": "z",
+  "mischung": {
+   "191": 0.5,
+   "226": 0.25,
+   "297": 0.25
+  },
+  "licht": false
+ },
+ {
+  "name": "Rahmen Glanzkante rechts",
+  "form": "rechteck",
+  "von": [
+   0.8125,
+   0.125
+  ],
+  "bis": [
+   0.82987,
+   0.75
+  ],
+  "hoehe": 8,
+  "glatt": true,
+  "striche": "z",
+  "mischung": {
+   "297": 0.6,
+   "191": 0.4
+  },
+  "licht": false
+ },
+ {
+  "name": "Kleid und Tutu (schwarz)",
+  "form": "rechteck",
+  "von": [
+   0.20487,
+   0.14237
+  ],
+  "bis": [
+   0.8125,
+   0.73263
+  ],
+  "farbe_rgb": [
+   26,
+   26,
+   26
+  ],
+  "toleranz": 75,
+  "hoehe": 8,
+  "kontur": true,
+  "teile": [
+   "3062b",
+   "4589",
+   "11610",
+   "54200",
+   "35464",
+   "92947",
+   "3941"
+  ],
+  "sauber": true
+ },
+ {
+  "name": "Tutu (Rueschen)",
+  "form": "ellipse",
+  "mitte": [
+   0.52603,
+   0.64583
+  ],
+  "radius": [
+   0.30833,
+   0.09167
+  ],
+  "farbe_rgb": [
+   26,
+   26,
+   26
+  ],
+  "toleranz": 75,
+  "hoehe": 11,
+  "profil": "kuppel",
+  "kontur": true,
+  "teile": [
+   "54200",
+   "35464",
+   "85984",
+   "15068",
+   "54200",
+   "4589"
+  ],
+  "sauber": true
+ },
+ {
+  "name": "Haut",
+  "form": "rechteck",
+  "von": [
+   0.20487,
+   0.24653
+  ],
+  "bis": [
+   0.8125,
+   0.76737
+  ],
+  "farbe_rgb": [
+   228,
+   190,
+   140
+  ],
+  "toleranz": 65,
+  "hoehe": 9,
+  "kontur": true,
+  "teile": [
+   "3062b",
+   "6141",
+   "98138",
+   "3005",
+   "3941"
+  ],
+  "sauber": true
+ },
+ {
+  "name": "Arm ausgestreckt",
+  "form": "rechteck",
+  "von": [
+   0.23958,
+   0.3507
+  ],
+  "bis": [
+   0.55208,
+   0.45487
+  ],
+  "farbe_rgb": [
+   228,
+   190,
+   140
+  ],
+  "toleranz": 65,
+  "hoehe": 9,
+  "glatt": true,
+  "striche": "x",
+  "sauber": true
+ },
+ {
+  "name": "Arm angewinkelt",
+  "form": "rechteck",
+  "von": [
+   0.62153,
+   0.3507
+  ],
+  "bis": [
+   0.70833,
+   0.61112
+  ],
+  "farbe_rgb": [
+   228,
+   190,
+   140
+  ],
+  "toleranz": 65,
+  "hoehe": 9,
+  "glatt": true,
+  "striche": "z",
+  "sauber": true
+ },
+ {
+  "name": "Beine",
+  "form": "rechteck",
+  "von": [
+   0.46528,
+   0.69792
+  ],
+  "bis": [
+   0.69097,
+   0.76737
+  ],
+  "farbe_rgb": [
+   228,
+   190,
+   140
+  ],
+  "toleranz": 70,
+  "hoehe": 6,
+  "glatt": true,
+  "striche": "z",
+  "sauber": true
+ },
+ {
+  "name": "Kopf",
+  "form": "ellipse",
+  "mitte": [
+   0.56945,
+   0.22048
+  ],
+  "radius": [
+   0.05,
+   0.06
+  ],
+  "hoehe": 12,
+  "profil": "kuppel",
+  "teile": [
+   "3062b",
+   "6141",
+   "98138",
+   "85861"
+  ],
+  "sauber": true
+ },
+ {
+  "name": "Haar",
+  "form": "rechteck",
+  "von": [
+   0.51737,
+   0.125
+  ],
+  "bis": [
+   0.62153,
+   0.19445
+  ],
+  "farbe_rgb": [
+   26,
+   26,
+   26
+  ],
+  "toleranz": 90,
+  "hoehe": 12,
+  "teile": [
+   "3062b",
+   "4589",
+   "6141"
+  ],
+  "sauber": true
+ },
+ {
+  "name": "Haarknoten",
+  "form": "punkt",
+  "mitte": [
+   0.56077,
+   0.13368
+  ],
+  "radius": [
+   0.004,
+   0.004
+  ],
+  "hoehe": 13,
+  "farbe": 0,
+  "teil": "3062b"
+ },
+ {
+  "name": "Auge links (Glotzauge: weisse Rundplatte, offene Noppe = Pupille)",
+  "form": "punkt",
+  "mitte": [
+   0.5434,
+   0.22048
+  ],
+  "radius": [
+   0.004,
+   0.004
+  ],
+  "hoehe": 12,
+  "farbe": 15,
+  "teil": "85861"
+ },
+ {
+  "name": "Auge rechts",
+  "form": "punkt",
+  "mitte": [
+   0.57813,
+   0.22048
+  ],
+  "radius": [
+   0.004,
+   0.004
+  ],
+  "hoehe": 12,
+  "farbe": 15,
+  "teil": "85861"
+ },
+ {
+  "name": "Wange (Rouge)",
+  "form": "punkt",
+  "mitte": [
+   0.56077,
+   0.23785
+  ],
+  "radius": [
+   0.004,
+   0.004
+  ],
+  "hoehe": 12,
+  "farbe": 25,
+  "teil": "6141"
+ },
+ {
+  "name": "Nase",
+  "form": "punkt",
+  "mitte": [
+   0.57813,
+   0.23785
+  ],
+  "radius": [
+   0.004,
+   0.004
+  ],
+  "hoehe": 12,
+  "farbe": 92,
+  "teil": "54200"
+ },
+ {
+  "name": "Mund",
+  "form": "punkt",
+  "mitte": [
+   0.56077,
+   0.2552
+  ],
+  "radius": [
+   0.004,
+   0.004
+  ],
+  "hoehe": 11,
+  "farbe": 4,
+  "teil": "98138"
+ },
+ {
+  "name": "Hand",
+  "form": "rechteck",
+  "von": [
+   0.22222,
+   0.36805
+  ],
+  "bis": [
+   0.2743,
+   0.42013
+  ],
+  "farbe_rgb": [
+   228,
+   190,
+   140
+  ],
+  "toleranz": 80,
+  "hoehe": 9,
+  "teile": [
+   "24246",
+   "6141",
+   "98138"
+  ],
+  "sauber": true
+ },
+ {
+  "name": "Rotwein",
+  "form": "punkt",
+  "mitte": [
+   0.19618,
+   0.37673
+  ],
+  "radius": [
+   0.004,
+   0.004
+  ],
+  "hoehe": 8,
+  "farbe": 36,
+  "teil": "98138"
+ },
+ {
+  "name": "Weinglas",
+  "form": "punkt",
+  "mitte": [
+   0.19618,
+   0.41147
+  ],
+  "radius": [
+   0.004,
+   0.004
+  ],
+  "hoehe": 7,
+  "spezial": {
+   "teil": "33061",
+   "farbe": 47
+  }
+ }
+]

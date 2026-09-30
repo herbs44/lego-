@@ -1,16 +1,15 @@
 """
-Kanye West – My Beautiful Dark Twisted Fantasy – Diorama "The Ballerina Room" (LEGO MOC Generator)
-Rotes Zimmer mit Schachbrettboden, an der Wand das Ballerina-Gemaelde im gestuften Goldrahmen (Pixelbild aus
-1x1-Platten, seitlich sichtbar). Davor steigt die Ballerina als gebaute 3D-Figur aus dem Bild: schwarzes Tutu,
-Maske, Weinglas in der ausgestreckten Hand, auf einem tuerkisen Podest. Rechts die weisse "Runaway"-Dinnertafel.
-Keine Minifiguren. Massstab: 1 Baseplate 32x32.
-Pipeline: Zellen/Ebenen -> Packing (Verband) -> Figuren/Details -> Checks (lose/schwebend/Kollision) -> MPD/BOM/XML
+Kanye West – My Beautiful Dark Twisted Fantasy – Diorama "Runaway" (LEGO MOC Generator)
+48x48-Grundplatte. Rueckwand = 3D-Relief (48x48 Noppen, per SNOT hochkant an einer Tragwand): rotes Stofffeld wie
+das Cover, darin das Ballerina-Gemaelde (30x30) im erhabenen Goldrahmen. Davor die Runaway-Szene mit Minifiguren:
+weisses Podest mit schwarzem Fluegel und Kanye im roten Anzug, ein Halbkreis Ballerinen mit Dutt, die lange weisse
+Dinnertafel mit Gaesten in Weiss, am Kopfende der Phoenix; Schachbrettboden, roter Laeufer, goldene Standleuchter.
+Pipeline: Relief (make_relief) -> Tragwand + SNOT -> Zellen/Ebenen -> Packing -> Minifiguren -> Checks -> MPD/BOM/XML
 
-Aufruf: python3 generate_mbdtf_diorama.py [cover.png]
-  Mit Cover (250 px, Gemaelde bei Pixel 70-179) wird das Gemaelde neu gerastert und in gemaelde.json gespeichert;
-  ohne Cover wird gemaelde.json aus dem Repo benutzt (das Cover selbst liegt nicht im Repo).
+Aufruf: python3 generate_mbdtf_diorama.py
+  Das Wandrelief (wand_relief.mpd) wird vorher mit tools/relief/make_relief.py erzeugt (Befehl im README).
 """
-import json, math, os, random, sys
+import math, os, random, re
 from collections import defaultdict, Counter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -19,44 +18,53 @@ NAME = "mbdtf_diorama"
 random.seed(5)
 
 LDU, BH, PH = 20, 24, 8
-ROT = {0: "1 0 0 0 1 0 0 0 1", 90: "0 0 -1 0 1 0 1 0 0"}
+RM = {0: [[1, 0, 0], [0, 1, 0], [0, 0, 1]], 90: [[0, 0, -1], [0, 1, 0], [1, 0, 0]],
+      180: [[-1, 0, 0], [0, 1, 0], [0, 0, -1]], 270: [[0, 0, 1], [0, 1, 0], [-1, 0, 0]]}
 
 # ---------------- Farben (LDraw: Name, BrickLink-ID) ----------------
-BLACK, WHITE, RED, DKRED, GOLD, LNOUGAT, DKTURQ, TCLEAR, TRED, TYELLOW, SILVER, DKGREEN = \
-    0, 15, 4, 320, 297, 78, 3, 47, 36, 46, 179, 288
+BLACK, WHITE, RED, DKRED, GOLD, LNOUGAT, MNOUGAT, RBROWN, ORANGE, TCLEAR, TYELLOW, DKBROWN, TAN = \
+    0, 15, 4, 320, 297, 78, 84, 70, 25, 47, 46, 308, 19
 COLORS = {0: ("Black", 11), 15: ("White", 1), 4: ("Red", 5), 320: ("Dark Red", 59), 297: ("Pearl Gold", 115),
-          78: ("Light Nougat", 90), 3: ("Dark Turquoise", 39), 47: ("Trans-Clear", 12), 36: ("Trans-Red", 17),
-          46: ("Trans-Yellow", 19), 179: ("Flat Silver", 95), 288: ("Dark Green", 80)}
+          78: ("Light Nougat", 90), 84: ("Medium Nougat", 150), 70: ("Reddish Brown", 88), 25: ("Orange", 4),
+          47: ("Trans-Clear", 12), 46: ("Trans-Yellow", 19), 308: ("Dark Brown", 120), 19: ("Tan", 2)}
 
 # ---------------- Teile ----------------
 BRICK = {(1, 1): "3005", (1, 2): "3004", (1, 3): "3622", (1, 4): "3010", (1, 6): "3009", (1, 8): "3008",
-         (2, 2): "3003", (2, 3): "3002", (2, 4): "3001", (2, 6): "2456", (2, 8): "3007"}
+         (2, 2): "3003", (2, 4): "3001"}
 PLATE = {(1, 1): "3024", (1, 2): "3023", (1, 3): "3623", (1, 4): "3710", (1, 6): "3666", (1, 8): "3460",
-         (2, 2): "3022", (2, 3): "3021", (2, 4): "3020", (2, 6): "3795", (2, 8): "3034", (2, 10): "3832",
+         (2, 2): "3022", (2, 3): "3021", (2, 4): "3020", (2, 6): "3795", (2, 8): "3034",
          (4, 4): "3031", (4, 6): "3032", (4, 8): "3035"}
 TILE = {(1, 1): "3070b", (1, 2): "3069b", (1, 4): "2431", (1, 6): "6636", (1, 8): "4162",
         (2, 2): "3068b", (2, 4): "87079"}
-BL_ID = {"3070b": "3070", "3069b": "3069", "3068b": "3068", "3062b": "3062", "6141": "4073", "4032a": "4032"}
-TITLES = {"boden": "Grundplatte und Schachbrettboden", "wand": "Rote Waende mit Sockel und Goldleiste",
-          "rahmen": "Goldrahmen", "gemaelde": "Gemaelde (Ballerina, Pixelbild aus 1x1-Platten)",
-          "podest": "Podest", "ballerina": "Ballerina (3D-Figur mit Weinglas)", "tafel": "Runaway-Dinnertafel"}
-
-
-class Part:
-    __slots__ = ("sub", "name", "color", "x", "y", "z", "rot", "cells", "ytop", "ybot", "studs")
-
-    def __init__(s, sub, name, color, x, y, z, rot, cells, ytop, ybot, studs=True):
-        s.sub, s.name, s.color, s.x, s.y, s.z, s.rot = sub, name, color, x, y, z, rot
-        s.cells, s.ytop, s.ybot = frozenset(cells), ytop, ybot
-        s.studs = frozenset(cells) if studs else frozenset()
-
-    def line(s):
-        return f"1 {s.color} {fmt(s.x)} {fmt(s.y)} {fmt(s.z)} {ROT[s.rot]} {s.name}.dat"
+TILE1 = {k: v for k, v in TILE.items() if k[0] == 1}
+BL_ID = {"3070b": "3070", "3069b": "3069", "3068b": "3068", "3062b": "3062", "6141": "4073",
+         "3815c01": "970c00", "3815c02": "970c00", "3626bp01": "3626c", "3626bp02": "3626c"}
+TITLES = {"wand": "Tragwand mit SNOT-Steinen, Sockel", "wand_relief": "Wandrelief: rotes Tuch und Gemaelde (48x48)",
+          "boden": "Grundplatte, Schachbrettboden, roter Laeufer", "podest": "Podest mit Fluegel",
+          "kanye": "Kanye am Fluegel", "ballerinen": "Ballerinen (Minifiguren)",
+          "tafel": "Runaway-Dinnertafel", "gaeste": "Gaeste und Phoenix", "leuchter": "Standleuchter"}
 
 
 def fmt(v):
     v = round(v, 3)
     return str(int(v)) if v == int(v) else str(v)
+
+
+def mstr(M): return " ".join(fmt(round(v, 4)) for r in M for v in r)
+def mm(A, B): return [[sum(A[i][k] * B[k][j] for k in range(3)) for j in range(3)] for i in range(3)]
+def mv(M, v): return [sum(M[i][k] * v[k] for k in range(3)) for i in range(3)]
+
+
+class Part:
+    __slots__ = ("sub", "name", "color", "x", "y", "z", "M", "cells", "ytop", "ybot", "studs")
+
+    def __init__(s, sub, name, color, x, y, z, M, cells, ytop, ybot, studs=True):
+        s.sub, s.name, s.color, s.x, s.y, s.z, s.M = sub, name, color, x, y, z, M
+        s.cells, s.ytop, s.ybot = frozenset(cells), ytop, ybot
+        s.studs = frozenset(cells) if studs else frozenset()
+
+    def line(s):
+        return f"1 {s.color} {fmt(s.x)} {fmt(s.y)} {fmt(s.z)} {mstr(s.M)} {s.name}.dat"
 
 
 parts = []
@@ -71,7 +79,7 @@ def place(sub, name, color, cells, ytop, h, studs=True, rot=None, y=None):
     nx, nz = max(xs) - min(xs) + 1, max(zs) - min(zs) + 1
     if rot is None: rot = 90 if nz > nx else 0
     x = (min(xs) + max(xs) + 1) / 2 * LDU; z = (min(zs) + max(zs) + 1) / 2 * LDU
-    p = Part(sub, name, color, x, ytop if y is None else y, z, rot, cells, ytop, ytop + h, studs)
+    p = Part(sub, name, color, x, ytop if y is None else y, z, RM[rot], cells, ytop, ytop + h, studs)
     parts.append(p); return p
 
 
@@ -91,224 +99,263 @@ def pack(sub, cells, color, ytop, table, h, studs=True, prefer_x=True, colfn=Non
             if done: break
 
 
+def runs_1d(xs, start_off):
+    """Laeufer-Verband in einer Reihe: 1x4-Steine, Versatz start_off (0/2), Reste 1x1-1x3."""
+    out, xs = [], sorted(xs)
+    seg = []
+    for x in xs + [None]:
+        if seg and (x is None or x != seg[-1] + 1):
+            i = 0
+            first = start_off if len(seg) > 4 else 0
+            if first: out.append((seg[0], first)); i = first
+            while i < len(seg):
+                n = min(4, len(seg) - i); out.append((seg[i], n)); i += n
+            seg = []
+        if x is not None: seg.append(x)
+    return out
+
+
 # ================= Grundriss =================
-# Zellen i (x) und k (z) von -16..15. Hinten = -z (Wand), vorne = +z (Betrachter). Von vorne gesehen liegt +x LINKS.
-ALL = rect(-16, -16, 32, 32)
-BACK = set(rect(-16, -16, 32, 2))                    # Rueckwand, 2 tief
-SIDE = set(rect(-16, -14, 2, 12))                    # Seitenwand (von vorne rechts), k -14..-3
-DADO = set(rect(-14, -14, 30, 2))                    # Sockel vor der Rueckwand
-FRAME_I = (-12, 11)                                  # Rahmen aussen, 24 breit
-PAINT_I = (-10, 9)                                   # Bildflaeche 20 breit
-PW = PAINT_I[1] - PAINT_I[0] + 1
-WALL_G = 20                                          # Wandhoehe in Steinen (480 LDU)
-DADO_G = 3
-Y_WALL, Y_DADO = -WALL_G * BH, -DADO_G * BH
-Y_LIP_BOT = Y_DADO - PH                              # Oberkante untere Rahmenleiste (-80)
-ROWS = 48                                            # Bildzeilen (Platten) zwischen den Goldleisten (Vielfaches von 3)
-Y_PAINT_TOP = Y_LIP_BOT - PH - ROWS * PH             # Oberkante Bild (-472)
-Y_FRAME_TOP = Y_PAINT_TOP - PH                       # Oberkante obere Innenleiste (-400)
+# Zellen i (x) und k (z) von -24..23. Hinten = -z (Wand), vorne = +z (Betrachter). Von vorne liegt +x LINKS.
+N = 24
+ALL = rect(-N, -N, 2 * N, 2 * N)
+parts.append(Part("boden", "4186", BLACK, 0, 0, 0, RM[0], ALL, 0, 4))
 
-# ---- Grundplatte ----
-parts.append(Part("boden", "3811", BLACK, 0, 0, 0, 0, ALL, 0, 4))
+# ================= Wandrelief (hochkant) und Tragwand =================
+# Relief lokal: Noppen nach -y, Bild oben = -z, Bild links = +x.  Welt: Noppen nach +z (zum Betrachter),
+# Bild oben = -y.  Matrix: x' = x, y' = z + TY, z' = -y + TZ.
+WALL_K = -N                                  # Tragwand 1 tief
+Z_WALL_FRONT = (WALL_K + 1) * LDU            # -460
+TZ = Z_WALL_FRONT + 8                        # Unterseite der 16x16-Platten liegt an der Wand
+Y_PANEL_BOT = -98                            # Unterkante Relief (unterste Reihe Mitte = -108 = Steinmitte Lage 4)
+TY = Y_PANEL_BOT - 480
+R_WALL = [[1, 0, 0], [0, 0, 1], [0, -1, 0]]
+relief_lines = []
+for L in open(os.path.join(HERE, "wand_relief.mpd")):
+    p = L.split()
+    if p and p[0] == "1" and p[-1] != "4186.dat": relief_lines.append(L.rstrip())
+for px in (-320, 0, 320):                    # statt Baseplate: 9 Platten 16x16 (haben Unterseite fuer SNOT-Noppen)
+    for pz in (-320, 0, 320): relief_lines.append(f"1 0 {px} 0 {pz} 1 0 0 0 1 0 0 0 1 91405.dat")
 
-# ---- Rueckwand + Seitenwand (Verband: Laeufer 2x4, Ecke wechselt je Lage) ----
+# Tiefe des Reliefs je (Spalte i, Hoehenzeile) fuer den Kollisionscheck mit der Szene
+relief_front = defaultdict(lambda: -1e9)
+for L in relief_lines:
+    p = L.split(); lx, ly, lz = float(p[2]), float(p[3]), float(p[4])
+    wx, wy, wz = lx, lz + TY, -ly + TZ + 4
+    ci = math.floor(wx / LDU); r = math.floor(wy / LDU)
+    relief_front[(ci, r)] = max(relief_front[(ci, r)], wz)
+
+WALL_G = 45                                  # 1080 LDU, Relief-Oberkante bei -1058
+SNOT_ROWS = [4 + 5 * j for j in range(8)]    # Lagen, deren Steinmitte auf einer Reliefreihe liegt
+SNOT_COLS = [23 - c for c in (2, 6, 9, 13, 18, 22, 25, 29, 34, 38, 41, 45)]
+snot = set()
+for n in SNOT_ROWS:
+    ys = -(n * BH + 12)
+    assert abs(((Y_PANEL_BOT - ys) - 10) % 20) < 1e-6, (n, ys)
+    for i in SNOT_COLS: snot.add((i, n))
 for g in range(WALL_G):
     yt = -(g + 1) * BH
-    if g % 2 == 0:                                   # Rueckwand laeuft durch die Ecke
-        runs_b = [(i, 4) for i in range(-16, 16, 4)]
-        runs_s = [(-14, 4), (-10, 4), (-6, 4)]
-    else:                                            # Seitenwand laeuft durch die Ecke
-        runs_b = [(-14, 2)] + [(i, 4) for i in range(-12, 16, 4)]
-        runs_s = [(-16, 4), (-12, 4), (-8, 4), (-4, 2)]
-    for i0, n in runs_b: place("wand", BRICK[(2, n)], RED, rect(i0, -16, n, 2), yt, BH)
-    for k0, n in runs_s: place("wand", BRICK[(2, n)], RED, rect(-16, k0, 2, n), yt, BH)
-# Wandkrone: vorne Gold, hinten Rot
-pack("wand", [c for c in rect(-14, -15, 30, 1)] , GOLD, Y_WALL - PH, TILE, PH, studs=False)
-pack("wand", [c for c in rect(-16, -16, 32, 1)], RED, Y_WALL - PH, TILE, PH, studs=False)
-pack("wand", [(-15, k) for k in range(-15, -2)], GOLD, Y_WALL - PH, TILE, PH, studs=False)
-pack("wand", [(-16, k) for k in range(-15, -2)], RED, Y_WALL - PH, TILE, PH, studs=False)
+    xs = [i for i in range(-N, N) if (i, g) not in snot]
+    for i0, n in runs_1d(xs, 2 if g % 2 else 0):
+        place("wand", BRICK[(1, n)], BLACK, rect(i0, WALL_K, n, 1), yt, BH)
+    for i in [i for i in range(-N, N) if (i, g) in snot]:
+        place("wand", "87087", BLACK, [(i, WALL_K)], yt, BH, rot=180)       # Seitennoppe nach vorne (+z)
+pack("wand", rect(-N, WALL_K, 2 * N, 1), GOLD, -WALL_G * BH - PH, TILE1, PH, studs=False)
 
-# ---- Sockel (Dunkelrot, 3 Steine) mit Goldleiste ausserhalb des Rahmens ----
-for g in range(DADO_G):
-    yt = -(g + 1) * BH
-    starts = list(range(-14, 16, 4)) if g % 2 == 0 else [-14] + list(range(-12, 16, 4))
-    for n_i, i0 in enumerate(starts):
-        n = 2 if (g % 2 == 1 and i0 == -14) else min(4, 16 - i0)
-        place("wand", BRICK[(2, n)], DKRED, rect(i0, -14, n, 2), yt, BH)
-cap = [c for c in DADO if not FRAME_I[0] <= c[0] <= FRAME_I[1]]
-pack("wand", cap, GOLD, Y_DADO - PH, TILE, PH, studs=False)
+# Sockel vor der Wand (dunkelrot, 3 Steine) mit Goldleiste
+DADO_K = WALL_K + 1
+for g in range(3):
+    for i0, n in runs_1d(list(range(-N, N)), 2 if g % 2 else 0):
+        place("wand", BRICK[(1, n)], DKRED, rect(i0, DADO_K, n, 1), -(g + 1) * BH, BH)
+pack("wand", rect(-N, DADO_K, 2 * N, 1), GOLD, -3 * BH - PH, TILE1, PH, studs=False)
 
-# ================= Goldrahmen =================
-# untere Leiste 2 tief auf dem Sockel
-NCOL = (ROWS * PH + PH) // BH                        # Steine je Rahmensaeule (+1 Platte)
-for i0 in range(FRAME_I[0], FRAME_I[1] + 1, 8):
-    place("rahmen", PLATE[(2, 8)], GOLD, rect(i0, -14, 8, 2), Y_LIP_BOT, PH)
-# aeussere Saeulen (2 tief) von der Leiste bis zur Oberkante: 1 Platte + 13 Steine
-for i in FRAME_I:
-    place("rahmen", PLATE[(1, 2)], GOLD, rect(i, -14, 1, 2), Y_LIP_BOT - PH, PH)
-    for g in range(NCOL):
-        place("rahmen", BRICK[(1, 2)], GOLD, rect(i, -14, 1, 2), Y_LIP_BOT - PH - (g + 1) * BH, BH)
-# innere Stufe (nur hintere Ebene k=-14): Spalten i=-9 und 8, Zeile unten und oben
-for i in (FRAME_I[0] + 1, FRAME_I[1] - 1):
-    place("rahmen", PLATE[(1, 1)], GOLD, [(i, -14)], Y_LIP_BOT - PH, PH)
-    for g in range(NCOL):
-        place("rahmen", BRICK[(1, 1)], GOLD, [(i, -14)], Y_LIP_BOT - PH - (g + 1) * BH, BH)
-pack("rahmen", rect(PAINT_I[0], -14, PW, 1), GOLD, Y_LIP_BOT - PH, PLATE, PH)
-pack("rahmen", rect(PAINT_I[0], -14, PW, 1), GOLD, Y_FRAME_TOP, PLATE, PH)
-# obere Leiste 3 tief (liegt auf Rahmen und Wandkrone ist hoeher -> nur Rahmen), mit Goldfliesen
-Y_LIP_TOP = Y_FRAME_TOP - PH
-for i0 in range(FRAME_I[0], FRAME_I[1] + 1, 8):
-    place("rahmen", PLATE[(2, 8)], GOLD, rect(i0, -14, 8, 2), Y_LIP_TOP, PH)
-pack("rahmen", rect(FRAME_I[0], -14, FRAME_I[1] - FRAME_I[0] + 1, 2), GOLD, Y_LIP_TOP - PH, TILE, PH, studs=False)
+# ================= Szene: reservierte Zellen =================
+FLOOR = {c for c in ALL if c[1] > DADO_K}
+reserved = set()
 
-# ================= Gemaelde (Pixelbild) =================
-PAL_PAINT = [0, 15, 3, 288, 4, 320, 78, 92, 84, 70, 72, 71, 297, 191, 19, 28, 308]
+# ---- Podest (weiss, Goldrand) ----
+PC = (0.0, -8.0)
+PODEST = {c for c in FLOOR if math.hypot(c[0] + 0.5 - PC[0], c[1] + 0.5 - PC[1]) <= 5.4}
+RIM = {c for c in PODEST if any((c[0] + a, c[1] + b) not in PODEST for a, b in ((1, 0), (-1, 0), (0, 1), (0, -1)))}
+reserved |= PODEST
+pack("podest", PODEST, WHITE, -PH, PLATE, PH, prefer_x=True)
+pack("podest", PODEST, WHITE, -2 * PH, PLATE, PH, prefer_x=False)
+YP = -2 * PH                                  # Noppen-Oberkante Podest
 
-
-def raster_painting(cover):
-    sys.path.insert(0, os.path.join(HERE, "..", "tools", "relief"))
-    import make_relief as mr
-    from PIL import Image
-    im = Image.open(cover).convert("RGB")
-    s = im.size[0] / 250
-    im = im.crop((int(79 * s), int(79 * s), int(171 * s), int(171 * s))).resize((PW, ROWS), Image.LANCZOS)
-    allp = {**mr.PALETTE, **mr.EXTRA}
-    pal = {c: allp[c] for c in PAL_PAINT if c in allp}
-    lab = {c: mr.srgb_to_lab(v[2]) for c, v in pal.items()}
-    rows = []
-    for r in range(ROWS):
-        L = []
-        for c in range(PW):
-            px = im.getpixel((c, r)); q = mr.srgb_to_lab(px)
-            if px[1] > px[0] + 35 and px[2] > px[0] + 15:          # tuerkiser Hintergrund des Gemaeldes
-                L.append(3 if sum(px) > 165 else 288); continue
-            L.append(min(lab, key=lambda k: sum((u - v) ** 2 for u, v in zip(q, lab[k]))))
-        rows.append(L)
-    return rows, {c: [pal[c][0], pal[c][1]] for c in set(x for r in rows for x in r)}
+# Fluegel (schwarz), Tastatur zum Pianisten (-z), Korpus zum Betrachter
+PIANO = rect(-2, -10, 4, 6)
+PLEGS = [(-2, -10), (1, -10), (-2, -5), (1, -5)]
+for c in PLEGS:
+    for g in range(2): place("podest", "3062b", BLACK, [c], YP - (g + 1) * BH, BH)
+yb = YP - 2 * BH
+place("podest", PLATE[(4, 6)], BLACK, PIANO, yb - PH, PH, rot=90); yb -= PH                     # Boden -72
+place("podest", TILE[(1, 4)], WHITE, rect(-2, -10, 4, 1), yb - PH, PH, studs=False)             # Tasten
+ring = [c for c in rect(-2, -9, 4, 5) if c[0] in (-2, 1) or c[1] in (-9, -5)]
+pack("podest", ring, BLACK, yb - BH, BRICK, BH)
+top = rect(-2, -9, 4, 5)
+pack("podest", top, BLACK, yb - BH - PH, PLATE, PH, prefer_x=False)
+CANDLE_P = (1, -5)
+pack("podest", [c for c in top if c != CANDLE_P and c != (-2, -9)], BLACK, yb - BH - 2 * PH, TILE, PH, studs=False)
+yl = yb - BH - PH
+# Notenpult: goldene Fliese hochkant waere SNOT; hier als Kerzenleuchter auf dem Fluegel (Liberace-Detail)
+place("podest", "6141", GOLD, [CANDLE_P], yl - PH, PH)
+place("podest", "3062b", GOLD, [CANDLE_P], yl - PH - BH, BH)
+place("podest", "6141", WHITE, [CANDLE_P], yl - 2 * PH - BH, PH)
+place("podest", "15470", TYELLOW, [CANDLE_P], yl - 2 * PH - BH - 18, 18, studs=False, y=yl - 2 * PH - BH)
+place("podest", "2343", GOLD, [(-2, -9)], yl - 40, 40, studs=False, y=yl - 40)                  # Kelch auf dem Fluegel
+# Bank
+BENCH = [(-1, -12), (0, -12)]
+place("podest", BRICK[(1, 2)], BLACK, BENCH, YP - BH, BH)
+place("podest", PLATE[(1, 2)], BLACK, BENCH, YP - BH - PH, PH)
+pack("podest", PODEST - set(PLEGS) - set(BENCH), None, YP - PH, TILE, PH, studs=False,
+     colfn=lambda c: GOLD if c in RIM else WHITE)
 
 
-GJ = os.path.join(HERE, "gemaelde.json")
-if len(sys.argv) > 1:
-    pix, pcols = raster_painting(sys.argv[1])
-    json.dump({"hinweis": "Ballerina-Gemaelde, 20 x 48 (Zeile 0 = oben, Spalte 0 = links), LDraw-Farben",
-               "pixel": pix, "farben": pcols}, open(GJ, "w"), indent=0)
-G = json.load(open(GJ))
-pix = G["pixel"]
-for c, (nm, bl) in G["farben"].items(): COLORS.setdefault(int(c), (nm, bl))
-
-# Bildzeile r (0 oben) -> Plattenlage; Spalte c (0 links) -> i = 7 - c (von vorne liegt +x links)
-for r in range(ROWS):
-    yt = Y_PAINT_TOP + r * PH
-    cells = {(PAINT_I[1] - c, -14): pix[r][c] for c in range(PW)}
-    # waagerecht zusammenfassen (1x2..1x4) fuer Verbund; ungerade Zeilen beginnen mit 1x1 (Versatz)
-    c = 0
-    while c < PW:
-        n = 1
-        while n < 4 and c + n < PW and pix[r][c + n] == pix[r][c] and not (r % 2 and c == 0):
-            n += 1
-        rc = [(PAINT_I[1] - c - j, -14) for j in range(n)]
-        place("gemaelde", PLATE[(1, n)], pix[r][c], rc, yt, PH); c += n
+# ================= Minifiguren =================
+def rx(deg):
+    c, s_ = math.cos(math.radians(deg)), math.sin(math.radians(deg))
+    return [[1, 0, 0], [0, c, -s_], [0, s_, c]]
 
 
-# ================= Boden: Schachbrett =================
-FLOOR = set(ALL) - BACK - SIDE - DADO
-PODEST_C = (0.0, -6.0)                               # Mitte (Gitterpunkt), in Zellen
+I3 = RM[0]
 
 
-def in_podest(c): return math.hypot(c[0] + 0.5 - PODEST_C[0], c[1] + 0.5 - PODEST_C[1]) <= 4.3
+def minifig(sub, cells, surf_y, rot, torso, legs_col, head_col, arms=(0, 0), arm_col=None, hair=None,
+            head="3626bp01", legs="3815c01", sitting=False):
+    """Minifigur auf 'cells' (2 Zellen), Blick lokal nach -z; rot 180 = zum Betrachter. arms = Hebewinkel."""
+    M = RM[rot]
+    cx = sum((c[0] + 0.5) * LDU for c in cells) / 2; cz = sum((c[1] + 0.5) * LDU for c in cells) / 2
+    P = [cx, surf_y - (53 if sitting else 72), cz]
+    arm_col = torso if arm_col is None else arm_col
+    comps = [(head, head_col, (0, -24, 0), I3), ("973", torso, (0, 0, 0), I3), (legs, legs_col, (0, 32, 0), I3)]
+    for sgn, arm, a in ((-1, "3818", arms[0]), (1, "3819", arms[1])):
+        A0 = [[0.985, -sgn * 0.174, 0], [sgn * 0.174, 0.985, 0], [0, 0, 1]]
+        H0 = [[0.985, -sgn * 0.174, 0], [-sgn * -0.133, 0.754, -0.643], [-sgn * -0.112, 0.633, 0.766]]
+        piv = (sgn * 15.552, 9, 0); hand = (sgn * 23.1, 24.7, -10)
+        R = rx(a)
+        rel = mv(R, [hand[i] - piv[i] for i in range(3)])
+        comps.append((arm, arm_col, piv, mm(R, A0)))
+        comps.append(("3820", head_col, tuple(piv[i] + rel[i] for i in range(3)), mm(R, H0)))
+    if hair: comps.append((hair[0], hair[1], (0, -24, 0), I3))
+    for nm, col, off, Mi in comps:
+        w = mv(M, off); pos = [P[0] + w[0], P[1] + w[1], P[2] + w[2]]
+        is_legs = nm == legs
+        parts.append(Part(sub, nm, col, pos[0], pos[1], pos[2], mm(M, Mi), cells if is_legs else [],
+                          surf_y - (21 if sitting else 40) if is_legs else 0, surf_y if is_legs else 0, studs=False))
 
 
-PODEST = {c for c in FLOOR if in_podest(c)}
-TABLE = rect(-14, 1, 6, 2)
-LEGS = [(-14, 1), (-9, 1), (-14, 2), (-9, 2)]
-CHAIRS = [-13, -10]
-CHAIR_CELLS = {(i, k) for i in CHAIRS for k in (-1, 0)}
-PLAQUE = rect(-2, 15, 4, 1)
-BORDER = {c for c in FLOOR if c[1] == 15}
-floor_tiles = FLOOR - PODEST - set(LEGS) - CHAIR_CELLS - {(13, -12), (-14, -12)}
+# ---- Kanye am Fluegel: roter Anzug, sitzt auf der Bank, Blick zum Betrachter ----
+minifig("kanye", BENCH, YP - BH - PH, 180, RED, RED, RBROWN, arms=(-55, -55), hair=("3901", BLACK), sitting=True,
+        legs="3815c02")
+
+# ---- Ballerinen: Halbkreis vor dem Podest, Dutt, schwarzes Tutu (glockenfoermig, 36036) ----
+SKIN = [LNOUGAT, MNOUGAT, RBROWN, LNOUGAT, MNOUGAT, RBROWN, LNOUGAT, MNOUGAT, LNOUGAT, RBROWN, LNOUGAT] * 2
+BALL = [(-13, -6, (-165, -165)), (-11, -1, (-90, -165)), (-7, 3, (-165, -40)), (-3, 6, (-165, -165)),
+        (2, 6, (-120, -120)), (6, 3, (-40, -165)), (10, -1, (-165, -90)), (12, -6, (-165, -165)),
+        (-1, 11, (-90, -90)),
+        # Formation vorne (Runaway: viele Ballerinen), zwei versetzte Reihen
+        (-17, 9, (-165, -165)), (-12, 10, (-120, -165)), (-7, 10, (-165, -120)), (5, 10, (-120, -165)),
+        (10, 10, (-165, -120)), (15, 9, (-165, -165)),
+        (-15, 15, (-90, -165)), (-10, 16, (-165, -165)), (-5, 16, (-165, -90)), (3, 16, (-90, -165)),
+        (8, 16, (-165, -165)), (13, 15, (-165, -90))]
+CARPET = {c for c in FLOOR if -3 <= c[0] <= 2 and c[1] >= -3 and c[1] < N - 1 and c not in PODEST}
+for n_, (i, k, arms) in enumerate(BALL):
+    cells = [(i, k), (i + 1, k)]
+    reserved |= set(cells)
+    base = DKRED if all(c in CARPET for c in cells) else BLACK
+    place("ballerinen", PLATE[(1, 2)], base, cells, -PH, PH)
+    minifig("ballerinen", cells, -PH, 180, BLACK, BLACK, SKIN[n_], arms=arms, arm_col=SKIN[n_],
+            hair=("99240", BLACK), head="3626bp02", legs="36036")
+
+# ================= Runaway-Dinnertafel =================
+T_I = (-20, -19)
+T_K = (-16, -1)
+TABLE = rect(T_I[0], T_K[0], 2, T_K[1] - T_K[0] + 1)
+TLEGS = [(-20, -16), (-19, -16), (-20, -1), (-19, -1), (-20, -9), (-19, -8)]
+for c in TLEGS:
+    for g in range(2): place("tafel", "3062b", WHITE, [c], -(g + 1) * BH, BH)
+place("tafel", PLATE[(2, 8)], WHITE, rect(-20, -16, 2, 8), -2 * BH - PH, PH)
+place("tafel", PLATE[(2, 8)], WHITE, rect(-20, -8, 2, 8), -2 * BH - PH, PH)
+YT = -2 * BH - PH                              # Tischplatte Noppen
+items = {}
+SEATS = [-15, -12, -9, -6, -3]                 # Stuhlpaare (k, k+1) auf beiden Seiten
+GUESTS = []
+for side, (seat_i, back_i, rot, tcell) in enumerate(((-18, -17, 270, -19), (-21, -22, 90, -20))):
+    for n_, k0 in enumerate(SEATS):
+        seat = [(seat_i, k0), (seat_i, k0 + 1)]
+        back = [(back_i, k0), (back_i, k0 + 1)]
+        reserved |= set(seat) | set(back)
+        place("tafel", BRICK[(1, 2)], GOLD, seat, -BH, BH)
+        place("tafel", PLATE[(1, 2)], DKRED, seat, -BH - PH, PH)
+        for g in range(2): place("tafel", BRICK[(1, 2)], GOLD, back, -(g + 1) * BH, BH)
+        place("tafel", TILE[(1, 2)], GOLD, back, -2 * BH - PH, PH, studs=False)
+        GUESTS.append((seat, rot))
+        items[(tcell, k0)] = "kelch"; items[(tcell, k0 + 1)] = "teller"
+for k in (-13, -10, -7, -4):
+    items[(-20 if k % 2 else -19, k)] = "leuchter"
+items[(-20, -16)] = "kelch"; items[(-19, -16)] = "teller"
+items[(-20, -1)] = "leuchter"; items[(-19, -1)] = "leuchter"
+for c, what in items.items():
+    if what == "teller": place("tafel", "98138", WHITE, [c], YT - PH, PH, studs=False)
+    elif what == "kelch": place("tafel", "2343", GOLD, [c], YT - 40, 40, studs=False, y=YT - 40)
+    elif what == "leuchter":
+        for g in range(2): place("tafel", "3062b", GOLD, [c], YT - (g + 1) * BH, BH)
+        place("tafel", "6141", WHITE, [c], YT - 2 * BH - PH, PH)
+        place("tafel", "15470", TYELLOW, [c], YT - 2 * BH - PH - 18, 18, studs=False, y=YT - 2 * BH - PH)
+pack("tafel", [c for c in TABLE if c not in items], WHITE, YT - PH, TILE, PH, studs=False)
+reserved |= set(TLEGS)
+
+# Gaeste in Weiss (verschiedene Hauttoene und Frisuren)
+HAIRS = [("3901", BLACK), ("99240", DKBROWN), ("92081", BLACK), ("20877", TAN), ("3901", DKBROWN),
+         ("26139", BLACK), ("99240", BLACK), ("21268", DKBROWN), ("62696", BLACK), ("40240", BLACK)]
+for n_, (seat, rot) in enumerate(GUESTS):
+    hair = HAIRS[n_ % len(HAIRS)]
+    female = hair[0] in ("99240", "20877", "62696")
+    minifig("gaeste", seat, -BH - PH, rot, WHITE, WHITE, SKIN[(n_ * 4) % len(SKIN)], arms=(-35, -35),
+            hair=hair, head="3626bp02" if female else "3626bp01", legs="3815c02", sitting=True)
+# Phoenix am Kopfende (Blick die Tafel entlang, +z): orange, rotes Haar
+PSEAT = [(-20, -17), (-19, -17)]
+PBACK = [(-20, -18), (-19, -18)]
+reserved |= set(PSEAT) | set(PBACK)
+place("gaeste", BRICK[(1, 2)], GOLD, PSEAT, -BH, BH)
+place("gaeste", PLATE[(1, 2)], DKRED, PSEAT, -BH - PH, PH)
+for g in range(3): place("gaeste", BRICK[(1, 2)], GOLD, PBACK, -(g + 1) * BH, BH)
+yw = -3 * BH
+for c, rot, wrot in ((PBACK[0], 0, 270), (PBACK[1], 0, 90)):          # Clip nach hinten, Fluegel nach aussen
+    cp = place("gaeste", "60897", GOLD, [c], yw - PH, PH, rot=rot)
+    parts.append(Part("gaeste", "11100", RED, cp.x, yw - PH + 2, cp.z - 17, RM[wrot], [], 0, 0, studs=False))
+minifig("gaeste", PSEAT, -BH - PH, 180, ORANGE, ORANGE, MNOUGAT, arms=(-20, -80), hair=("20595", RED),
+        head="3626bp02", legs="3815c02", sitting=True)
+
+# ================= Standleuchter =================
+CANDLES = [(13, -16), (-14, -16), (21, 18), (-22, 18)]
+for c in CANDLES:
+    reserved.add(c)
+    place("leuchter", "6141", GOLD, [c], -PH, PH)
+    for g in range(7): place("leuchter", "3062b", GOLD, [c], -PH - (g + 1) * BH, BH)
+    yc = -PH - 7 * BH
+    place("leuchter", "6141", WHITE, [c], yc - PH, PH)
+    place("leuchter", "15470", TYELLOW, [c], yc - PH - 18, 18, studs=False, y=yc - PH)
+
+# ================= Boden: Schachbrett, roter Laeufer, Goldschild =================
+PLAQUE = set(rect(-3, N - 1, 6, 1))
+BORDER = {c for c in FLOOR if c[1] == N - 1}
+floor = FLOOR - reserved
 
 
-def checker(c):
+def fcol(c):
     if c in BORDER: return GOLD if c in PLAQUE else BLACK
+    if c in CARPET: return GOLD if c[0] in (-3, 2) else DKRED
     return BLACK if ((c[0] // 2) + (c[1] // 2)) % 2 == 0 else WHITE
 
 
-# 2x2-Bloecke im Raster, Reste als 1x1/1x2
-rest = set(floor_tiles)
-for c in sorted(floor_tiles):
+rest = set(floor)
+for c in sorted(floor):
     if c[0] % 2 == 0 and c[1] % 2 == 0:
         blk = rect(c[0], c[1], 2, 2)
-        if all(q in rest and q not in BORDER for q in blk):
-            place("boden", TILE[(2, 2)], checker(c), blk, -PH, PH, studs=False); rest -= set(blk)
-pack("boden", rest, None, -PH, {k: v for k, v in TILE.items() if k[0] == 1}, PH, studs=False, colfn=checker)
-
-# ================= Podest =================
-pack("podest", PODEST, BLACK, -PH, PLATE, PH, prefer_x=True)
-pack("podest", PODEST, DKTURQ, -2 * PH, PLATE, PH, prefer_x=False)
-FEET = [(-1, -6), (0, -6)]
-pack("podest", PODEST - set(FEET), DKTURQ, -3 * PH, TILE, PH, studs=False)
-
-# ================= Ballerina =================
-y = -2 * PH                                          # Oberkante Podest-Platten (-16)
-for f in FEET: place("ballerina", "6141", WHITE, [f], y - PH, PH)            # Spitzenschuhe
-y -= PH
-for g in range(4):                                   # Beine (Strumpfhose)
-    for f in FEET: place("ballerina", "3062b", LNOUGAT, [f], y - BH, BH)
-    y -= BH
-TORSO = rect(-1, -7, 2, 2)
-place("ballerina", "11213", BLACK, rect(-3, -9, 6, 6), y - PH, PH); y -= PH  # Tutu unten 6x6
-place("ballerina", "60474", BLACK, rect(-2, -8, 4, 4), y - PH, PH); y -= PH  # Tutu oben 4x4
-for g in range(2):                                   # Trikot
-    place("ballerina", "3941", BLACK, TORSO, y - BH, BH); y -= BH
-place("ballerina", PLATE[(1, 6)], LNOUGAT, rect(-3, -6, 6, 1), y - PH, PH)   # Arme (zweite Position)
-place("ballerina", PLATE[(1, 2)], BLACK, rect(-1, -7, 2, 1), y - PH, PH)     # Ruecken
-y -= PH
-# Weinglas in der Hand (von vorne links = +x), Hand rechts leer
-GI = (2, -6)
-place("ballerina", "6141", TCLEAR, [GI], y - PH, PH)
-place("ballerina", "6141", TCLEAR, [GI], y - 2 * PH, PH)
-place("ballerina", "3062b", TRED, [GI], y - 2 * PH - BH, BH)
-place("ballerina", "4032a", LNOUGAT, TORSO, y - PH, PH); y -= PH             # Schultern/Hals
-place("ballerina", "4032a", LNOUGAT, TORSO, y - PH, PH); y -= PH            # Kinn
-place("ballerina", "4032a", BLACK, TORSO, y - PH, PH); y -= PH               # Maske (Augen)
-place("ballerina", "4032a", LNOUGAT, TORSO, y - PH, PH); y -= PH            # Stirn
-place("ballerina", "30367b", BLACK, TORSO, y - BH, BH); y -= BH             # Haar (Kuppel)
-p = place("ballerina", "15470", BLACK, TORSO, y - 18, 18, studs=False, y=y)  # Dutt (Ursprung unten)
-
-# ================= Standleuchter links und rechts vom Bild =================
-CANDLES = [(13, -12), (-14, -12)]
-for c in CANDLES:
-    place("tafel", "6141", GOLD, [c], -PH, PH)
-    for g in range(6): place("tafel", "3062b", GOLD, [c], -PH - (g + 1) * BH, BH)
-    yc = -PH - 6 * BH
-    place("tafel", "6141", WHITE, [c], yc - PH, PH)
-    place("tafel", "15470", TYELLOW, [c], yc - PH - 18, 18, studs=False, y=yc - PH)
-
-# ================= Runaway-Dinnertafel =================
-for c in LEGS:
-    for g in range(3): place("tafel", "3062b", WHITE, [c], -(g + 1) * BH, BH)
-place("tafel", PLATE[(2, 6)], WHITE, TABLE, -3 * BH - PH, PH)
-YT = -3 * BH - PH
-ITEMS = {(-13, 1): "teller", (-10, 1): "teller", (-12, 1): "leuchter", (-13, 2): "glas", (-10, 2): "glas",
-         (-11, 2): "flasche"}
-for c, what in ITEMS.items():
-    if what == "teller": place("tafel", "98138", SILVER, [c], YT - PH, PH, studs=False)
-    elif what == "glas":
-        place("tafel", "6141", TCLEAR, [c], YT - PH, PH); place("tafel", "3062b", TRED, [c], YT - PH - BH, BH)
-    elif what == "flasche":
-        place("tafel", "3062b", DKGREEN, [c], YT - BH, BH); place("tafel", "6141", DKGREEN, [c], YT - BH - PH, PH)
-        place("tafel", "4589", DKGREEN, [c], YT - 2 * BH - PH, BH, studs=False)
-    elif what == "leuchter":
-        place("tafel", "3062b", GOLD, [c], YT - BH, BH); place("tafel", "3062b", GOLD, [c], YT - 2 * BH, BH)
-        place("tafel", "6141", WHITE, [c], YT - 2 * BH - PH, PH)
-        place("tafel", "15470", TYELLOW, [c], YT - 2 * BH - PH - 18, 18, studs=False, y=YT - 2 * BH - PH)
-pack("tafel", [c for c in TABLE if c not in ITEMS], WHITE, YT - PH, TILE, PH, studs=False)
-for i in CHAIRS:                                     # Stuehle hinter der Tafel, Blick zum Betrachter
-    place("tafel", PLATE[(1, 2)], BLACK, rect(i, -1, 1, 2), -PH, PH)
-    place("tafel", "3005", BLACK, [(i, 0)], -PH - BH, BH)
-    place("tafel", "3070b", DKRED, [(i, 0)], -PH - BH - PH, PH, studs=False)
-    for g in range(2): place("tafel", "3005", BLACK, [(i, -1)], -PH - (g + 1) * BH, BH)
-    place("tafel", "3070b", GOLD, [(i, -1)], -PH - 2 * BH - PH, PH, studs=False)
+        if all(q in rest and fcol(q) == fcol(c) for q in blk):
+            place("boden", TILE[(2, 2)], fcol(c), blk, -PH, PH, studs=False); rest -= set(blk)
+pack("boden", rest, None, -PH, TILE1, PH, studs=False, colfn=fcol, prefer_x=False)
 
 
 # ================= Checks =================
@@ -326,43 +373,81 @@ def checks():
         n = st.pop()
         for m in adj[n]:
             if m not in seen: seen.add(m); st.append(m)
-    loose = [n for n in range(len(parts)) if n not in seen]
-    floating = [n for n in range(1, len(parts)) if not below[n]]
+    phys = [n for n, p in enumerate(parts) if p.cells]
+    loose = [n for n in phys if n not in seen]
+    floating = [n for n in phys[1:] if not below[n]]
     occ = {}; coll = []
-    for n, p in enumerate(parts[1:], 1):
-        hit = False
+    for n in phys[1:]:
+        p = parts[n]; hit = False
         for c in p.cells:
             for yy in range(int(p.ytop), int(p.ybot), 2):
                 if (c, yy) in occ and not hit: coll.append((occ[(c, yy)], n)); hit = True
                 occ[(c, yy)] = n
-    print("Teile:", len(parts), "| lose:", len(loose), "| schwebend:", len(floating), "| Kollisionen:", len(coll))
-    for n in (loose + floating)[:10]:
+    # Relief ragt nach vorne: Szene darf nicht hineinragen
+    rcoll = []
+    for n in phys[1:]:
+        p = parts[n]
+        if p.sub == "wand": continue
+        for c in p.cells:
+            for r in range(math.floor(p.ytop / LDU), math.floor((p.ybot - 1) / LDU) + 1):
+                if relief_front[(c[0], r)] > c[1] * LDU: rcoll.append(n); break
+            else: continue
+            break
+    print("Teile (Szene):", len(parts), "| lose:", len(loose), "| schwebend:", len(floating),
+          "| Kollisionen:", len(coll), "| in das Relief ragend:", len(rcoll), "| SNOT-Noppen:", len(snot))
+    for n in (loose + floating + rcoll)[:12]:
         p = parts[n]; print("  !", p.sub, p.name, p.color, p.x, p.y, p.z)
-    for a, b in coll[:10]:
-        print("  X", parts[a].sub, parts[a].name, parts[a].ytop, sorted(parts[a].cells)[:2], "<->", parts[b].sub, parts[b].name, parts[b].ytop)
-    return len(loose) + len(floating) + len(coll)
+    for a, b in coll[:12]:
+        print("  X", parts[a].sub, parts[a].name, parts[a].ytop, sorted(parts[a].cells)[:2], "<->",
+              parts[b].sub, parts[b].name, parts[b].ytop, sorted(parts[b].cells)[:2])
+    return len(loose) + len(floating) + len(coll) + len(rcoll)
+
+
+def relief_colors():
+    import sys
+    sys.path.insert(0, os.path.join(HERE, "..", "tools", "relief"))
+    import make_relief as mr
+    return {v[1]: v[0] for v in list(mr.PALETTE.values()) + list(mr.EXTRA.values())}
+
+
+RELIEF_COLORS = relief_colors()
 
 
 def export():
-    order = [s for s in TITLES if any(p.sub == s for p in parts)]
-    out = [f"0 FILE {NAME}.ldr", "0 Kanye West - My Beautiful Dark Twisted Fantasy - Diorama The Ballerina Room",
+    order = [s for s in TITLES if s == "wand_relief" or any(p.sub == s for p in parts)]
+    out = [f"0 FILE {NAME}.ldr", "0 Kanye West - My Beautiful Dark Twisted Fantasy - Diorama Runaway",
            f"0 Name: {NAME}.ldr", "0 Author: Claude Code (generiert)", "0 !LDRAW_ORG Unofficial_Model", ""]
-    for s in order: out += [f"0 // {TITLES[s]}", f"1 16 0 0 0 {ROT[0]} {s}.ldr"]
+    for s in order:
+        if s == "wand_relief": out += [f"0 // {TITLES[s]}", f"1 16 0 {TY} {TZ} {mstr(R_WALL)} {s}.ldr"]
+        else: out += [f"0 // {TITLES[s]}", f"1 16 0 0 0 {mstr(RM[0])} {s}.ldr"]
     out += ["0 NOFILE"]
     for s in order:
-        out += [f"0 FILE {s}.ldr", f"0 {TITLES[s]}", f"0 Name: {s}.ldr"] + [p.line() for p in parts if p.sub == s] + ["0 NOFILE"]
+        body = relief_lines if s == "wand_relief" else [p.line() for p in parts if p.sub == s]
+        out += [f"0 FILE {s}.ldr", f"0 {TITLES[s]}", f"0 Name: {s}.ldr"] + body + ["0 NOFILE"]
     open(os.path.join(OUT, f"{NAME}.mpd"), "w").write("\n".join(out) + "\n")
-    bom = Counter((p.name, p.color) for p in parts)
-    rows = ["LDraw Part,BrickLink ID,Farbe,Menge"]; xml = ["<INVENTORY>"]
-    for (nm, c), q in sorted(bom.items()):
-        bl = BL_ID.get(nm, nm); cn, blc = COLORS[c]
-        rows.append(f"{nm}.dat,{bl},{cn},{q}")
+    # Stueckliste: Szene + Relief (Relief-Farben ueber dessen Stueckliste)
+    bom = Counter()
+    for p in parts: bom[(p.name, COLORS[p.color][0], COLORS[p.color][1])] += 1
+    rx_ = open(os.path.join(HERE, "wand_relief_bricklink.xml")).read()
+    for m in re.finditer(r"<ITEMID>([^<]+)</ITEMID><COLOR>(\d+)</COLOR><MINQTY>(\d+)</MINQTY>", rx_):
+        pid, blc, q = m.group(1), int(m.group(2)), int(m.group(3))
+        if pid == "4186": pid, q = "91405", 9
+        cname = next((v[0] for v in COLORS.values() if v[1] == blc), None) or RELIEF_COLORS.get(blc)
+        bom[("BL:" + pid, cname or f"BL-Farbe {blc}", blc)] += q
+    rows = ["LDraw/BrickLink,BrickLink ID,Farbe,Menge"]; xml = ["<INVENTORY>"]
+    merged = Counter()
+    for (nm, cn, blc), q in bom.items():
+        bl = nm[3:] if nm.startswith("BL:") else BL_ID.get(nm, nm)
+        merged[(bl, cn, blc)] += q
+    for (bl, cn, blc), q in sorted(merged.items()):
+        rows.append(f"{bl},{bl},{cn},{q}")
         xml.append(f"<ITEM><ITEMTYPE>P</ITEMTYPE><ITEMID>{bl}</ITEMID><COLOR>{blc}</COLOR><MINQTY>{q}</MINQTY></ITEM>")
     xml.append("</INVENTORY>")
     open(os.path.join(OUT, f"{NAME}_bom.csv"), "w").write("\n".join(rows) + "\n")
     open(os.path.join(OUT, f"{NAME}_bricklink.xml"), "w").write("\n".join(xml) + "\n")
-    print("Teile gesamt:", sum(bom.values()), "| Positionen:", len(bom))
-    for s in order: print(f"  {s}: {sum(1 for p in parts if p.sub == s)}")
+    print("Teile gesamt:", sum(merged.values()), "| Positionen:", len(merged))
+    for s in order:
+        print(f"  {s}: {len(relief_lines) if s == 'wand_relief' else sum(1 for p in parts if p.sub == s)}")
 
 
 bad = checks()

@@ -7,7 +7,7 @@ LEGO-MOCs als LDraw-Dateien (`.mpd`) mit Stückliste und BrickLink-Wanted-List.
 | Modell | Teile | Beschreibung |
 |---|---|---|
 | [MBDTF-Relief](mbdtf-relief/) | 40.417 | Kanye Wests *My Beautiful Dark Twisted Fantasy* als 128×128-3D-Relief: rotes Stofffeld, erhabener Goldrahmen, vertiefte Leinwand, Ballerina mit echtem Weinglas |
-| [MBDTF-Diorama](mbdtf-diorama/) | 1.112 | Szenen-Set „The Ballerina Room“: rotes Zimmer, Gemälde im Goldrahmen, 3D-Ballerina mit Weinglas steigt aus dem Bild, Runaway-Dinnertafel |
+| [MBDTF-Diorama](mbdtf-diorama/) | 7.813 | Szenen-Set „Runaway“ (48×48): Cover als 3D-Reliefwand per SNOT, 33 Minifiguren – Kanye am Flügel, 21 Ballerinen, Dinnertafel, Phoenix |
 | [UTOPIA-Relief](utopia-relief/) | 10.993 | Travis Scotts *UTOPIA* als 96×96-3D-Relief: modellierte Figur (Muskeln, Glanzlichter, Silberhose) tritt bis 17 Platten aus dem schwarzen Grund; 64×64-Variante |
 | [ASTROWORLD-Relief](astroworld-relief/) | 25.099 | Travis Scotts *ASTROWORLD* als 96×96-3D-Relief: goldener Kopf als Kuppel (Pearl Gold), vertiefter Eingang, Kinder und Rakete als Ebenen |
 | [Graduation-Relief](graduation-relief/) | 28.210 | Kanye Wests Albumcover *Graduation* als 96×96-3D-Relief (ca. 77 × 77 cm, bis 5 cm tief, Satellitenschüsseln am Ring) im Stil von LEGO-Wandkunst – jede Noppe ein anderes Teil in anderer Höhe |
