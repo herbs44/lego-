@@ -1,0 +1,128 @@
+[
+ {
+  "name": "Leinwand",
+  "form": "rechteck",
+  "von": [
+   0.05,
+   0.05
+  ],
+  "bis": [
+   0.95,
+   0.95
+  ],
+  "hoehe": 1,
+  "glatt": true,
+  "sauber": true
+ },
+ {
+  "name": "Pinsel links",
+  "form": "rechteck",
+  "von": [
+   0.05,
+   0.05
+  ],
+  "bis": [
+   0.5,
+   0.52
+  ],
+  "hoehe": 1,
+  "glatt": true,
+  "sauber": true,
+  "striche": "z"
+ },
+ {
+  "name": "Pinsel unten",
+  "form": "rechteck",
+  "von": [
+   0.05,
+   0.52
+  ],
+  "bis": [
+   0.5,
+   0.95
+  ],
+  "hoehe": 1,
+  "glatt": true,
+  "sauber": true,
+  "striche": "x"
+ },
+ {
+  "name": "Goldrahmen",
+  "form": "rahmen",
+  "von": [
+   0,
+   0
+  ],
+  "bis": [
+   1,
+   1
+  ],
+  "breite": 0.05,
+  "hoehe": 6,
+  "glatt": true,
+  "mischung": {
+   "297": 0.6,
+   "191": 0.25,
+   "19": 0.15
+  },
+  "licht": false,
+  "teile": [
+   "3070b",
+   "25269",
+   "98138",
+   "6141"
+  ]
+ },
+ {
+  "name": "Kleid und Tutu",
+  "form": "rechteck",
+  "von": [
+   0.05,
+   0.05
+  ],
+  "bis": [
+   0.95,
+   0.95
+  ],
+  "farbe_rgb": [
+   26,
+   26,
+   26
+  ],
+  "toleranz": 80,
+  "hoehe": 4,
+  "kontur": true,
+  "sauber": true,
+  "teile": [
+   "3062b",
+   "4589",
+   "54200",
+   "35464"
+  ]
+ },
+ {
+  "name": "Haut",
+  "form": "rechteck",
+  "von": [
+   0.05,
+   0.1
+  ],
+  "bis": [
+   0.95,
+   0.95
+  ],
+  "farbe_rgb": [
+   228,
+   190,
+   140
+  ],
+  "toleranz": 70,
+  "hoehe": 4,
+  "sauber": true,
+  "teile": [
+   "3062b",
+   "6141",
+   "98138"
+  ]
+ }
+]

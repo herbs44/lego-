@@ -76,3 +76,22 @@ Das Cover-Bild liegt aus Urheberrechtsgründen nicht im Repo.
 - **Gesicht:** Das Gesicht ist im Original nur etwa 4 × 5 Noppen groß – die Gesichtszüge sind deshalb einzelne,
   bewusst gesetzte Teile statt Pixel.
 - **Pearl Gold** ist bei manchen Teilen (Viertelkreis-Fliese, Rundfliese 2 × 2) selten – die BrickLink-Liste zeigt es an.
+
+## Kleine Varianten (`klein/`)
+
+Beim ganzen Cover wäre das Gemälde bei 16 Noppen nur 5 Noppen groß und unkenntlich. Die kleinen Varianten zeigen
+deshalb nur das **gerahmte Gemälde mit der Ballerina** – mit Goldrahmen, Pinselstrichen, Licht und Schatten.
+
+| Größe | Teile | Grundplatte |
+|---|---|---|
+| 32 × 32 Noppen (ca. 26 cm) | 2.343 | 1 × Baseplate 32 × 32 |
+| 16 × 16 Noppen (ca. 13 cm) | 590 | 1 × Platte 16 × 16 (91405) |
+
+| 32 × 32 | 16 × 16 |
+|---|---|
+| ![32](klein/mbdtf_32x32_schraeg.png) | ![16](klein/mbdtf_16x16_schraeg.png) |
+| ![32 Vorschau](klein/mbdtf_32x32_vorschau.png) | ![16 Vorschau](klein/mbdtf_16x16_vorschau.png) |
+
+Neu erzeugen: Cover auf das Gemälde zuschneiden (Pixel 70–179 bei 250 px), dann
+`make_relief.py ausschnitt.png mbdtf-relief/klein/mbdtf_32x32 --breite 32 --hoehe 32 --chaos 0.15 --konfetti 0 --seed 5
+--tiefe 1 --zonen mbdtf-relief/klein/zonen_ausschnitt.json --farben-plus 3,151,92,78,297 --licht 1 --formfolge`.

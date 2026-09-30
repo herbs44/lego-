@@ -264,7 +264,7 @@ def main():
 
     def ctr(cells): return sum(cx(p[0]) for p in cells) / len(cells), sum(cz(p[1]) for p in cells) / len(cells)
 
-    B, bp = (48, "4186") if W % 48 == 0 and H % 48 == 0 else (32, "3811")
+    B, bp = (48, "4186") if W % 48 == 0 and H % 48 == 0 else (32, "3811") if W % 32 == 0 and H % 32 == 0 else (16, "91405")
     for bx in range(math.ceil(W / B)):
         for bz in range(math.ceil(H / B)):
             put(bp, 0, (bx * B + B / 2 - W / 2) * LDU, 0, (bz * B + B / 2 - H / 2) * LDU)
