@@ -137,6 +137,7 @@ def main():
     ap.add_argument("--licht", type=float, default=0.0,
                     help="Licht und Schatten wie ein Maler (0 = aus, 1 = normal): Licht von links oben, beleuchtete "
                          "Flaechen eine Stufe heller, abgewandte eine Stufe dunkler (gleicher Farbton)")
+    ap.add_argument("--hell-hoehe", type=float, default=0, help="Hoehe nach Helligkeit: hellste Stelle = N Platten")
     ap.add_argument("--formfolge", action="store_true", help="Slopes zeigen der Form nach (Gefaelle der Hoehenkarte)")
     ap.add_argument("--farben-plus", default="", help="Zusatzfarben aktivieren, z. B. 3,151,92,78,297 (siehe EXTRA)")
     a = ap.parse_args()
@@ -176,6 +177,9 @@ def main():
         n = vnoise(q[0], q[1], 3.0, a.seed) * (a.tiefe + 1) * 0.8 + rng.random() * 1.2
         if a.wolken: n += a.wolken * vnoise(q[0], q[1], 5.0, a.seed + 7) * ((lum[q] - lo) / max(1, hi - lo)) * 1.4
         hgt[q] = min(a.tiefe + a.wolken, int(n))
+        if a.hell_hoehe:                                          # helle Stellen treten heraus (Low-Key-Fotos)
+            t = (lum[q] - lo) / max(1, hi - lo)
+            hgt[q] = int(a.hell_hoehe * t ** 0.6 + (rng.random() * 1.2 if t > 0.08 else 0))
     for z in zones:
         members = []
         for q in col:
