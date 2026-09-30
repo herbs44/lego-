@@ -1,7 +1,7 @@
 # Kanye West – My Beautiful Dark Twisted Fantasy als LEGO-Relief
 
 Das Albumcover *My Beautiful Dark Twisted Fantasy* (2010, Gemälde von George Condo) als 3D-Relief-Mosaik im Stil von
-LEGO-Wandkunst: **128 × 128 Noppen** (ca. 102 × 102 cm) auf 16 Baseplates 32 × 32, **40.412 Teile** in 26 Farben,
+LEGO-Wandkunst: **128 × 128 Noppen** (ca. 102 × 102 cm) auf 16 Baseplates 32 × 32, **40.417 Teile** in 26 Farben,
 43 Teilesorten, bis ca. 4,5 cm tief. Gegenstück zum [Graduation-Relief](../graduation-relief/).
 
 | Das Gemälde im Goldrahmen | Ballerina (Nähe) |
@@ -47,7 +47,7 @@ Stelle liegt Stoff.
 | **Licht und Schatten** | Licht von links oben: zugewandte Flächen eine Farbstufe heller, abgewandte eine Stufe dunkler (gleicher Farbton), als Dithering verteilt wie Farbauftrag. Schwarz bleibt schwarz, der rote Stoff bekommt nur Schatten – dadurch wirft der Rahmen einen **Schlagschatten** nach rechts unten |
 | **Formfolge** | Cheese- und Doppel-Slopes zeigen mit dem Gefälle der Form nach: Kopf, Arme und Tutu wirken gerundet statt gestuft |
 | **Konturlinie** | Der Umriss der Figur besteht aus Slopes, die nach außen abfallen – wie eine gemalte Kontur |
-| **Gemalter Goldrahmen** | Zwei Stufen (äußeres Profil 10 Platten, innere Glanzkante 8), oben/links hell, unten/rechts dunkler; Leisten in Längsrichtung; vier Rosetten aus goldenen Schüsseln in den Ecken |
+| **Gemalter Goldrahmen** | Zwei Stufen (äußeres Profil 10 Platten, innere Glanzkante 8), oben/links hell, unten/rechts dunkler; Leisten in Längsrichtung |
 | **Saubere Figur** | Im Motiv keine Zufallsfarben – nur die Hintergründe bekommen Konfetti |
 | **Handgesetzte Details** | Glotzaugen aus weißen Rundplatten mit offener Noppe (die Öffnung ist die Pupille), orangefarbenes Rouge, Nase als Cheese-Slope, roter Mund, dunkler Haarknoten als höchster Punkt, Rotwein-Tropfen im Glas |
 
@@ -84,7 +84,7 @@ deshalb nur das **gerahmte Gemälde mit der Ballerina** – mit Goldrahmen, Pins
 
 | Größe | Teile | Grundplatte |
 |---|---|---|
-| **64 × 64 Noppen (ca. 51 cm) – ganzes Cover** mit rotem Stoff, Goldrahmen, Weinglas | 10.054 | 4 × Baseplate 32 × 32 |
+| **64 × 64 Noppen (ca. 51 cm) – ganzes Cover** mit rotem Stoff, Goldrahmen, Weinglas | 10.000 | 4 × Baseplate 32 × 32 |
 | 32 × 32 Noppen (ca. 26 cm) | 2.343 | 1 × Baseplate 32 × 32 |
 | 16 × 16 Noppen (ca. 13 cm) | 590 | 1 × Platte 16 × 16 (91405) |
 

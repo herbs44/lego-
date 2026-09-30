@@ -1,257 +1,263 @@
 LDraw Part,BrickLink ID,Farbe,Menge
 11610.dat,11610,Black,4
 11610.dat,11610,Green,1
-11610.dat,11610,Red,2
-15068.dat,15068,Black,1
-15068.dat,15068,Red,1
-15470.dat,15470,Dark Turquoise,1
-15470.dat,15470,Sand Green,1
-15470.dat,15470,Dark Green,1
-18674.dat,18674,Red,1
-2412b.dat,2412b,Green,1
-2412b.dat,2412b,Red,42
+11610.dat,11610,Red,1
+11610.dat,11610,Sand Green,1
+11610.dat,11610,Medium Azure,1
+15470.dat,15470,Green,1
+15470.dat,15470,Dark Turquoise,3
+2412b.dat,2412b,Green,2
+2412b.dat,2412b,Red,45
+2412b.dat,2412b,Magenta,1
 2412b.dat,2412b,Dark Tan,1
-2412b.dat,2412b,Dark Bluish Gray,1
-2412b.dat,2412b,Dark Green,1
-2412b.dat,2412b,Dark Red,14
+2412b.dat,2412b,Dark Bluish Gray,2
+2412b.dat,2412b,Dark Red,7
+24246.dat,24246,Green,2
 24246.dat,24246,Red,1
-24246.dat,24246,Dark Red,1
-2431.dat,2431,Green,5
-2431.dat,2431,Dark Turquoise,3
-2431.dat,2431,Bright Light Orange,1
-24866.dat,24866,Red,1
+24246.dat,24246,Magenta,1
+24246.dat,24246,Dark Tan,1
+24246.dat,24246,Nougat,1
+24246.dat,24246,Dark Green,1
+2431.dat,2431,Green,7
+2431.dat,2431,Dark Turquoise,5
+2431.dat,2431,Bright Light Orange,2
+2431.dat,2431,Pearl Gold,1
+24866.dat,24866,Magenta,1
 24866.dat,24866,Dark Red,1
-25269.dat,25269,Green,3
+25269.dat,25269,Green,2
 25269.dat,25269,Red,1
-25269.dat,25269,Dark Tan,1
+25269.dat,25269,Magenta,1
+25269.dat,25269,Bright Light Orange,1
 25269.dat,25269,Dark Green,1
-2555.dat,2555,Green,2
-2555.dat,2555,Dark Turquoise,1
-2555.dat,2555,Red,2
-2555.dat,2555,Dark Red,1
-3004.dat,3004,Green,3
-3004.dat,3004,Red,65
-3004.dat,3004,Dark Red,17
-3005.dat,3005,Black,281
-3005.dat,3005,Green,181
-3005.dat,3005,Dark Turquoise,113
-3005.dat,3005,Red,963
+25269.dat,25269,Pearl Gold,1
+2555.dat,2555,Green,1
+2555.dat,2555,Red,1
+2555.dat,2555,Dark Tan,1
+3004.dat,3004,Black,1
+3004.dat,3004,Green,2
+3004.dat,3004,Red,69
+3004.dat,3004,Dark Red,23
+3004.dat,3004,Medium Azure,1
+3005.dat,3005,Black,287
+3005.dat,3005,Green,180
+3005.dat,3005,Dark Turquoise,107
+3005.dat,3005,Red,956
 3005.dat,3005,White,4
-3005.dat,3005,Tan,62
+3005.dat,3005,Tan,76
 3005.dat,3005,Orange,4
 3005.dat,3005,Magenta,83
-3005.dat,3005,Dark Tan,58
+3005.dat,3005,Dark Tan,50
 3005.dat,3005,Trans-Red,2
 3005.dat,3005,Trans-Clear,1
 3005.dat,3005,Reddish Brown,3
-3005.dat,3005,Light Bluish Gray,5
-3005.dat,3005,Dark Bluish Gray,31
-3005.dat,3005,Medium Nougat,14
-3005.dat,3005,Nougat,28
+3005.dat,3005,Light Bluish Gray,3
+3005.dat,3005,Dark Bluish Gray,33
+3005.dat,3005,Medium Nougat,10
+3005.dat,3005,Nougat,30
 3005.dat,3005,Sand Green,14
-3005.dat,3005,Bright Light Orange,90
-3005.dat,3005,Bright Light Yellow,20
-3005.dat,3005,Dark Green,86
-3005.dat,3005,Pearl Gold,131
-3005.dat,3005,Dark Brown,2
-3005.dat,3005,Dark Red,400
-3005.dat,3005,Medium Azure,13
-3023.dat,3023,Green,4
-3023.dat,3023,Dark Turquoise,7
-3023.dat,3023,Red,33
+3005.dat,3005,Bright Light Orange,92
+3005.dat,3005,Bright Light Yellow,24
+3005.dat,3005,Dark Green,83
+3005.dat,3005,Pearl Gold,82
+3005.dat,3005,Dark Brown,3
+3005.dat,3005,Dark Red,411
+3005.dat,3005,Medium Azure,16
+3023.dat,3023,Black,1
+3023.dat,3023,Green,12
+3023.dat,3023,Dark Turquoise,4
+3023.dat,3023,Red,31
 3023.dat,3023,Tan,1
-3023.dat,3023,Magenta,1
-3023.dat,3023,Dark Tan,1
-3023.dat,3023,Bright Light Orange,6
-3023.dat,3023,Bright Light Yellow,1
-3023.dat,3023,Dark Green,6
-3023.dat,3023,Pearl Gold,3
-3023.dat,3023,Dark Red,15
-3023.dat,3023,Medium Azure,1
-3024.dat,3024,Black,101
-3024.dat,3024,Green,1
-3024.dat,3024,Dark Turquoise,1
-3024.dat,3024,Red,2584
-3024.dat,3024,Tan,5
-3024.dat,3024,Magenta,240
-3024.dat,3024,Dark Tan,3
+3023.dat,3023,Bright Light Orange,1
+3023.dat,3023,Bright Light Yellow,3
+3023.dat,3023,Dark Green,3
+3023.dat,3023,Pearl Gold,2
+3023.dat,3023,Dark Red,9
+3023.dat,3023,Medium Azure,2
+3024.dat,3024,Black,88
+3024.dat,3024,Green,3
+3024.dat,3024,Red,2569
+3024.dat,3024,Tan,6
+3024.dat,3024,Orange,1
+3024.dat,3024,Magenta,237
+3024.dat,3024,Dark Tan,6
 3024.dat,3024,Trans-Red,2
-3024.dat,3024,Dark Bluish Gray,8
-3024.dat,3024,Medium Nougat,5
+3024.dat,3024,Dark Bluish Gray,7
 3024.dat,3024,Nougat,4
-3024.dat,3024,Bright Light Orange,91
-3024.dat,3024,Bright Light Yellow,20
-3024.dat,3024,Dark Green,11
-3024.dat,3024,Pearl Gold,93
-3024.dat,3024,Dark Brown,2
-3024.dat,3024,Dark Red,1171
-3062b.dat,3062,Black,3
-3062b.dat,3062,Green,6
+3024.dat,3024,Bright Light Orange,92
+3024.dat,3024,Bright Light Yellow,25
+3024.dat,3024,Dark Green,15
+3024.dat,3024,Pearl Gold,70
+3024.dat,3024,Dark Red,1188
+3062b.dat,3062,Black,4
+3062b.dat,3062,Green,3
 3062b.dat,3062,Dark Turquoise,2
-3062b.dat,3062,Red,195
-3062b.dat,3062,Tan,1
+3062b.dat,3062,Red,200
 3062b.dat,3062,Magenta,27
-3062b.dat,3062,Dark Tan,1
-3062b.dat,3062,Medium Nougat,3
-3062b.dat,3062,Sand Green,3
-3062b.dat,3062,Bright Light Orange,3
+3062b.dat,3062,Reddish Brown,1
+3062b.dat,3062,Dark Bluish Gray,2
+3062b.dat,3062,Medium Nougat,1
+3062b.dat,3062,Sand Green,2
+3062b.dat,3062,Bright Light Orange,2
 3062b.dat,3062,Bright Light Yellow,1
-3062b.dat,3062,Dark Green,1
+3062b.dat,3062,Dark Green,4
 3062b.dat,3062,Pearl Gold,4
-3062b.dat,3062,Dark Red,96
-3062b.dat,3062,Medium Azure,1
+3062b.dat,3062,Dark Red,101
+3062b.dat,3062,Medium Azure,2
 3069b.dat,3069,Black,1
-3069b.dat,3069,Green,7
-3069b.dat,3069,Dark Turquoise,2
-3069b.dat,3069,Red,47
+3069b.dat,3069,Green,14
+3069b.dat,3069,Dark Turquoise,9
+3069b.dat,3069,Red,48
+3069b.dat,3069,Tan,2
 3069b.dat,3069,Magenta,1
-3069b.dat,3069,Reddish Brown,1
 3069b.dat,3069,Bright Light Orange,3
-3069b.dat,3069,Bright Light Yellow,1
-3069b.dat,3069,Dark Green,3
-3069b.dat,3069,Pearl Gold,1
-3069b.dat,3069,Dark Red,12
-3069b.dat,3069,Medium Azure,1
-3070b.dat,3070,Dark Turquoise,3
-3070b.dat,3070,Red,165
-3070b.dat,3070,Magenta,24
-3070b.dat,3070,Dark Tan,1
-3070b.dat,3070,Dark Green,1
+3069b.dat,3069,Dark Green,6
+3069b.dat,3069,Pearl Gold,4
+3069b.dat,3069,Dark Red,9
+3070b.dat,3070,Green,2
+3070b.dat,3070,Dark Turquoise,2
+3070b.dat,3070,Red,157
+3070b.dat,3070,Magenta,15
+3070b.dat,3070,Bright Light Orange,1
 3070b.dat,3070,Dark Red,94
 32000.dat,32000,Black,1
-32000.dat,32000,Red,29
-32000.dat,32000,Dark Red,5
+32000.dat,32000,Red,24
+32000.dat,32000,Dark Red,9
 33061.dat,33061,Trans-Clear,1
-33291.dat,33291,Green,4
-33291.dat,33291,Dark Turquoise,1
-33291.dat,33291,Red,180
-33291.dat,33291,Magenta,24
+33291.dat,33291,Green,2
+33291.dat,33291,Dark Turquoise,2
+33291.dat,33291,Red,197
+33291.dat,33291,Magenta,18
 33291.dat,33291,Sand Green,1
 33291.dat,33291,Bright Light Orange,2
-33291.dat,33291,Bright Light Yellow,2
-33291.dat,33291,Dark Green,1
-33291.dat,33291,Dark Red,94
-33291.dat,33291,Medium Azure,1
-35464.dat,35464,Black,28
-35464.dat,35464,Green,2
-35464.dat,35464,Dark Turquoise,3
-35464.dat,35464,Tan,9
-35464.dat,35464,Dark Tan,7
-35464.dat,35464,Light Bluish Gray,2
-35464.dat,35464,Dark Bluish Gray,4
+33291.dat,33291,Pearl Gold,1
+33291.dat,33291,Dark Red,90
+35464.dat,35464,Black,21
+35464.dat,35464,Green,3
+35464.dat,35464,Dark Turquoise,2
+35464.dat,35464,Tan,1
+35464.dat,35464,Dark Tan,5
+35464.dat,35464,Light Bluish Gray,1
+35464.dat,35464,Dark Bluish Gray,5
 35464.dat,35464,Nougat,1
 35464.dat,35464,Bright Light Orange,1
-35464.dat,35464,Bright Light Yellow,1
-35464.dat,35464,Dark Green,3
-35464.dat,35464,Pearl Gold,1
-35480.dat,35480,Green,5
-35480.dat,35480,Dark Turquoise,4
-35480.dat,35480,Tan,2
-35480.dat,35480,Sand Green,1
+35464.dat,35464,Dark Green,1
+35464.dat,35464,Pearl Gold,4
+35464.dat,35464,Medium Azure,2
+35480.dat,35480,Green,6
+35480.dat,35480,Dark Turquoise,6
+35480.dat,35480,Tan,1
+35480.dat,35480,Reddish Brown,1
 35480.dat,35480,Bright Light Orange,4
 35480.dat,35480,Bright Light Yellow,1
-35480.dat,35480,Dark Green,4
+35480.dat,35480,Dark Green,6
 35480.dat,35480,Pearl Gold,1
-3623.dat,3623,Green,6
-3623.dat,3623,Dark Turquoise,4
-3623.dat,3623,Bright Light Orange,1
+3623.dat,3623,Green,5
+3623.dat,3623,Dark Turquoise,2
 3623.dat,3623,Pearl Gold,1
-3700.dat,3700,Black,2
-3700.dat,3700,Green,2
+3700.dat,3700,Black,1
 3700.dat,3700,Dark Turquoise,1
-3700.dat,3700,Red,24
-3700.dat,3700,Magenta,2
+3700.dat,3700,Red,32
 3700.dat,3700,Dark Green,1
-3700.dat,3700,Dark Red,8
-3710.dat,3710,Green,5
-3710.dat,3710,Dark Turquoise,4
-3710.dat,3710,Dark Green,2
-3794b.dat,3794b,Green,2
-3794b.dat,3794b,Red,12
-3794b.dat,3794b,Dark Red,7
+3700.dat,3700,Dark Red,12
+3710.dat,3710,Green,1
+3710.dat,3710,Dark Turquoise,2
+3710.dat,3710,Bright Light Orange,1
+3710.dat,3710,Dark Green,1
+3794b.dat,3794b,Black,1
+3794b.dat,3794b,Green,3
+3794b.dat,3794b,Red,21
+3794b.dat,3794b,Magenta,1
+3794b.dat,3794b,Sand Green,1
+3794b.dat,3794b,Dark Red,4
 3811.dat,3811,Black,4
-3941.dat,3941,Red,3
+3941.dat,3941,Red,2
 3942c.dat,3942c,Red,1
 4070.dat,4070,Green,2
-4070.dat,4070,Dark Turquoise,2
-4070.dat,4070,Bright Light Orange,2
-4150.dat,4150,Red,1
-4589.dat,4589,Black,8
-4589.dat,4589,Green,3
-4589.dat,4589,Dark Turquoise,2
-4589.dat,4589,Red,197
-4589.dat,4589,Magenta,20
-4589.dat,4589,Dark Tan,1
-4589.dat,4589,Dark Bluish Gray,1
+4070.dat,4070,Dark Turquoise,1
+4070.dat,4070,Dark Green,1
+4589.dat,4589,Black,11
+4589.dat,4589,Green,5
+4589.dat,4589,Dark Turquoise,3
+4589.dat,4589,Red,164
+4589.dat,4589,Magenta,21
 4589.dat,4589,Sand Green,1
-4589.dat,4589,Dark Green,1
-4589.dat,4589,Pearl Gold,2
-4589.dat,4589,Dark Red,86
-4740.dat,4740,Green,2
-4740.dat,4740,Red,1
-4740.dat,4740,Pearl Gold,4
-54200.dat,54200,Black,35
-54200.dat,54200,Green,6
-54200.dat,54200,Dark Turquoise,2
-54200.dat,54200,Red,141
-54200.dat,54200,Tan,5
-54200.dat,54200,Magenta,20
-54200.dat,54200,Dark Tan,6
-54200.dat,54200,Dark Bluish Gray,8
+4589.dat,4589,Bright Light Yellow,1
+4589.dat,4589,Dark Green,5
+4589.dat,4589,Dark Red,100
+4589.dat,4589,Medium Azure,1
+4740.dat,4740,Green,1
+4740.dat,4740,Dark Red,1
+54200.dat,54200,Black,29
+54200.dat,54200,Green,5
+54200.dat,54200,Dark Turquoise,1
+54200.dat,54200,Red,166
+54200.dat,54200,Tan,16
+54200.dat,54200,Magenta,14
+54200.dat,54200,Dark Tan,7
+54200.dat,54200,Light Bluish Gray,1
+54200.dat,54200,Dark Bluish Gray,5
 54200.dat,54200,Medium Nougat,2
 54200.dat,54200,Nougat,6
 54200.dat,54200,Sand Green,1
-54200.dat,54200,Dark Green,6
-54200.dat,54200,Pearl Gold,3
+54200.dat,54200,Bright Light Orange,1
+54200.dat,54200,Dark Green,5
+54200.dat,54200,Pearl Gold,1
 54200.dat,54200,Dark Brown,1
-54200.dat,54200,Dark Red,75
-54200.dat,54200,Medium Azure,1
-6141.dat,4073,Green,7
-6141.dat,4073,Dark Turquoise,3
-6141.dat,4073,Red,191
+54200.dat,54200,Dark Red,70
+6141.dat,4073,Black,1
+6141.dat,4073,Green,3
+6141.dat,4073,Dark Turquoise,1
+6141.dat,4073,Red,190
 6141.dat,4073,Orange,1
-6141.dat,4073,Magenta,18
-6141.dat,4073,Dark Tan,1
+6141.dat,4073,Magenta,22
+6141.dat,4073,Dark Tan,6
 6141.dat,4073,Light Bluish Gray,1
-6141.dat,4073,Dark Bluish Gray,1
+6141.dat,4073,Medium Nougat,1
+6141.dat,4073,Nougat,1
 6141.dat,4073,Sand Green,1
-6141.dat,4073,Dark Green,5
-6141.dat,4073,Dark Red,90
-63864.dat,63864,Green,4
-63864.dat,63864,Dark Turquoise,3
+6141.dat,4073,Dark Green,4
+6141.dat,4073,Dark Red,93
+6141.dat,4073,Medium Azure,1
+63864.dat,63864,Green,3
+63864.dat,63864,Dark Turquoise,2
 63864.dat,63864,Bright Light Orange,1
-63864.dat,63864,Dark Green,1
-63864.dat,63864,Pearl Gold,3
+63864.dat,63864,Dark Green,2
+63864.dat,63864,Pearl Gold,1
 85861.dat,85861,Green,2
-85861.dat,85861,Dark Turquoise,3
-85861.dat,85861,Red,179
+85861.dat,85861,Dark Turquoise,1
+85861.dat,85861,Red,168
 85861.dat,85861,White,1
-85861.dat,85861,Magenta,14
+85861.dat,85861,Tan,1
+85861.dat,85861,Magenta,24
 85861.dat,85861,Dark Tan,1
-85861.dat,85861,Reddish Brown,1
+85861.dat,85861,Dark Bluish Gray,1
+85861.dat,85861,Nougat,1
+85861.dat,85861,Sand Green,1
+85861.dat,85861,Bright Light Orange,2
+85861.dat,85861,Bright Light Yellow,1
 85861.dat,85861,Dark Green,1
-85861.dat,85861,Pearl Gold,1
-85861.dat,85861,Dark Red,87
-85861.dat,85861,Medium Azure,4
-85984.dat,85984,Black,5
-85984.dat,85984,Green,5
-85984.dat,85984,Dark Turquoise,3
-85984.dat,85984,Red,34
-85984.dat,85984,Dark Green,3
-85984.dat,85984,Pearl Gold,2
-85984.dat,85984,Dark Red,7
-85984.dat,85984,Medium Azure,1
-92947.dat,92947,Red,1
+85861.dat,85861,Dark Red,85
+85861.dat,85861,Medium Azure,3
+85984.dat,85984,Black,9
+85984.dat,85984,Green,1
+85984.dat,85984,Dark Turquoise,4
+85984.dat,85984,Red,36
+85984.dat,85984,Magenta,1
+85984.dat,85984,Sand Green,1
+85984.dat,85984,Bright Light Orange,2
+85984.dat,85984,Dark Green,1
+85984.dat,85984,Pearl Gold,1
+85984.dat,85984,Dark Red,14
+92947.dat,92947,Red,2
 98100.dat,98100,Red,1
-98138.dat,98138,Green,5
-98138.dat,98138,Dark Turquoise,2
-98138.dat,98138,Red,158
-98138.dat,98138,Magenta,15
+98100.dat,98100,Dark Red,1
+98138.dat,98138,Green,3
+98138.dat,98138,Dark Turquoise,1
+98138.dat,98138,Red,163
+98138.dat,98138,Magenta,21
 98138.dat,98138,Dark Tan,1
 98138.dat,98138,Trans-Red,1
-98138.dat,98138,Nougat,2
-98138.dat,98138,Sand Green,2
-98138.dat,98138,Dark Green,4
-98138.dat,98138,Pearl Gold,1
-98138.dat,98138,Dark Red,91
+98138.dat,98138,Bright Light Orange,1
+98138.dat,98138,Dark Green,2
+98138.dat,98138,Dark Red,76
 98262.dat,98262,Red,1
