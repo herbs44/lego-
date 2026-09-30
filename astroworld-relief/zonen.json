@@ -1,0 +1,276 @@
+[
+ {
+  "name": "Himmel und Wolken",
+  "form": "rechteck",
+  "von": [
+   0.0,
+   0.0
+  ],
+  "bis": [
+   1.0,
+   0.52
+  ],
+  "palette": [
+   15,
+   226,
+   379,
+   73,
+   1,
+   272
+  ],
+  "chaos": 0.2,
+  "farbe_rgb": [
+   170,
+   190,
+   215
+  ],
+  "toleranz": 130
+ },
+ {
+  "name": "Boden (Sand, Popcorn)",
+  "form": "rechteck",
+  "von": [
+   0.0,
+   0.76
+  ],
+  "bis": [
+   1.0,
+   1.0
+  ],
+  "palette": [
+   19,
+   28,
+   71,
+   15,
+   84,
+   78
+  ],
+  "chaos": 0.3,
+  "hoehe": 0
+ },
+ {
+  "name": "Goldener Kopf mit Dreadlocks (nur goldene Pixel)",
+  "form": "ellipse",
+  "mitte": [
+   0.535,
+   0.41
+  ],
+  "radius": [
+   0.21,
+   0.25
+  ],
+  "farbe_rgb": [
+   200,
+   145,
+   55
+  ],
+  "toleranz": 145,
+  "hoehe": 10,
+  "profil": "kuppel",
+  "palette": [
+   297,
+   191,
+   70,
+   14
+  ],
+  "chaos": 0.2,
+  "teile": [
+   "3024",
+   "3005",
+   "4073",
+   "98138",
+   "3062b",
+   "3070b",
+   "54200",
+   "4589"
+  ]
+ },
+ {
+  "name": "Gesicht (Kuppel, ganz)",
+  "form": "ellipse",
+  "mitte": [
+   0.525,
+   0.4
+  ],
+  "radius": [
+   0.15,
+   0.2
+  ],
+  "hoehe": 13,
+  "profil": "kuppel",
+  "palette": [
+   297,
+   191,
+   70,
+   14
+  ],
+  "chaos": 0.2,
+  "teile": [
+   "3024",
+   "3005",
+   "4073",
+   "98138",
+   "3062b",
+   "3070b",
+   "54200",
+   "4589"
+  ]
+ },
+ {
+  "name": "Mund / Eingang (leuchtend, zurueckgesetzt)",
+  "form": "ellipse",
+  "mitte": [
+   0.54,
+   0.66
+  ],
+  "radius": [
+   0.07,
+   0.06
+  ],
+  "hoehe": 2,
+  "glatt": true,
+  "sauber": true
+ },
+ {
+  "name": "Kind links Kopf",
+  "form": "ellipse",
+  "mitte": [
+   0.145,
+   0.535
+  ],
+  "radius": [
+   0.05,
+   0.06
+  ],
+  "hoehe": 5,
+  "sauber": true
+ },
+ {
+  "name": "Kind links Oberkoerper",
+  "form": "ellipse",
+  "mitte": [
+   0.14,
+   0.625
+  ],
+  "radius": [
+   0.075,
+   0.07
+  ],
+  "hoehe": 5,
+  "sauber": true
+ },
+ {
+  "name": "Kind links Beine",
+  "form": "ellipse",
+  "mitte": [
+   0.135,
+   0.82
+  ],
+  "radius": [
+   0.07,
+   0.15
+  ],
+  "hoehe": 4,
+  "sauber": true
+ },
+ {
+  "name": "Kind links Arm + Popcorn",
+  "form": "ellipse",
+  "mitte": [
+   0.225,
+   0.44
+  ],
+  "radius": [
+   0.035,
+   0.1
+  ],
+  "hoehe": 5,
+  "sauber": true
+ },
+ {
+  "name": "Kind rechts Kopf",
+  "form": "ellipse",
+  "mitte": [
+   0.79,
+   0.65
+  ],
+  "radius": [
+   0.045,
+   0.055
+  ],
+  "hoehe": 5,
+  "sauber": true
+ },
+ {
+  "name": "Kind rechts Oberkoerper",
+  "form": "ellipse",
+  "mitte": [
+   0.795,
+   0.76
+  ],
+  "radius": [
+   0.075,
+   0.07
+  ],
+  "hoehe": 5,
+  "sauber": true
+ },
+ {
+  "name": "Kind rechts Beine",
+  "form": "ellipse",
+  "mitte": [
+   0.8,
+   0.91
+  ],
+  "radius": [
+   0.05,
+   0.1
+  ],
+  "hoehe": 4,
+  "sauber": true
+ },
+ {
+  "name": "Rakete",
+  "form": "ellipse",
+  "mitte": [
+   0.04,
+   0.5
+  ],
+  "radius": [
+   0.035,
+   0.17
+  ],
+  "hoehe": 5,
+  "sauber": true,
+  "farbe_rgb": [
+   225,
+   225,
+   230
+  ],
+  "toleranz": 90,
+  "teile": [
+   "3005",
+   "4073",
+   "3024",
+   "98138"
+  ]
+ },
+ {
+  "name": "Label entfernt: Boden statt Aufkleber",
+  "form": "rechteck",
+  "von": [
+   0.88,
+   0.91
+  ],
+  "bis": [
+   1.0,
+   1.0
+  ],
+  "hoehe": 0,
+  "mischung": {
+   "19": 0.45,
+   "71": 0.35,
+   "15": 0.2
+  }
+ }
+]

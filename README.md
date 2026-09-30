@@ -8,6 +8,7 @@ LEGO-MOCs als LDraw-Dateien (`.mpd`) mit Stückliste und BrickLink-Wanted-List.
 |---|---|---|
 | [MBDTF-Relief](mbdtf-relief/) | 40.417 | Kanye Wests *My Beautiful Dark Twisted Fantasy* als 128×128-3D-Relief: rotes Stofffeld, erhabener Goldrahmen, vertiefte Leinwand, Ballerina mit echtem Weinglas |
 | [UTOPIA-Relief](utopia-relief/) | 10.993 | Travis Scotts *UTOPIA* als 96×96-3D-Relief: modellierte Figur (Muskeln, Glanzlichter, Silberhose) tritt bis 17 Platten aus dem schwarzen Grund; 64×64-Variante |
+| [ASTROWORLD-Relief](astroworld-relief/) | 25.099 | Travis Scotts *ASTROWORLD* als 96×96-3D-Relief: goldener Kopf als Kuppel (Pearl Gold), vertiefter Eingang, Kinder und Rakete als Ebenen |
 | [Graduation-Relief](graduation-relief/) | 28.210 | Kanye Wests Albumcover *Graduation* als 96×96-3D-Relief (ca. 77 × 77 cm, bis 5 cm tief, Satellitenschüsseln am Ring) im Stil von LEGO-Wandkunst – jede Noppe ein anderes Teil in anderer Höhe |
 | [Circus Maximus (UTOPIA)](circus-maximus/) | 7.062 | Travis Scotts Arena-Bühne auf 2 Baseplates 48×48: geschwungener Weg zwischen dunklen Felsen mit 14 Steinköpfen, Felsblock mit Durchgang und Performer, 154 schwarze Fans als Minifiguren, Pyro und CO2, Videoring mit Feuerwand, Scheinwerfer und PA |
 | [Yeezus Stage](yeezus-stage/) | 2.301 | Mount Yeezus: Fels-Pyramide mit Wendelweg bis zum Gipfel vor dem runden Screen, Laufsteg mit Rampe zur Lower Stage im Publikum, Line-Arrays und Moving Heads – auf 2 Baseplates |

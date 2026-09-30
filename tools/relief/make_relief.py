@@ -17,6 +17,7 @@ Zonen-Datei: Liste von Objekten, Koordinaten als Bruchteil der Bildbreite/-hoehe
    "teile": ["4589", "3069b", ...]  (bevorzugte Abschlussteile je Groesse 1x1/1x2/2x2), "farbe_rgb": [r,g,b], "toleranz": 80 (nur passende Pixel),
    "sauber": true (Bildfarbe ohne Chaos/Konfetti), "licht": false | "schatten", "glatt": true (exakte Hoehe), "striche": "x" | "z" (Pinselstriche aus 1x2-1x4-Teilen), "kontur": true (Umriss aus
    Slopes), "teil": "85861" (handgesetztes Detail, genau dieses Teil, keine Zusammenfassung),
+   "palette": [297, 191, 70] (nur diese Farben, Farben muessen in --farben/--farben-plus sein) + "chaos": 0.25,
    "mischung": {"4": 0.7, "320": 0.3} (Farbmix), "zweifarbig": [0, 15] + "schwelle": 50 (Helligkeit L*),
    "spezial": {"teil": "4740", "abstand": 4, "farbe": 15, "extra": 1}  (Spezialteile verteilt)}
 Spaetere Zonen ueberschreiben fruehere.
@@ -200,6 +201,10 @@ def main():
             if z.get("sauber"):                                  # reine Bildfarbe, ohne Chaos/Konfetti (Motiv sauber halten)
                 Lq = srgb_to_lab(rgb[q])
                 col[q] = min((c for c in pal if c not in (47, 36)), key=lambda c: sum((u - v) ** 2 for u, v in zip(Lq, lab[c])))
+            if "palette" in z:                                   # eigene Farbauswahl der Zone (z. B. nur Goldtoene)
+                Lq = srgb_to_lab(rgb[q]); zp = [c for c in z["palette"] if c in lab]
+                d = sorted((sum((u - v) ** 2 for u, v in zip(Lq, lab[c])), c) for c in zp)
+                col[q] = d[1][1] if len(d) > 1 and d[1][0] < d[0][0] * 1.6 + 40 and rng.random() < z.get("chaos", 0.25) else d[0][1]
             if "farbe" in z: col[q] = z["farbe"]
             if z["form"] == "bitmap":
                 ch = z["pixel"][q[1] - z["ursprung"][1]][q[0] - z["ursprung"][0]]

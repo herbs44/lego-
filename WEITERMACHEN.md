@@ -19,6 +19,7 @@ mit der Circus-Maximus-Bühne weiter."*
 | `circus-maximus/` | Travis Scott UTOPIA, 2×48×48, schwarze Fans, Pyro/CO2 | `generate_circus_maximus.py` | 7.062 |
 | `mbdtf-relief/` | *MBDTF* als 128×128-3D-Relief wie gemalt (Pinselstriche, Licht/Schatten, Goldrahmen, Weinglas) | `tools/relief/make_relief.py` + `zonen.json`, Optionen `--licht 1 --formfolge` | 40.417 |
 | `utopia-relief/` | Travis Scott *UTOPIA* als 96×96-Relief (+ 64×64), Höhe nach Helligkeit | `vorbereiten.py` + `make_relief.py --hell-hoehe 16` (Aufruf im README) | 10.993 |
+| `astroworld-relief/` | Travis Scott *ASTROWORLD* als 96×96-Relief, Gesicht als Gold-Kuppel | `make_relief.py` + `zonen.json` (Zonen-Schlüssel `palette`) | 25.099 |
 | `graduation-relief/` | Kanye *Graduation* als 96×96-3D-Relief mit Satellitenschüsseln | `tools/relief/make_relief.py` + `zonen.json` | 28.210 |
 
 Jeder Generator schreibt `.mpd`, Stückliste `_bom.csv` und `_bricklink.xml` und prüft sich selbst
