@@ -84,8 +84,11 @@ deshalb nur das **gerahmte Gemälde mit der Ballerina** – mit Goldrahmen, Pins
 
 | Größe | Teile | Grundplatte |
 |---|---|---|
+| **64 × 64 Noppen (ca. 51 cm) – ganzes Cover** mit rotem Stoff, Goldrahmen, Weinglas | 10.054 | 4 × Baseplate 32 × 32 |
 | 32 × 32 Noppen (ca. 26 cm) | 2.343 | 1 × Baseplate 32 × 32 |
 | 16 × 16 Noppen (ca. 13 cm) | 590 | 1 × Platte 16 × 16 (91405) |
+
+![64](klein/mbdtf_64x64_bild.png)
 
 | 32 × 32 | 16 × 16 |
 |---|---|
