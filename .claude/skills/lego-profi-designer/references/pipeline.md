@@ -52,6 +52,25 @@ Bild links → +X; Kamera bei +Y sieht es seitenrichtig), `--ansicht oben` für 
 (`cam`, `ziel`, `brennweite`, `blende` für Tiefenunschärfe). Lichtstärken klein halten (~100 W · Größe² für das
 Hauptlicht), sonst überstrahlt es.
 
+Lokal mit installiertem Blender (Windows, GPU, LDraw-Bibliothek von der Platte, ohne Server):
+`tools/blender-render/ldraw_blender.py` (Import mit BFC, Farben, Teil-Attributen, Aufbau-Animation) und
+`render_cycles.py` für Standbilder. Videos mit EEVEE und Timing aus der Musik:
+`mbdtf-relief/video/runaway_video.py`, `yeezus-stage/video/coldest_winter_video.py` (`--probe` zuerst).
+Bauanleitung für Stud.io: `yeezus-stage/anleitung/plan_steps.py` schreibt `0 STEP` + Baugruppen ins MPD.
+
+## Arbeitsweise (Reihenfolge)
+
+- **Referenz**: Vorder-, Seiten-, Drauf- und Schrägansicht, Nahdetails, Maßstab, Licht; bei Bühnen zusätzlich
+  Bühnenbreite, Laufstegbreite, Traversenhöhe, Screen-Durchmesser, Boxenpositionen, Publikumstiefe.
+- **Blockout** nur mit Basis, Bühne, Felsmasse, Traverse, Screens, Laufsteg – null Mikrodetails.
+- **Iterationen**: Geometrie → Statik → Teileverfügbarkeit → Oberfläche/Detail → Licht → Render.
+- **Teilewahl in dieser Reihenfolge**: geometrisch passend → legal/stabil → verfügbar → Preis → optisch ideal.
+- **Ersatzgruppen** je Teil (primär/sekundär/tertiär); optisch ähnlich heißt nicht geometrisch gleich
+  (6141 ≠ 85861: offene Noppe nimmt eine Stange auf).
+- **Technik als geprüfte Module** statt Einzelteil-Zufall (SNOT-Wand, Halbversatz, Scharnier-Ring,
+  Truss-4/8, Line-Array, LED-Panel, Fels-Facetten, Relief-Pixel) – im Generator als Funktionen.
+- Jede große Baugruppe als eigenes Submodell (Basis, Bühne, Fels, Truss, Screens, Licht, Publikum).
+
 ## Stolperfallen (alle in diesem Repo passiert)
 
 | Problem | Lösung |

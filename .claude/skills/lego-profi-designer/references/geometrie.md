@@ -21,6 +21,12 @@
 Halbe Platten (4 LDU) entstehen nur über Teile mit eingebautem Versatz (Headlight, Brackets) –
 Ganzzahl-Kombinationen immer bevorzugen (gerade Stud-Zahlen seitlich bauen).
 
+- **Diagonale** zwischen benachbarten Rasterpunkten: 20·√2 ≈ 28,28 LDU (11,3 mm) – schräge Wände deshalb
+  immer als Dreieck planen (Pythagoras, unten), nie „Stud + Stud“ rechnen.
+- **Versatz-Stufen** im Überblick: ½ Stud = 10 LDU (Jumper), ½ Platte = 4 LDU (Headlight/Bracket),
+  ¼ Platte = 2 LDU (Jumper + Headlight + Platte). Freie Koordinaten dazwischen nie erzeugen – jeder Versatz
+  muss aus einer bekannten Teilekombination kommen.
+
 ## LDraw-Konventionen
 
 - Y zeigt nach **unten**; Baseplate-Oberfläche y = 0, höher bauen = y negativer.
@@ -64,6 +70,14 @@ Slope-Richtung im Generator: Gefälle nach −z ist Standard; Richtung d → Rot
   Headlight, Stud-Brick und Bracket nebeneinander ergeben aufeinanderfolgende ½-Platten-Stufen.
 - **32952** (1x1x1⅔ mit Seitennoppen): 5 Platten hoch = 2 Studs → quadratischer SNOT-Würfel mit 2 Studs.
 - **4733 / 47905**: Noppen auf 4 bzw. 2 gegenüberliegenden Seiten – Kern für Lowell-Kugel und Säulen.
+- **26604** (1x1, Noppen an 2 benachbarten Seiten) für Ecken, **52107** (1x2, Noppen an beiden Längsseiten)
+  für Rahmen/Ecken, **99206** (Platte 2x2x0.667, 2 Seitennoppen + 2 erhöhte) für dichte SNOT-Knoten,
+  **3386** (Halbrund 1x1x0.667 mit offener Seitennoppe) für organische Anbauten – Versätze vor dem ersten
+  Einsatz mit `scripts/ldbbox.py` messen.
+- **Seltene Feinversätze** (nicht automatisch erzeugen, nur bewusst und im Render geprüft): Zaun 3185
+  (Fence Lattice 1x4x2) wird in der Community als Quelle eines ⅓-Stud-Versatzes genannt (≈ 6,67 LDU,
+  ungeprüft); der dünne Bracket 42446 (Wand 3 LDU) erlaubt mit Headlight + Jumper 1-LDU-Spalte – Altform,
+  die aktuelle Version hat andere Maße.
 
 ## Halbe-Noppe-Versatz (Offset, „AZMEP")
 
@@ -89,6 +103,9 @@ Slope-Richtung im Generator: Gefälle nach −z ist Standard; Richtung d → Rot
 
 **Beinahe-Tripel** (Scharnierplatten haben etwas Spiel): für ≈45° 12-12-17 (16,97), 17-17-24 (24,04),
 5-5-7 (7,07), 7-7-10 (9,90); 8-9-12 (12,04) ergibt 41,6°. Berechnen mit `scripts/winkel.py`.
+Beinahe-Tripel nie mit starren Noppenverbindungen erzwingen – nur mit Scharnier/Clip, der die Differenz
+aufnimmt, und im Generator als Näherung markieren (`approximation=True`). Beleg für 3-4-5 im Set:
+10297 Boutique Hotel (diagonale Plattenreihe mit Keilen 3x6 = 54383/54384).
 
 Verbindungsmittel:
 - Platte diagonal nur an den End-Noppen aufsetzen (Mittelnoppen frei) – legal und üblich.

@@ -66,7 +66,8 @@ Skripte: `scripts/ldbbox.py <teil> …` (Name, Ursprung und Bounding-Box aus der
 - **Iterativ und sichtbar.** Nach jeder größeren Änderung rendern und das Bild selbst ansehen.
   Nie "fertig" melden, ohne das Ergebnis gesehen zu haben.
 - **Keine urheberrechtlich geschützten Referenzfotos ins Repo.** Nur eigene Renders.
-- **Nutzer-Vorlieben dieses Projekts:** keine Minifiguren, keine langgestreckten Slopes bei
+- **Nutzer-Vorlieben dieses Projekts:** Minifiguren nur als eigene, abnehmbare Baugruppe und nur auf Wunsch
+  (Yeezus: Kanye, Tänzerinnen, Jesus – rein unbunt; Globe: keine), keine langgestreckten Slopes bei
   Rundungen (1x1/2x1 bevorzugt), bei Yeezus rein unbunt (kein Rot), Kommunikation auf Deutsch.
 
 ## Render-Fehler lesen

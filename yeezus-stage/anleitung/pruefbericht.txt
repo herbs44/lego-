@@ -1,6 +1,6 @@
-1. Vollständigkeit: 2301 Teile, 0 fehlen, 0 doppelt, Baugruppen vollständig: ja
-2. Verbindung nach jedem Schritt: 0 Schritte mit losen Teilen (34 haltende Teile in den Schritt ihres Halters verschoben)
+1. Vollständigkeit: 2329 Teile, 0 fehlen, 0 doppelt, Baugruppen vollständig: ja
+2. Verbindung nach jedem Schritt: 0 Schritte mit losen Teilen (48 haltende Teile in den Schritt ihres Halters verschoben)
 3. Einsetzbarkeit (von oben / Gitter von der Seite / Baugruppen von unten): 0 Probleme
 4. Endmontage: 8 untere Traversen-Platten stecken auf Türmen/Screen
-Schritte: Hauptmodell 83, Traverse 12, Moving Head 1, Line-Array 4; Teile je Schritt max 33, Mittel 22
+Schritte: Hauptmodell 85, Traverse 12, Moving Head 1, Line-Array 4; Teile je Schritt max 56, Mittel 22
 ERGEBNIS: ALLE PRÜFUNGEN BESTANDEN

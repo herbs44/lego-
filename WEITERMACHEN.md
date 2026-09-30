@@ -65,7 +65,9 @@ Geometrie/SNOT, Technik-Katalog (inkl. Relief-Mosaik), Design, Statik, geprüfte
 ## Deine Vorlieben (bitte beibehalten)
 
 - Kommunikation auf Deutsch; iterativ arbeiten und jede Änderung rendern und prüfen.
-- Globe/Yeezus: keine Minifiguren; Rundungen mit kurzen Slopes (1×1/2×1), keine langen.
+- Globe: keine Minifiguren. Yeezus: Figuren als abnehmbare Baugruppe `11_figuren` (Kanye, 12 Tänzerinnen, Jesus), rein unbunt.
+- Rundungen mit kurzen Slopes (1×1/2×1), keine langen.
+- Yeezus: Türme, Gitterträger und Traverse schwarz; Center Stage als ansteigender Keil; Screen als Ellipse über dem Gipfel.
 - Yeezus: rein unbunt, **kein Rot**.
 - Circus Maximus: keine fliegenden Köpfe; Weg niedrig (3 Steine); Stage dunkel; Fans **komplett schwarz**;
   wenige Flammen, mehr Dynamik.

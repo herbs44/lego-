@@ -126,7 +126,7 @@ add_step("main", "Grundplatten auslegen", SUB["01_baseplates"],
          note="Zwei schwarze Grundplatten 32×32 nebeneinander, die lange Seite zeigt zum Publikum.")
 for t, s in layer_steps(MOUNTAIN, "Mount Yeezus", None): add_step("main", t, s)
 for t, s in layer_steps(SUB["04_laufsteg"], "Laufsteg mit Rampe", cxz(SUB["04_laufsteg"])): add_step("main", t, s)
-for t, s in layer_steps(SUB["05_lower_stage"], "Lower Stage", cxz(SUB["05_lower_stage"])): add_step("main", t, s)
+for t, s in layer_steps(SUB["05_lower_stage"], "Center Stage (Keil)", cxz(SUB["05_lower_stage"])): add_step("main", t, s)
 for t, s in layer_steps(SUB["07_screen"], "Runder Screen", cxz(SUB["07_screen"]), maxp=24): add_step("main", t, s)
 
 # Ecktuerme: Sockel, dann je Ebene Gittertraeger + Verbindungsplatten
@@ -199,7 +199,7 @@ a0 = ARRAYS[0][1]                             # unten beginnen: je Box 3 Teile +
 units, cur = [], []
 for i in a0:
     cur.append(i)
-    if parts[i].name == "3022": units.append(cur); cur = []
+    if parts[i].name in ("3022", "3020"): units.append(cur); cur = []
 assert not cur and len(units) == 13, len(units)
 k = 4
 for n in range(k):
@@ -211,6 +211,11 @@ for n in range(k):
                   "Publikum ab (J-Form). 4× bauen." if n == 0 else None)
 
 ref = lambda f, o: f"1 16 {fmt(o[0])} {fmt(o[1])} {fmt(o[2])} {ROT[0]} {f}"
+if SUB.get("11_figuren"):
+    add_step("main", "Figuren aufstellen (optional)", SUB["11_figuren"],
+             note="Kanye (schwarz, Kopf in Flat Silver als Maske) auf die Spitze der Center Stage, Jesus auf den Gipfel, "
+                  "die Tänzerinnen (weiß mit Kapuze) auf die Platten mit Noppen am Wendelweg. Figuren vorher "
+                  "zusammenstecken: Beine, Torso, Kopf, Kapuze bzw. Haare und Bart.")
 add_step("main", "Traverse auf die Ecktürme setzen", refs=[ref("traverse.ldr", (0, 0, 0))],
          note="Die fertige Traverse (am besten zu zweit) waagerecht von oben auf die sechs Gitterträger und die "
               "Screen-Oberkante absenken und festdrücken.")
@@ -241,6 +246,7 @@ def step_parts(st):
 
 
 def loose(placed, roots):
+    placed = {i for i in placed if parts[i].cells}          # Figurenteile ohne Zellen stecken an den Beinen
     if not placed: return set()
     start = (roots & placed) if roots else None
     if not start:                                          # Baugruppe: groesste Komponente
