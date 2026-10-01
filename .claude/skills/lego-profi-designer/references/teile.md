@@ -143,6 +143,9 @@ existiert in LDraw nicht. 3794 und 3023 sind nur Umleitungen (→ 3794a/3794b bz
 | 3659 / 4490 / 3455 / 92950 | | Bogen 1x4 / 1x3 / 1x6 / 1x6 erhöht |
 | 3307 / 6005 | | Bogen 1x6x2 / 1x3x2 gekrümmt |
 | 95347 | | Stütze 2x2x10 Gitterträger (in DBG seltener) |
+| 30518 | | Gitterträger 2x16x2 dreieckig: hängt mit 32 Noppen unter Decks, Endblöcke nehmen Noppen von unten auf |
+| 15332 | | Zaun 1x4x2 gedrechselt mit 4 Noppen (Geländer, hängende Brüstung) |
+| 90370 | | Minifig-Mikrofon |
 | 63142 | x127c30pb01 | Schnur mit Endnoppen |
 | 2423 / 32607 / 33291 | | Blätter 4x3 / Rundplatte mit 3 Blättern / Rundplatte mit Laschen (Blüte) |
 

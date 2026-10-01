@@ -142,7 +142,18 @@ Zweck: glatte Fronten, Details in Wänden, Flächen in jeder Richtung, feinere A
 - **Traversen**: Gitterträger 95347 gestapelt (DBG tritt optisch zurück), Plattenlagen per
   Verbund-Algorithmus zu einem Stück verbinden, Pfosten 3062b im Zickzack.
 - **Abhängen**: Schnur mit Endnoppen 63142 statt massiver Stützen; Last über Schlingen, im Check als
-  Verbindung modellieren.
+  Verbindung modellieren. Variante J-Bogen: unterer Knopf von unten in den Endblock eines Trägers (Saint Pablo).
+- **Runde Köpfe mit Cartoon-Gesicht (4x4)**: 3 Steinlagen + Platte 4x4 + Kuppel 4x4 (86500 glatt / 30208 facettiert).
+  Vorne SNOT: Grinsen = 30414 + Fliese 1x4 schwarz, Nase = 11211 + Cheese-Slope 85984 mit Unterseite an der Wand
+  (kragt nach unten aus), Augen = zwei Headlight-Steine 4070 (gemeisselte Hoehle, Noppe = Pupille; KEINE
+  bedruckten Kulleraugen - vom Nutzer abgelehnt), Mund als dunkelgraue Rille statt schwarzem Band; Ohren = Rundfliese 2x2
+  (14769) mittig auf einer Seitennoppe (87087). Eckige Front wirkt cartoonhaft, runde Eck-Steine (3062b) dagegen
+  technisch ("Rohre"). Fels vor und neben dem Kopf absenken, sonst kollidieren Ohren mit Slopes (Circus Maximus).
+- **Rockwork-Details nach Prioritaet verteilen**: Spitzen (3062b + Kegel 4589), Felskugeln (30367c/30151b), Glut
+  (Rundfliese Trans-Orange), Felsspots, Reliefgesichter (4070-Augen + 3040b-Nase + Fliesen-Mund) VOR den
+  Kanten-Slopes vergeben, sonst belegen Curved/Cheese alle Oberseiten. Treppen direkt ins Hoehenfeld schneiden.
+- **Lichtraster**: Rundsteine 1x1 (3062b) in Ketten unter ein Plattengitter hängen, unten Rundplatte Trans-Orange;
+  im Zickzack entlang der Balken, in der Mitte länger. Leuchtet erst im Konzert-Render (Emission + Dunst).
 - **Line-Arrays**: Boxen aus 11211 + 3004 + Gitterfliese (SNOT), J-förmig gekrümmt.
 - **Moving Heads**: 3022 + 3941 + 4032a in Trans-Clear (echte LED möglich).
 - **Screens**: Stein-Mosaik mit farbbewusster Aufteilung; Umriss mit Curved/Cheese gerundet;

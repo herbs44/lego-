@@ -69,6 +69,7 @@ Skripte: `scripts/ldbbox.py <teil> …` (Name, Ursprung und Bounding-Box aus der
 - **Nutzer-Vorlieben dieses Projekts:** Minifiguren nur als eigene, abnehmbare Baugruppe und nur auf Wunsch
   (Yeezus: Kanye, Tänzerinnen, Jesus – rein unbunt; Globe: keine), keine langgestreckten Slopes bei
   Rundungen (1x1/2x1 bevorzugt), bei Yeezus rein unbunt (kein Rot), Kommunikation auf Deutsch.
+  Gesichter gemeißelt statt Glubschaugen (keine bedruckten Kulleraugen).
 
 ## Render-Fehler lesen
 

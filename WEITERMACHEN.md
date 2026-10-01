@@ -16,11 +16,13 @@ mit der Circus-Maximus-Bühne weiter."*
 |---|---|---|---|
 | `globe-stage/` | fertig inkl. PDF-Bauanleitung, Bully-Mosaik auf dem Dach | `generate_globe_stage.py` | 10.876 |
 | `yeezus-stage/` | Mount Yeezus mit Wendelweg, rein unbunt; Stud.io-Bauanleitung (`yeezus_stage_anleitung.mpd`) und 360°-Video | `generate_yeezus_stage.py` | 2.301 |
-| `circus-maximus/` | Travis Scott UTOPIA, 2×48×48, schwarze Fans, Pyro/CO2 | `generate_circus_maximus.py` | 7.062 |
+| `circus-maximus/` | Travis Scott UTOPIA, 2×48×48, überarbeitet nach Recherche (Entwurf Elsa Hanneke): runde Steinköpfe mit gemeißelten Gesichtern (Headlight-Augen), Reliefgesichter, Felsgrate mit Treppen, Spitzen, Glut, Geröll, hoher Feuer-Ring mit Lampen, Fans mit Hauttönen; Konzertlicht `render_konzert.py` | `generate_circus_maximus.py` | 7.434 |
 | `mbdtf-relief/` | *MBDTF* als 128×128-3D-Relief wie gemalt (Pinselstriche, Licht/Schatten, Goldrahmen, Weinglas) | `tools/relief/make_relief.py` + `zonen.json`, Optionen `--licht 1 --formfolge` | 40.417 |
 | `mbdtf-diorama/` | MBDTF-Szene „Runaway“: Reliefwand (48×48, SNOT), Kanye am Flügel, 21 Ballerinen, Dinnertafel, Phoenix | `generate_mbdtf_diorama.py` + `wand_relief.mpd` | 7.813 |
 | `utopia-relief/` | Travis Scott *UTOPIA* als 96×96-Relief (+ 64×64), Höhe nach Helligkeit | `vorbereiten.py` + `make_relief.py --hell-hoehe 16` (Aufruf im README) | 10.993 |
 | `astroworld-relief/` | Travis Scott *ASTROWORLD* als 96×96-Relief, Gesicht als Gold-Kuppel | `make_relief.py` + `zonen.json` (Zonen-Schlüssel `palette`) | 25.099 |
+| `cantina/` | Mos Eisley Cantina (Hub aus LEGO Star Wars: The Complete Saga), 6 Episoden-Türen, Bar, Tische, Bacta-Tanks, optionale Figuren | `generate_cantina.py` | 1.375 |
+| `saint-pablo/` | Saint Pablo Tour: schwebende Plattform an 4 Seilen (63142 im J-Bogen in den Endblöcken der Gitterträger 30518), Lichtraster mit 582 Leuchten auf 6 Gittertürmen, Kanye + 133 Fans; Konzertlicht-Render `render_konzert.py` | `generate_saint_pablo.py` | 3.105 |
 | `graduation-relief/` | Kanye *Graduation* als 96×96-3D-Relief mit Satellitenschüsseln | `tools/relief/make_relief.py` + `zonen.json` | 28.210 |
 
 Jeder Generator schreibt `.mpd`, Stückliste `_bom.csv` und `_bricklink.xml` und prüft sich selbst
@@ -54,7 +56,12 @@ python3 tools/relief/make_relief.py cover.jpg graduation-relief/graduation_relie
   Drop, 2 Takte, Schnitt auf Schwarz. `blender -b -P mbdtf-relief/video/runaway_video.py -- "<runaway.mp3>" out/runaway20`
 - `yeezus-stage/video/coldest_winter_video.py` – 360°-Diorama zu *Coldest Winter*, Zeitraffer-Aufbau auf einen
   Lego-Bau-Sound, Lichtkegel im Dunst. `blender -b -P yeezus-stage/video/coldest_winter_video.py -- "<Coldest Winter.mp3>" "<lego-build.mp3>" out/coldest_winter`
-- Beide mit `--probe` (Standbilder zum Prüfen) und `--blend` (Szene mit Kamera-Markern und Ton im Sequencer).
+- `circus-maximus/video/hyaena_video.py` – Bühnen-Präsentation zu *HYAENA* im orangen Konzertlicht: Fahrten über die
+  Bühne, in der Pause vor dem Drop POV aus dem dunklen Lift-Schacht, auf dem Drop wird Travis aus dem Lift nach oben
+  geschleudert (POV), landet mit Drehung; danach Schnitte auf dem Beat-Raster, Flammen/Ring pulsieren.
+  Drop, Pause und Tempo werden erkannt (HYAENA: Drop 27,39 s, Pause 20,0–24,2 s, 96,6 BPM).
+  `blender -b -P circus-maximus/video/hyaena_video.py -- "<HYAENA.mp3>" out/hyaena` (ca. 3 s/Bild in 1080p).
+- Alle mit `--probe` (Standbilder zum Prüfen) und `--blend` (Szene mit Kamera-Markern).
   Timing wird aus der Musik gelesen; Ausgabe landet in `out/` (nicht im Repo).
 
 ## Skill
@@ -83,6 +90,6 @@ Geometrie/SNOT, Technik-Katalog (inkl. Relief-Mosaik), Design, Statik, geprüfte
 ## Offene Ideen
 
 - Graduation: lesbarer Titel als eigener Fliesen-Schriftzug oder größere Version mit hochaufgelöstem Cover.
-- Circus Maximus: Moshpit, Handy-Lichter bei den Fans, sichtbare Lichtstrahlen, Lift auf dem Block, Moai-Köpfe.
+- Circus Maximus: Handy-Lichter bei den Fans, Lift auf dem Block, optional der fliegende Riesenkopf (bisher auf Wunsch weggelassen).
 - Yeezus: PDF-Bauanleitung wie bei der Globe Stage (Vorlage `globe-stage/anleitung/`).
 - Flache `.ldr`-Exporte der Bühnen für Stud.io/BrickLink.

@@ -54,6 +54,9 @@ y von −Höhe bis 0 → Ursprung **unten** (direkt auf die Auflagefläche setze
 | Slope-Platte 92946 | −16…8 | Sonderfall – im Render prüfen |
 | Rundplatte mit Wirbel 15470 | −18…0 | unten |
 | Gitterträger 95347 | −4…240 | oben |
+| Gitterträger 30518 (2x16x2) | −4…45 | oben – 2x16 Noppen oben; nur die Endblöcke 2x2 (je 2 Zellen) sind 24 hoch mit Noppenaufnahmen unten, dazwischen Steg bis 45 |
+| Zaun 15332 (1x4x2, 4 Noppen) | −4…48 | oben |
+| Mikrofon 90370 | −12.8…18 | Griff im Handloch: Hand 3820 hat das Loch lokal bei z ≈ −10, Achse y → Versatz (0, −6, −10) mit der Handmatrix |
 | Brackets 99781 (down) −4…20, 99780 (up) −12…8, 44728 −4…40, 99207 −32…8 | | Ursprung = Plattenebene |
 
 Slope-Richtung im Generator: Gefälle nach −z ist Standard; Richtung d → Rotation

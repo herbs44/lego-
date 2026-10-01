@@ -46,6 +46,9 @@ Restaurant (SNOT-Fassade, Curved-Dach), 31109 Pirate Ship (SNOT-Rumpf), 10278 Po
 Bücher: *The LEGO Architect* (Tucker), *Beautiful LEGO* (Doyle), *The Unofficial LEGO Builder's Guide*
 (Bedford), *The Unofficial LEGO Advanced Building Techniques Guide*.
 
+## Bühnen-Vorlagen
+- Elsa Hanneke – Circus Maximus Arena Tour (Grundriss, Seitenansichten, Konzertfotos): https://elsa.works/projects/travis-scott-circus-maximus-tour-arenas
+
 ## Statik, Licht, Beschaffung
 - htbi – Stabilität hoher Türme: https://htbi-moc.com/blogs/guides/lego-stability-tips-for-tall-towers
 - BrickingArt – Festigkeit testen: https://brickingart.com/how-i-test-my-lego-models-for-strength-and-stability/

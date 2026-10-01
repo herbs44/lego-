@@ -55,6 +55,11 @@ kontrolliert gebogen = Näherung, erzwungen gebogen = vermeiden.
   Einzelplatten hängen durch.
 - **Aufhängen**: Hängende Teile müssen von oben mit Noppen-Clutch halten; Seile (63142) tragen nur Zug.
   Last pro Noppe klein halten, mehrere Hänger verteilen.
+  Besser als Zug an Noppen: **Seil im J-Bogen** – der untere Knopf steckt von unten in einer Noppenaufnahme
+  (z. B. Endblock von 30518), die Last liegt auf dem Knopf auf (Saint Pablo). Der Abstand der Endnoppen folgt
+  aus der festen Schnurlänge (63142: 576 LDU Schnur), nicht umgekehrt.
+- **Große Raster/Decken**: zwei Plattenlagen im Verband hängen über 40+ Noppen durch; eine Steinlage obenauf
+  (Balken 40 LDU hoch) oder darunter gehängte Gitterträger 30518 machen sie steif.
 - **Türme/Stützen**: Gitterträger 95347 gestapelt, Verbindungsplatten dazwischen; bei langen
   Traversen mehrere Stützen, im Check Tragkette bis zur Grundplatte.
 
