@@ -29,7 +29,8 @@ LEGO-MOC als LDraw/Studio-Modell, **Hauptversion 128 × 64 Noppen** (8 Baseplate
 | P2 – Rise Fabrication | Arena-Tour 2023: >275 laufende Fuß handgeschnitzte Felsen (EPS 1,5 lb, schwarze texturierte Flex-Beschichtung), **13 CNC-gefräste Köpfe 6–14 ft breit**, Stahlarmatur, fliegbar, interne Punkte für Crowd-Scanning-Laser und Licht | Kopfgrößen, Felsmaterial/-farbe, Laser in den Augen |
 | P2 – See You Later | Show-Execution, Lichtdesign, Content; **360°-Videoring** um die Bühne (Arena); Bühne als **Erdspalte, die den Saal teilt** | Fissure-Konzept; Ring **nicht** übernommen (Arena) |
 | P2 – Mixonline (Clair Global) | Arena: 202 Clair Cohesion CO10 in ~12 Stereo-Hangs je Seite über dem Videoring | Line-Arrays als dünne, gehängte Module |
-| P2 – Elsa Hanneke, A World Away | keine Treffer im Suchindex | – |
+| P2 – Elsa Hanneke (Stage Design, über die Recherche einer anderen Sitzung in `circus-maximus/README.md`) | Arena-Entwurf: sehr langer, flacher Felspfad mit Ausbuchtungen; **runde Köpfe an den Rändern** mit großen Ohren und runden gemeißelten Augen; **hoher Felsblock mit Tür und Gesicht an einem Ende** (laut Notiz aus der Stadionversion) | bestätigt Fissure-Pfad und Kopf-Randposition; **Block mit Tür → V2-Kandidat statt/zusätzlich zu Kopf A** |
+| P2 – A World Away | keine Treffer im Suchindex | – |
 | P3 – SoFi-Review (HotNewHipHop u. a.) | Bühne wie ein Felsweg, Rauch, spontane Flammen; **„massive head shaped piece“, auf dem Travis performt**; Stadion-Videoboard als IMAG | Kopf A als bespielbarer Riesenkopf |
 | P3 – Stadion-Tour allgemein | Bühne nicht an einem Ende, sondern **quer durch den Innenraum** („spans across, cutting through the crowd“) | Bühne als Längsspalte über das Feld |
 | P3 – Grokipedia (KI-Text, geringe Verlässlichkeit) | 88 ft × 62 ft × >30 ft, Ölfässer schwarz | nur Höhen-Plausibilität, Ölfässer als Detail |
@@ -47,7 +48,8 @@ LEGO-MOC als LDraw/Studio-Modell, **Hauptversion 128 × 64 Noppen** (8 Baseplate
 | Steinköpfe 6–14 ft, Laser in den Augen | [CONFIRMED – TOUR] | Rise (Arena, fliegend) |
 | Bespielbarer Riesenkopf | [CONFIRMED – TOUR] | SoFi-Review; **Größe/Position [INFERRED]** |
 | Köpfe am Boden statt fliegend | [INFERRED] | Open-Air-Stadion ohne Dachrigging; deckt sich mit Wunsch „keine fliegenden Köpfe“ |
-| Anzahl 5 Köpfe, Verteilung | [INFERRED] | – |
+| Anzahl 5 Köpfe, Verteilung | [INFERRED] | Randposition durch Hanneke-Entwurf (Arena) gestützt |
+| Hoher Felsblock mit Tür/Gesicht an einem Ende | [CONFIRMED – TOUR] (Hanneke-Notiz, Stadion) | in V1 als Kopf A + Plaza umgesetzt; MetLife-Form offen |
 | Hebeplattform (Lift) | [CONFIRMED – TOUR] (Arena: CyberMotion-Lifte) | MetLife-Position/Hub [INFERRED] |
 | 360°-LED-Ring | **nicht übernommen** | nur Arena bestätigt |
 | LED-Wände (4 Panels an den Stirnseiten) | [INFERRED] | Stadion nutzte eigene Videoboards (SoFi); MetLife-Screens unbekannt |
@@ -267,7 +269,7 @@ circus_maximus_metlife.ldr
 1. Bühne als Längsspalte über den Innenraum, Länge ≈ 48 m – **estimated**, Ausrichtung im Stadion unbekannt.
 2. Laufweg 3 Steine (1,4 m) hoch, 4–7 Noppen breit.
 3. Köpfe stehen am Boden (nicht fliegend), Anzahl 5, Positionen und Blickrichtungen.
-4. Kopf A als größter, oben abgebrochener, bespielbarer Kopf an einem Ende.
+4. Kopf A als größter, oben abgebrochener, bespielbarer Kopf an einem Ende (Hanneke zeigt dort einen hohen Felsblock mit Tür und Gesicht – Abgleich mit MetLife-Fotos nötig).
 5. B-Stage rund am anderen Ende, Rear Stage / Backstage-Zugang dort.
 6. Lift-Position und Hub; Scheren-Optik.
 7. LED: 4 Panels an den Stirnseiten (MetLife-Videoboards/IMAG nicht modelliert).
