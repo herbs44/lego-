@@ -1,88 +1,136 @@
 # Travis Scott – Circus Maximus Tour (UTOPIA-Bühne) als LEGO-MOC
 
-Nachbau der Arena-Bühne der Circus-Maximus-Tour (Album *UTOPIA*, 2023–2025) auf **zwei Baseplates 48 × 48**
-(96 × 48 Noppen, ca. 77 × 38 cm). Ein **geschwungener Laufweg** zieht sich knapp unter den Felsrändern durch die
-Halle, gesäumt von dunklem, verwittertem Stein und **Steinköpfen mit Osterinsel-Gesichtern**. An einem Ende steht ein
-**kuppelförmiger Felsblock mit Durchgang**, oben Travis Scott mit erhobenen Armen. Rund um die Bühne drängen sich
-**154 Fans als komplett schwarze Minifiguren**. Pyro-Flammen und CO2-Säulen schießen aus den Felsen, darüber hängen ein **ovaler
-360°-Videoring mit Feuerwand**, farbige Scheinwerfer und die PA an einem Traversen-Raster.
+Die Arena-Bühne der Circus-Maximus-Tour (Album *UTOPIA*, 2023–2025) auf **zwei Baseplates 48 × 48**
+(96 × 48 Noppen, ca. 77 × 38 cm). Ein **langer, flacher Felspfad** windet sich durch die Halle, rundherum das Publikum.
+Auf den Felsrändern sitzen **runde Steinköpfe mit gemeißelten Gesichtern** (Augenhöhlen, Nase, Mundrille, große Ohren),
+alle schauen ins Publikum. In die Felswände sind weitere **Reliefgesichter** gehauen, **Felstreppen** führen auf
+Felsgrate. Am einen Ende steht ein **hoher Felsblock mit Durchgang und Gesicht**, oben Travis Scott mit Mikrofon.
+Flammen schießen aus den Felsen, darüber hängt ein **hoher ovaler 360°-Videoring mit Feuerwand** und einer Lampenreihe.
 
-![Hero](renders/cm_hero.png)
+![Konzert](renders/cm_konzert.png)
 
-| Fans vor den Steinköpfen | Felsblock mit Performer |
+| Aus dem Publikum | Tageslicht |
 |---|---|
-| ![Fans](renders/cm_fans.png) | ![Block](renders/cm_block.png) |
+| ![Publikum](renders/cm_publikum.png) | ![Hero](renders/cm_hero.png) |
 
-| Weg mit Steinköpfen, Pyro und CO2 | Videoring mit Feuerwand |
+| Felspfad mit Steinköpfen und Pyro | Steinkopf und Reliefgesicht aus der Nähe |
 |---|---|
-| ![Weg](renders/cm_weg.png) | ![Ring](renders/cm_ring.png) |
+| ![Weg](renders/cm_weg.png) | ![Kopf](renders/cm_kopf.png) |
 
-| Von oben: Grundriss des Weges | Seitenansicht (wie im Bauplan) |
+| Details: Felsspitzen, Glut, Geröll, Felsspots | Felsblock mit Durchgang und Gesicht |
 |---|---|
-| ![Oben](renders/cm_oben.png) | ![Seite](renders/cm_seite.png) |
+| ![Detail](renders/cm_detail.png) | ![Block](renders/cm_block.png) |
+
+![Ring](renders/cm_ring.png)
+
+## Vorlage und Recherche
+
+- **Bühnenentwurf (Elsa Hanneke):** Creative Direction und Stage Design der Arena-Tour. Die
+  [Projektseite](https://elsa.works/projects/travis-scott-circus-maximus-tour-arenas) zeigt Grundriss und Seitenansichten.
+  - Die Bühne ist ein sehr langer, flacher Felspfad mit Ausbuchtungen.
+  - Runde Köpfe sitzen an den Rändern, am einen Ende steht ein hoher Block mit Tür und Gesicht.
+  - Dazu kommen Konzertfotos mit dem ovalen LED-Band, der Lampenreihe darunter, weiß angestrahlten Felsen und Flammen.
+- **Probenfoto (RapTV, „The Making of …“):** grauer, kantiger Fels wie gebrochene Säulen, runde Köpfe mit großen Ohren
+  und runden, gemeißelten Augen, Treppe zum Block.
+- **Konzertberichte:**
+  - [Magnet Magazine](https://magnetmagazine.com/2023/12/11/live-review-travis-scott-philadelphia-pa-dec-10-2023/) beschreibt die
+    „craggy rock formation“ und mehr Feuer und Flash-Pots als bei Kiss.
+  - [OnMilwaukee](https://onmilwaukee.com/articles/travis-scott-fiserv-forum-2024-review) beschreibt „faces cut into stone“ an
+    den Bühnenseiten sowie Felsvorsprünge und „faux-volcanic ridges“ als Aussichtspunkte.
+  - [Mix](https://www.mixonline.com/?p=144569) zeigt die Arena mit Ring und Felspfad.
+- Referenzbilder liegen nicht im Repo.
+
+### Was sich gegenüber der ersten Version geändert hat
+
+| Vorher | Jetzt (nach der Recherche) |
+|---|---|
+| hohe, kantige „Grabstein“-Köpfe als Wand, die den Weg verdecken | 12 **runde Köpfe** (4 × 4 Noppen mit Kuppel) auf niedrigen Sockeln, Blick ins Publikum, Weg frei |
+| Gesichter nur an den Köpfen | **gemeißelte Gesichter**: Augenhöhlen aus Headlight-Steinen, dazu 6 **Reliefgesichter** in den Außenwänden und ein großes Gesicht am Block |
+| fast schwarzer, gleichmäßiger Fels | grauer Fels mit **senkrechten Streifen und Rillensteinen** wie gebrochene Säulen, 6 **Felsgrate** mit **Felstreppen**, 14 **Felsspitzen**, **Glut** in Spalten, **Geröll** am Fuß |
+| schwarzer Laufweg | **Steinplatten** in Dunkelgrau mit helleren und dunklen Platten |
+| 9 Flammen, rote Uplights | **16 Flammen**, **27 weiße Uplights**, **9 Felsspots** im Fels am Weg |
+| flaches Ringband, 5 Lagen | **hohes Band mit 8 Lagen**, Flammenzungen im Bild, **75 Lampen** an der Unterkante |
+| graue Traversen | **schwarze** Traversen und Türme (treten zurück) |
+| 154 komplett schwarze Figuren | 169 Fans in dunkler Kleidung mit **verschiedenen Hauttönen**; Travis in schwarzem Shirt, hellen Shorts, wilde Haare, Mikrofon |
+| nur Tageslicht-Renders | zusätzlich **Konzertlicht** (`render_konzert.py`) |
 
 ## Kennzahlen
 
-- **7.062 Teile**, 157 Positionen (Teil × Farbe), davon 154 Fans und 1 Performer als Minifiguren (komplett schwarz)
+- **7.434 Teile**, 209 Positionen (Teil × Farbe), davon 170 Minifiguren (169 Fans und Travis)
 - **Grundfläche** 96 × 48 Noppen, **Höhe** ca. 46 cm
-- **Weg** 6 Noppen breit, 3 Steine hoch (Felsränder 1–3 Steine höher), Treppen an beiden Enden
-- **Felsblock** 18 Steine hoch, **14 Steinköpfe** mit Gesichtern
-- **Videoring** Oval 81 × 38 Noppen, 5 Bildlagen, an 20 Seilen
-- **9 Pyro-Einheiten** (Flammen und CO2), 9 Bodenmonitore, 15 Subwoofer, 20 Uplights, 27 Scheinwerfer
-
-## Vorlage
-
-- **Bauplan-Skizze** (Draufsicht, Seitenansicht, Stirnansicht): geschwungener Weg, kuppelförmiger Block mit Rundbogen,
-  dichte Reihen von Steinköpfen mit Gesichtern an beiden Wegseiten
-- **Bühnen-Renderings und Probenfoto**: grauer Stein, Findlinge mit Gesichtern, Traversen-Raster, Scheinwerfer, PA
-- **Stadionfoto**: hoher Fels mit Gesicht, Travis Scott oben auf dem Gipfel
-- Beschreibungen der Produktion (Rise Fabrication über RapTV, Mix Magazine, Konzertkritiken):
-  - Bühne wie eine „Cartoon-Fiebertraum-Version der Osterinsel": Felsen mit Steingesichtern, versteckte Tunnel, Lifts
-  - über 80 m handgeschnitzte Felsen mit strukturierter Beschichtung
-  - „Flammen schießen spontan aus der Felsbühne", Pyro und Laser von Strictly FX
-  - 360°-Videoring, PA-Hänge über dem Screen
+- **Weg** 6 Noppen breit, 3 Steine hoch; Felsränder 1–3 Steine, Grate bis 6 Steine über dem Weg; Treppen an beiden Enden
+- **Köpfe und Block:** 12 runde Steinköpfe (je 31 Teile), Felsblock 18 Steine hoch mit Durchgang unter 11 Bögen
+- **Felsdetails:**
+  - 6 Reliefgesichter, 29 Treppenstufen auf die Grate, 14 Felsspitzen, 11 Glutstellen
+  - 76 Geröllsteine, 59 Rillensteine
+- **Videoring:** Oval 81 × 38 Noppen, 8 Lagen, an 20 Hängern, 75 Lampen an der Unterkante
+- **Effekte:** 16 Pyro-Einheiten (Flammen und CO2), 27 Uplights, 9 Felsspots
+- **Technik:** 27 Scheinwerfer, 8 PA-Hänge, 9 Bodenmonitore, 18 Subwoofer
 
 ## Aufbau (Submodelle)
 
 1. **Grundplatten** – 2 × Baseplate 48 × 48 schwarz
-2. **Felswände und Steinköpfe** – dunkler Stein (Schwarz und Dunkelgrau, Hellgrau nur an den hellsten Kanten), Slopes an
-   jeder Stufe, Überhänge auf umgedrehten Slopes, erodierte Kanten; 14 Steinköpfe (Grundriss als Squircle, damit die
-   Gesichtsseite flach ist) abwechselnd an beiden Wegseiten
-3. **Laufweg** – 6 Noppen breit, 3 Steine hoch, Felsränder nur 1–3 Steine höher, schwarze Dielen im Verband, geschwungen wie in der Skizze,
-   Treppen an beiden Enden, 9 Bodenmonitore (Cheese-Slope 1 × 2) am Wegrand
-4. **Plattform auf dem Block** – Performer-Fläche
-5. **Felsblock mit Durchgang** – 18 Steine hoch, Kuppelform; der Weg führt unter 11 Bögen 1 × 8 × 2 hindurch
-6. **Gesichter (SNOT)** – Augen aus Headlight-Steinen mit runden Fliesen, Nase aus einem vorspringenden 45°-Slope,
-   Mund aus einer schwarzen Fliese auf einem Stein mit Seitennoppe (am Block eine Gitterfliese)
-7. **Ovaler Videoring** – 2 Noppen dick, Feuerwand als Bild (Gelb → Orange → Rot → Schwarz), zwei Plattenlagen im Verbund
-8. **Türme und Traversen-Raster** – 6 Gittertürme (je 4 × 95347), Außenrahmen plus 5 Quertraversen
-9. **PA-Hänge** – 8 Stränge an den Längstraversen, Lautsprechergitter per SNOT nach außen
-10. **Moving Heads** – 27 Scheinwerfer, Linsen abwechselnd trans-rot, trans-orange, trans-klar
-11. **Pyro und CO2** – 9 Einheiten: Flammenteil 85959 (trans-orange, trans-gelb, trans-klar als CO2-Säule) in einer
-    schwarzen Rundstein-Düse, auf den Felskanten und auf dem Block
-12. **Bodenlautsprecher, Uplights** – Subwoofer mit SNOT-Gittern entlang der Bühne, rote Bodenstrahler am Felsfuß
-13. **Fans** – 154 Minifiguren rundherum, komplett schwarz (Kopf, Hände, Haare), Blick zur Bühne; viele mit einem oder beiden Armen oben
-14. **Performer** – Minifigur ganz in Schwarz oben auf dem Block, beide Arme oben
+2. **Felswände und Felsgrate** – Höhenfeld aus gewundenem Pfad, Rändern, Graten und Block.
+   - Gebaut als Schale aus Steinen im Verband, mit Slopes an jeder Stufe, Überhängen auf umgedrehten Slopes und
+     Cheese-/Curved-Kappen.
+   - Farbe nach Lichtrichtung mit senkrechten Streifen; sichtbare Steine 1 × 2 stellenweise als Rillenstein (2877).
+   - Auf den Oberseiten stehen **Felsspitzen** (Rundstein 1 × 1 + Kegel 1 × 1), **Felsspots** (Rundstein schwarz +
+     Rundplatte Trans-Clear) und **Glut** (Rundfliese Trans-Orange).
+   - **Felstreppen** sind 2 Noppen breit vom Weg auf die Grate geschnitten, die Stufen tragen glatte Fliesen.
+3. **Laufweg** – Steinplatten aus Fliesen im Verband, Bodenmonitore am Rand. Darin ein **Lift** (Submodell 16): ein
+   2 × 2-Schacht mit Hubsäule und schwarzer Klappe bündig im Weg – die echte Bühne hatte Lifts und versteckte Tunnel
+4. **Plattform auf dem Block** – Fläche für den Performer
+5. **Felsblock mit Durchgang** – Kuppelform, der Weg führt unter 11 Bögen 1 × 8 × 2 hindurch, Treppe an der Stirnseite
+6. **Gesichter in den Felsen (SNOT)**
+   - **Reliefgesichter** in den Außenwänden: Augenhöhlen aus Headlight-Steinen (4070), eine Nase aus einem
+     auskragenden 45°-Slope, der Mund als schwarze Fliese auf einem Stein mit Seitennoppe.
+   - **Am Block:** große, leere Augenhöhlen aus schwarzen Rundfliesen 2 × 2 und ein Gitter-Mund.
+7. **Videoring** – 2 Noppen dick und 8 Lagen hoch, zwei Verbund-Plattenlagen. Das Bild ist eine Feuerwand mit
+   Flammenzungen (Gelb → Orange → Rot → Schwarz). Unten hängt jede dritte Zelle eine Lampe
+8. **Türme und Traversen-Raster** – 6 Gittertürme (je 4 × 95347), Außenrahmen plus 5 Quertraversen, schwarz
+9. **Runde Steinköpfe** – siehe unten
+10. **PA-Hänge**, 11. **Moving Heads**, 12. **Pyro und CO2** (Flamme 85959 in schwarzer Rundstein-Düse)
+13. **Bodenlautsprecher, Uplights und Geröll am Felsfuß** (Rundplatten 1 × 1 und Cheese-Slopes)
+14. **Fans** – 169 Minifiguren rund um die Bühne, Blick zur Bühne, viele mit erhobenen Armen
+15. **Travis** – vorne auf dem Block, Mikrofon in der rechten Hand, linke Hand oben
 
-## Angewandte Techniken (Skill `lego-profi-designer`)
+### Die runden Steinköpfe
+
+Jeder Kopf ist 4 × 4 Noppen groß und 120 LDU hoch (drei Steinlagen, eine Platte 4 × 4 und eine Kuppel 4 × 4). Er sitzt auf
+einem Felssockel einen Stein über dem Weg und schaut nach außen ins Publikum.
+
+| Lage | Vorne (Gesicht) | Seiten und hinten |
+|---|---|---|
+| 1 | Stein 1 × 4 mit Seitennoppen (30414) + dunkelgraue Fliese 1 × 4 = **gemeißelte Mundrille** | Stein 2 × 4, hinten runde Ecken (3062b) |
+| 2 | Stein 1 × 2 mit Seitennoppen + Cheese-Slope 1 × 2, der nach unten auskragt = **Nase** | **Ohren:** Rundfliesen 2 × 2 mittig auf Steinen mit Seitennoppe (87087) |
+| 3 | zwei Headlight-Steine (4070) = **Augenhöhlen**, die Noppe in der Vertiefung wirkt als Pupille | Stein 2 × 4 |
+| Kopf | Platte 4 × 4, darauf Kuppel 4 × 4 (glatt 86500, jede dritte facettiert 30208 wie gesprungener Stein) | |
+
+Neben und vor den Köpfen senkt der Generator den Fels ab, damit Ohren und Gesicht frei stehen.
+
+## Angewandte Techniken
 
 | Technik | Umsetzung |
 |---|---|
-| **Grundriss aus der Vorlage** | Weg-Mittellinie aus der Skizze: gerade durch den Block, danach zwei überlagerte Wellen |
-| **SNOT-Gesichter** | Headlight-Stein (4070) + runde Fliese = rundes Auge mit ½-Platten-Relief; Nase als auskragender 45°-Slope; Mund als Fliese auf einem Stein mit Seitennoppe |
-| **Bögen als Tunnel** | Bögen 1 × 8 × 2 überspannen den Weg im Block, die Felswände darüber sitzen auf ihren Noppen |
-| **Rockwork** | Slopes nach Stufenhöhe, Überhänge auf umgedrehten Slopes, erodierte Kanten, Schattierung nach Lichtrichtung |
-| **Dunkle Bühne, schwarzes Publikum** | Stein fast nur in Schwarz und Dunkelgrau, Fans als schwarze Silhouetten – so tragen allein Feuer, Scheinwerfer und Videoring die Farbe |
-| **Farbe gezielt als Feuer** | Warme Farben nur bei Videoring, Flammen, Uplights und Scheinwerfern |
-| **Stange in Hohlnoppe** | Flammenteile stecken mit ihrer Stange in der Hohlnoppe eines runden Steins – legale Verbindung |
-| **Dynamik durch Posen** | Fans mit unterschiedlich gehobenen Armen (Arm-Rotation um die Schulterachse), Performer mit beiden Armen oben |
-| **Verbund-Plattenlagen** | Der Videoring bekommt zwei Plattenlagen, die alle Steine zu einem Stück verbinden |
+| **Grundriss aus dem Bühnenentwurf** | Weg-Mittellinie aus dem Entwurf: gerade durch den Block, danach zwei überlagerte Wellen. Die Köpfe sitzen im Wechsel links und rechts wie im Grundriss |
+| **Headlight-Steine als gemeißelte Augen** | Die runde Vertiefung des Steins 4070 wirkt als Augenhöhle, ganz ohne Druck. Glubschaugen (bedruckte Fliesen) sind bewusst ersetzt |
+| **Gesichter per SNOT** | Mundrille und Nase sitzen an Seitennoppen. Die Nase ist ein Cheese-Slope, der mit seiner Unterseite an der Wand hängt (eigene Rotationsmatrix) |
+| **Rundfliese auf einer Noppe** | Ohren und die großen Augenhöhlen am Block: Rundfliesen 2 × 2 sitzen mittig auf einer einzelnen Seitennoppe |
+| **Rockwork mit Struktur** | Slopes an jeder Stufe, Überhänge, senkrechte Farbstreifen, Rillensteine, Spitzen und Geröll statt gleichmäßigem Rauschen |
+| **Treppen ins Höhenfeld geschnitten** | Die Stufenhöhe wird im Höhenfeld gesetzt (Weg + 1, + 2, …) und von Slopes und Deko freigehalten |
+| **Detailhierarchie** | Hellgrau nur an Köpfen und Lichtkanten, der Fels bleibt dunkelgrau, Farbe nur im Ring, in den Flammen und in der Glut |
+| **Bögen als Tunnel** | Bögen 1 × 8 × 2 überspannen den Weg im Block, die Wände darüber sitzen auf ihren Noppen |
+| **Stange in Hohlnoppe** | Flammen stecken mit ihrer Stange in der Hohlnoppe eines runden Steins – legale Verbindung |
+| **Verbund-Plattenlagen** | Ring und Traversen bekommen Plattenlagen, die alle Steine zu einem Stück verbinden |
+| **Konzertlicht im Render** | Die LED-Wand (Rot, Orange, Gelb, nur im Ring verwendet), Flammen, Glut und Lampen leuchten selbst. Dazu kommen weiße Kegel aus dem Raster und Uplights am Felsfuß im Dunst |
 
 ## Prüfung
 
 Der Generator prüft nach jedem Lauf: **0 nicht verbundene Teile, 0 schwebende Teile, 0 Kollisionen**.
-Hängende Teile (Ring, Seile, PA, Scheinwerfer, untere Traversenlage) halten mit Klemmkraft von oben; Augen, Münder und
-Lautsprechergitter sitzen per SNOT an ihren Haltern. Die Minifiguren stehen mit den Beinen auf den Noppen.
+
+- **Hängende Teile** (Ring, Hänger, PA, Scheinwerfer, Lampen) halten mit Klemmkraft von oben.
+- **SNOT-Teile** (Nasen, Münder, Ohren, Augenhöhlen am Block, Lautsprechergitter) sitzen an ihren Haltern.
+- **Minifiguren** stehen mit den Beinen auf den Noppen.
 
 ## Neu erzeugen
 
@@ -90,12 +138,49 @@ Lautsprechergitter sitzen per SNOT an ihren Haltern. Die Minifiguren stehen mit 
 python3 circus-maximus/generate_circus_maximus.py
 ```
 
+Die wichtigsten Stellschrauben stehen oben im Generator:
+
+- **Köpfe:** `HEAD_X` und `PED_H`
+- **Felsgrate:** `RIDGES`, die Treppen entstehen automatisch an jedem Grat
+- **Weg:** `PATH`, `zc()`, `half_width()`
+- **Ring:** `RING_BOT`, `RING_H`, `screen_color()`
+
+Renders erzeugen:
+
+- **Tageslicht:**
+  `blender -b -P tools/blender-render/render_cycles.py -- circus-maximus/circus_maximus_stage.mpd out/cm`
+- **Konzertlicht:**
+  `blender -b -P circus-maximus/render_konzert.py -- circus-maximus/circus_maximus_stage.mpd out/cm_konzert`
+  - Optionen: `--glut` (Leuchtkraft), `--screen` (Ring), `--dunst` (Dichte)
+
+## Video
+
+`video/hyaena_video.py` präsentiert die Bühne zu *HYAENA* (Musik nicht im Repo) im orangen Konzertlicht:
+
+1. **Vor dem Drop:** Totale über das Publikum, Fahrt an den Steinköpfen entlang, Felsblock, Kranfahrt zur Lift-Klappe.
+2. **In der Pause vor dem Drop:** Blackout und POV aus dem dunklen Lift-Schacht unter der Bühne; das Licht im
+   Klappenspalt flackert mit der Musik.
+3. **Im Anlauf:** Die Klappe glüht, der Schacht zittert immer stärker.
+4. **Auf dem Drop:** Die Klappe fliegt auf, Travis wird nach oben geschleudert (POV), Flammen und Strobe. Danach
+   landet er mit einer Drehung auf der Klappe.
+5. **Danach:** Schnitte alle zwei Beats, Flammen und Ring pulsieren, Travis hüpft auf dem Beat.
+
+Drop, Pause und Tempo liest das Skript aus der Musik.
+
+```bash
+blender -b -P circus-maximus/video/hyaena_video.py -- "<HYAENA.mp3>" out/hyaena
+```
+
+Optionen: `--probe` (Standbilder), `--drop`, `--bpm`, `--vorlauf`, `--nachlauf`, `--ohne-fans`, `--res`, `--blend`.
+
 ## Hinweise
 
-- **Arena- und Stadionversion gemischt:** Der hohe Block mit Performer stammt aus der Stadionversion, Weg und Raster aus der Arena.
-- **Fliegende Köpfe** sind auf Wunsch entfernt.
-- **Gitterträger in Dunkelgrau** (95347) sind seltener als in Hellgrau – Verfügbarkeit auf BrickLink prüfen.
-- **Flammen:** LDraw 85959 (Flamme 7L mit Stange); BrickLink-Nummer und Farbverfügbarkeit vor der Bestellung prüfen.
-- **Minifiguren:** Komplett schwarz wie Silhouetten im Konzertlicht. Die Stückliste führt Beine als 3815c01 (BrickLink 970c00);
-  schwarze Köpfe gibt es mit und ohne Gesicht.
+- **Fliegende Köpfe** (der riesige runde Kopf, der während der Show über dem Publikum schwebt) bleiben auf Wunsch weg.
+- **Arena- und Stadionversion gemischt:** Der hohe Block mit Performer stammt aus der Stadionversion, Weg, Köpfe und Ring aus
+  der Arena.
+- **Keine bedruckten Teile:** Alle Gesichter sind gebaut (Headlight-Steine, Slopes, Fliesen), nicht gedruckt.
+- **Vor der Bestellung prüfen:** Gitterträger 95347 in Schwarz und Flamme 85959 (Farbverfügbarkeit).
+- **Minifiguren:**
+  - Unbedruckte Köpfe 3626c in Hauttönen; Gesichter nach Wahl.
+  - Torsos führt BrickLink je Farbkombination unter eigenen Nummern (973c…), die Beine 73200b-f1 unter 970c00.
 - **Pyro-Licht:** In die Rundstein-Düsen passen kleine LEDs, dann leuchten die Flammen von unten.

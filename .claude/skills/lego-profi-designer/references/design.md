@@ -7,6 +7,8 @@
 - Charakteristische Merkmale übertreiben statt verwässern (z. B. Grat des Bergs, runder Screen).
 - Achsen und Symmetrien der Vorlage exakt treffen (Laufsteg genau auf der Mittelachse); natürliche
   Formen dagegen bewusst asymmetrisch.
+- Reihenfolge: Silhouette → Massen → Architektur → Primärdetails → Sekundärdetails → Mikrodetails.
+  Mikrodetails erst, wenn Silhouette und Massen im Render bestehen.
 
 ## 2. Maßstab und Proportion
 
@@ -15,6 +17,11 @@
   runden. Bei Konflikt gewinnt die Wirkung, nicht der Millimeter.
 - Im Mikromaßstab wird zu breit/zu hoch schnell sichtbar – SNOT (Plattenauflösung) und Jumper
   (½ Stud) als Feinregler.
+- **Ein Leitmaß, ein Modul**: z. B. Screen = 16 Studs, alles andere daraus ableiten; Bühnenelemente in
+  einem Modul von 4 oder 8 Studs (Truss 4, LED-Segment 4/8, Line-Array 2/4, Bodenplatten 2/4,
+  Felsfacetten 2/4/8) – so bleibt die Bühne parametrisch.
+- **Forced Perspective** (Richtwerte): vorne 100 %, Mitte 85–90 %, hinten 70–80 %, Hintergrund 50–65 %;
+  wirkt bei Laufstegen, Publikum, Traversen, Hintergrundbauten und Lichtstrahlen.
 
 ## 3. Farbe
 
@@ -43,6 +50,10 @@
 - Wiederholung vermeiden, wo die Natur keine hat (Fels, Pflanzen); Wiederholung nutzen, wo Technik
   sie hat (Traversen, Boxen, Fenster).
 - „Nice Part Usage": ungewöhnliche Teile für neue Zwecke – sparsam und so, dass es passt.
+- **Drei Detailgrößen**: Makro 8–32 Studs (Fels, Dach, LED-Wand, Laufsteg), Mittel 2–8 Studs (Lampen,
+  Truss-Felder, Türen, Boxen), Mikro 1–2 Studs (Kabelhalter, Pixel, Nieten, Nebel). Mikrodetails dürfen
+  Makroformen nie optisch zerlegen.
+- **Ruhezonen**: 20–40 % einer großen Displayfläche bewusst ruhig lassen (Bühnenboden, Backstage).
 
 ## 6. Geschichte und Präsentation
 
@@ -66,3 +77,13 @@
 5. Lesbarkeit der Funktion: erkennt man Wege, Treppen, Öffnungen, Technik?
 6. Nutzerwunsch: ist jede Bitte sichtbar umgesetzt? Mehrdeutiges in beiden Lesarten prüfen.
 Befunde als Liste mit konkreter Maßnahme (Teil, Ort, Zahl) formulieren, dann umsetzen und neu rendern.
+
+Drei Prüfabstände: **1 m** (Silhouette, Hauptfarben, Hierarchie, große Formen, Lichtquellen),
+**30 cm** (SNOT, Fugen, Wiederholungen, Kabel, Mikrodetails) und **einfarbig grau** gerendert – funktioniert
+die Form ohne Farbe nicht, ist die Farbe nur Kosmetik.
+
+## 9. Präsentation
+
+- Sockel sichtbar breiter als die Grundplatte: 34–36 Studs bei 32×32, 50–52 Studs bei 48×48.
+- Licht: Haupt-, Füll-, Akzent- und „praktisches“ Licht (eingebaute LEDs); bei Bühnen Frontlicht,
+  Gegenlicht, Screen-Leuchten, Strahlen, Bodenlicht.

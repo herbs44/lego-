@@ -40,7 +40,7 @@ PLATE = {(1, 1): "3024", (1, 2): "3023", (1, 3): "3623", (1, 4): "3710", (1, 6):
          (16, 16): "91405"}
 TILE = {(1, 1): "3070b", (1, 2): "3069b", (1, 4): "2431", (1, 6): "6636", (1, 8): "4162",
         (2, 2): "3068b", (2, 4): "87079"}
-BL_ID = {"3070b": "3070", "3069b": "3069", "3068b": "3068", "3062b": "3062", "6141": "4073", "3815c01": "970c00", "63142": "x127c30pb01"}
+BL_ID = {"73200b-f1": "970c00", "3070b": "3070", "3069b": "3069", "3068b": "3068", "3062b": "3062", "6141": "4073", "3815c01": "970c00", "63142": "x127c30pb01"}
 NAME_OVERRIDE = {"63142": "String with End Studs 30L overall (63142 / 14225)"}
 
 
@@ -238,8 +238,12 @@ RUNWAY = {(i, k) for i in range(-11, 3) for k in range(-2, 2)}          # Laufst
 RUNWAY_H = 2
 RAMP = {(i, k) for i in range(-14, -11) for k in range(-2, 2)}          # Rampe zur Lower Stage (Unterbau)
 STAIR = {(i, 2) for i in range(-3, 0)} | {(i, -3) for i in range(-3, 0)}  # Stufen beidseitig am Laufsteg
-STAGE_C, STAGE_R = (-22.0, 0.0), 8.6                                    # Lower Stage (Felsplateau)
-STAGE_H = 4
+STAGE_H = 4                                                             # Hoehe am Rampenende (Steine)
+# Center Stage wie auf den Tourfotos: dreieckiger Keil im Publikum. Die Grundseite liegt an der Rampe, die
+# Oberflaeche steigt gleichmaessig zur Spitze im Publikum an (dort steht der Kuenstler), Flanken senkrecht.
+WEDGE_BASE_X, WEDGE_TIP_X = -14.5, -31.5                               # Mittelpunkt-x der Grundseite / Spitze
+WEDGE_HALF = 9.5                                                        # halbe Breite an der Grundseite
+WEDGE_H1 = 8                                                            # Hoehe an der Spitze (Steine)
 APEX = (12.0, 0.0); APEX_H = 19
 SUMMIT = {(11, -1), (12, -1), (11, 0), (12, 0)}                        # Gipfelplattform 2x2
 
@@ -301,12 +305,18 @@ def mountain_f(p):
 
 
 def stage_f(p):
-    """Lower Stage: Felsplateau mit unregelmaessigem Rand und steilen Felswaenden"""
-    x, z = p[0] - STAGE_C[0], p[1] - STAGE_C[1]
-    a = math.atan2(z, x)
-    r = STAGE_R * (1 + 0.10 * math.sin(3 * a + 0.7) + 0.06 * math.sin(7 * a + 2.1) + 0.04 * math.sin(11 * a))
-    edge = r - math.hypot(x, z * 1.08)
-    return STAGE_H * max(0.0, min(1.0, 0.25 + edge / 2.2))
+    """Center Stage: dreieckiger Keil, Hoehe steigt linear von der Rampe (STAGE_H) zur Spitze (WEDGE_H1)"""
+    x, z = p
+    if x > WEDGE_BASE_X + 1e-6 or x < WEDGE_TIP_X - 1e-6: return 0.0
+    t = (WEDGE_BASE_X - x) / (WEDGE_BASE_X - WEDGE_TIP_X)
+    if abs(z) > max(1.0, WEDGE_HALF * (1 - t)) + 1e-6: return 0.0
+    return STAGE_H + (WEDGE_H1 - STAGE_H) * t
+
+
+def stage_h(c):
+    """Stufenhoehe der Center Stage: alle 4 Noppen 1 Stein hoeher - so schliessen die 18-Grad-Slopes 4x1
+    nahtlos aneinander (und an die Rampe) und ergeben eine durchgehende Schraege bis zur Spitze"""
+    return STAGE_H + (-15 - c[0]) // 4
 
 
 # Ecktuerme: vorne je 1 Gittertraeger (freie Sicht), hinten hinter dem Screen je 2 nebeneinander
@@ -366,8 +376,7 @@ for c in GRID:
     elif c in RAMP: h, m = RUNWAY_H + 1, "rampe"
     elif c in STAIR: h, m = 1, "laufsteg"
     else:
-        hs = stage_f(p)
-        if hs > 0.5: h, m = int(round(hs)), "fels"
+        if stage_f(p) > 0.5: h, m = stage_h(c), "fels"
     if h: HF[c], MAT[c] = h, m
 # Mulden im Fels schliessen (Zelle tiefer als alle 4 Nachbarn), damit hinter Wegkanten keine Loecher entstehen
 for _ in range(4):
@@ -395,9 +404,10 @@ def _vn(x, z, sc, seed):
 
 
 LIPS = []                       # (Zelle innen, Zelle aussen, Richtung) - umgedrehter Slope in Lage STAGE_H-2
+LIP_ENABLE = False              # Center Stage als Keil: glatte Flanken statt Ueberhaengen
 _gl = STAGE_H - 1               # Lage, die auskragt
 _used = set()
-for c in sorted(S[_gl]):
+for c in sorted(S[_gl]) if LIP_ENABLE else []:
     if MAT[c] != "fels" or c not in S[_gl - 1]: continue
     if _vn(c[0] + 0.5, c[1] + 0.5, 2.2, 9) < 0.45: continue
     for d in DIRS:
@@ -442,8 +452,8 @@ def rock_color(c, top=False, g=None):
     return WHITE if shade > 0.55 else LBG
 
 
-STAGE_CRACKS = [[(-28.0, -3.0), (-24.0, -1.0), (-21.0, 2.5), (-17.0, 3.0)],
-                [(-24.0, -1.0), (-23.0, -5.5)], [(-19.0, -6.0), (-16.5, -2.0)]]
+STAGE_CRACKS = [[(-29.5, 0.5), (-25.0, -1.5), (-20.5, 1.0)], [(-22.5, 2.5), (-19.0, 6.0)],
+                [(-19.0, -2.5), (-16.5, -7.0)]]
 ROCK = ("berg", "fels")
 SLOPE_OK = ("berg", "fels")
 
@@ -534,6 +544,11 @@ def side_visible(c, g):
 
 def body_color(c, g):
     m = MAT[c]
+    if m == "fels" and side_visible(c, g):
+        if crack_d((c[0] + 0.5, c[1] + 0.5), STAGE_CRACKS) < 0.6: return DBG
+        u = (math.sin((c[0] * 7 + c[1] * 3) * 12.9898) * 43758.5453) % 1.0
+        base = WHITE if u < 0.45 else LBG if u < 0.85 else DBG
+        return DBG if g == 0 and base != WHITE else base               # Fuss im Schatten
     if m in ROCK:
         vis = side_visible(c, g) or c not in (S[g + 1] if g + 1 <= GMAX else set())
         return rock_color(c, g=g) if vis else BLACK
@@ -599,6 +614,13 @@ for (name, c, d, g, h, cells) in SLOPES:
 # Abdeckung aller noch offenen Oberseiten.
 # Felskanten: Mischung aus gebogenen Slopes 2x1 (11477, "ausgewaschen") und Cheese-Slopes 1x1 (Rockwork-Tipp:
 # gebogene Keile fuer weiche, erodierte Uebergaenge), sonst Fliesen. Laufsteg: Dielen im Verband.
+# ---------------- Figuren: Standplaetze ----------------
+# Figuren stecken auf einer Platte mit Noppen, die dort statt einer Fliese liegt (eigene Baugruppe 11_figuren).
+FIG_STANDS = [("kanye", (-32, -1), (-32, 0), (-1, 0)),           # Spitze der Center Stage, Blick zum Publikum
+              ("jesus", (12, -1), (12, 0), (-1, 0))]             # Gipfelplattform (vorne endet der Grat)
+STAND_CELLS = {c for _, a, b, _ in FIG_STANDS for c in (a, b)}
+STAND_Y = {}                    # Zelle -> Oberkante der Standplatte (y)
+stand_caps = defaultdict(dict)
 caps = defaultdict(dict)
 PLANKS = defaultdict(set)
 for g in range(GMAX + 1):
@@ -608,7 +630,7 @@ for g in range(GMAX + 1):
     openset, done = set(open_), set()
     # Pass 1: gebogene Slopes auf Randzelle + Nachbar innen
     for c in open_:
-        if MAT[c] not in ROCK or c in SUMMIT or c in done: continue
+        if MAT[c] not in ROCK or MAT[c] == "fels" or c in SUMMIT or c in done: continue
         drop = [d for d in grad_dirs(c) if (c[0] + d[0], c[1] + d[1]) not in S[g]]
         if not drop or vnoise(c[0] + 0.5, c[1] + 0.5, 2.3, 11) < 0.5: continue
         d = drop[0]; i = (c[0] - d[0], c[1] - d[1])
@@ -621,10 +643,12 @@ for g in range(GMAX + 1):
     for c in open_:
         if c in done: continue
         m = MAT[c]
+        if c in STAND_CELLS:
+            stand_caps[(g, sub_of(c))][c] = BLACK if c in SUMMIT else rock_color(c, top=True); continue
         if c in SUMMIT: caps[(g, "03_berg")][c] = BLACK; continue
         if m in ROCK:
             drop = [d for d in grad_dirs(c) if (c[0] + d[0], c[1] + d[1]) not in S[g]]
-            if drop and vnoise(c[0] + 0.5, c[1] + 0.5, 1.7, 8) < 0.78:
+            if drop and m != "fels" and vnoise(c[0] + 0.5, c[1] + 0.5, 1.7, 8) < 0.78:
                 add(Part(sub_of(c), "54200", rock_color(c, top=True), ctr(c[0]), y, ctr(c[1]), ROT_OUT[drop[0]],
                          {c}, y - 16, y, studs=False))
                 continue
@@ -638,6 +662,9 @@ for g in range(GMAX + 1):
         else: caps[(g, sub_of(c))][c] = DBG
 for (g, sb), cc in caps.items():
     plates(sb, cc, -BH * (g + 1) - PH, g % 2, table=TILE, studs=False)
+for (g, sb), cc in stand_caps.items():
+    plates(sb, cc, -BH * (g + 1) - PH, 0)
+    for c in cc: STAND_Y[c] = -BH * (g + 1) - PH
 # Dielen: 1 Noppe breite Fliesen entlang x, Stoesse von Reihe zu Reihe versetzt (Verband)
 TILE_LEN = {1: "3070b", 2: "3069b", 4: "2431", 6: "6636", 8: "4162"}
 for g, cells in PLANKS.items():
@@ -681,6 +708,21 @@ def row_tiles(sub, row, y, color, lengths=(4, 3, 2, 1)):
         add(Part(sub, TILE_LEN[n], color, cx, y, cz, 0 if along_x else 90, set(seg), y, y + PH, studs=False))
 
 
+DANCER_CAP = {"D": 5, "A": 3, "C": 3, "E": 2}                   # vorne der Chor auf dem Sims, dazu die Seitenwege
+_taken = set()
+for sname, cap in DANCER_CAP.items():
+    got = 0
+    for seg, sts, hp in WAY_GROUPS:
+        if seg != sname or got >= cap: continue
+        n = len(sts); lamp = {n // 2 - 1, n // 2} if seg != "G" and n >= 4 else set()
+        for i in range(n - 1):
+            a, b = sts[i][0], sts[i + 1][0]
+            if i in lamp or i + 1 in lamp or got >= cap: continue
+            if any((q[0] + dx, q[1] + dz) in _taken for q in (a, b) for dx in (-1, 0, 1) for dz in (-1, 0, 1)): continue
+            out = (sts[i][0][0] - sts[i][1][0], sts[i][0][1] - sts[i][1][1])
+            FIG_STANDS.append(("taenzerin", a, b, out)); _taken |= {a, b}; got += 1
+            break                                              # hoechstens eine Figur pro Absatz
+STAND_CELLS = {c for _, a, b, _ in FIG_STANDS for c in (a, b)}
 for seg, sts, hp in WAY_GROUPS:
     base = -BH * (hp // 3); k = hp % 3
     allc = {c for st in sts for c in st}
@@ -696,16 +738,25 @@ for seg, sts, hp in WAY_GROUPS:
             add(Part("06_wendelweg", "2412b", DBG, sum(ctr(q[0]) for q in lamp) / 2, y, sum(ctr(q[1]) for q in lamp) / 2,
                      0 if along_x else 90, set(lamp), y, y + PH, studs=False))
             N_LIGHTS += 1
-            row_tiles("06_wendelweg", row[:m], y, WHITE); row_tiles("06_wendelweg", row[m + 2:], y, WHITE)
+            segs = [row[:m], row[m + 2:]]
         else:
-            row_tiles("06_wendelweg", row, y, WHITE)
+            segs = [row]
+        for part_row in segs:                                  # Standplatten fuer Figuren statt Fliesen
+            cur = []
+            for q in part_row + [None]:
+                if q is not None and q not in STAND_CELLS: cur.append(q); continue
+                if cur: row_tiles("06_wendelweg", cur, y, WHITE); cur = []
+                if q is not None and q not in STAND_Y:
+                    pair = [q2 for q2 in part_row if q2 in STAND_CELLS and abs(q2[0] - q[0]) + abs(q2[1] - q[1]) <= 1]
+                    plates("06_wendelweg", {c: WHITE for c in pair}, y, 0)
+                    for c in pair: STAND_Y[c] = y
 print("Wendelweg:", len(STATIONS), "Stationen,", len(WAY_GROUPS), "Absaetze,", N_LIGHTS, "Bodenleuchten,",
       "Hoehe", STATIONS[0][2] / 3, "->", STATIONS[-1][2] / 3, "Steine")
 
 # ---------------- Runder Screen hinter dem Berg (zeigt zum Publikum, -x) ----------------
 SCR_X = (27, 28, 29)                         # vorne .. hinten; hinten schwarze Rueckwand
-DISC_ZC, DISC_RZ = 0.0, 14.0                 # Mitte zwischen z=-1 und z=0, Radius 14 Noppen
-DISC_RC, DISC_RY = 20.0, 10.3                # Mitte (Steinlagen) und Radius in Lagen
+DISC_ZC, DISC_RZ = 0.0, 15.0                 # Mitte zwischen z=-1 und z=0, 30 Noppen breit (breiter als der Berg)
+DISC_RC, DISC_RY = 24.5, 7.4                 # Lagen 17-31: der Gipfel ragt gerade in den unteren Rand
 
 
 def disc_row(r):
@@ -758,8 +809,8 @@ def partition(L, left_need, right_need, prev_joints, colors=None):
     return out[::-1]
 
 
-PED_Z = DISC_ROWS[R0]
-for g in range(R0):                                            # Sockel (hinter dem Berg verborgen)
+PED_Z = [z for z in range(-2, 2) if z in DISC_ROWS[R0]]         # schmale Saeule genau hinter dem Gipfel
+for g in range(R0):
     bricks("07_screen", {(x, z): BLACK for x in SCR_X for z in PED_Z}, g)
 prev_cells = set(PED_Z); prev_j = defaultdict(set)
 for r, zs in sorted(DISC_ROWS.items()):
@@ -787,7 +838,13 @@ DISC_TOP = max(DISC_ROWS)
 # Runde Formen: Jede Zeile der oberen Haelfte ist schmaler als die darunter. Auf die freien Stufenenden
 # kommen gebogene Slopes (2 Zellen) bzw. Cheese-Slopes (1 Zelle), Gefaelle nach aussen; von vorne wird
 # der Umriss dadurch rund statt treppig. Vorn in Bildfarbe, dahinter schwarz.
-TIE_CELLS = {(29, z) for z in (-1, 0)}
+def top_row(z): return max(r for r, zs in DISC_ROWS.items() if z in zs)
+# Aufhaengung an der hinteren Traverse: Mitte + links + rechts (Statik: mindestens 3 Punkte)
+TIES = [[(29, z) for z in (-1, 0)]]
+for zc in (-9, 8):
+    pair = next([(29, z), (29, z + 1)] for z in (zc, zc - 1, zc + 1, zc - 2, zc + 2) if top_row(z) == top_row(z + 1))
+    TIES.append(pair)
+TIE_CELLS = {c for t in TIES for c in t}
 for r in sorted(DISC_ROWS):
     here, above = DISC_ROWS[r], set(DISC_ROWS.get(r + 1, []))
     exposed = [z for z in here if z not in above]
@@ -812,6 +869,7 @@ for r in sorted(DISC_ROWS):
             if rest: plates("07_screen", rest, y - PH, 0, table=TILE, studs=False)
 
 # ---------------- Ecktuerme und Traversen-Rechteck ----------------
+TRUSS_COL = BLACK                          # Tuerme, Gittertraeger und Traverse schwarz (Wunsch des Nutzers)
 TRUSS_Y = -BH * 3 - 3 * 240 - 2 * PH       # Unterkante Traverse (= Oberkante Tuerme)
 for side in {(1 if X > 0 else -1, 1 if Z > 0 else -1) for X, Z in TOWERS}:
     grp = [(X, Z) for X, Z in TOWERS if (1 if X > 0 else -1, 1 if Z > 0 else -1) == side]
@@ -823,27 +881,29 @@ for side in {(1 if X > 0 else -1, 1 if Z > 0 else -1) for X, Z in TOWERS}:
         yy -= 240
         for X, Z in grp:
             cells = {(X - 1, Z - 1), (X, Z - 1), (X - 1, Z), (X, Z)}
-            add(Part("08_traverse", "95347", DBG, X * LDU, yy, Z * LDU, 0 if X < 0 else 180, cells, yy, yy + 240))
+            add(Part("08_traverse", "95347", TRUSS_COL, X * LDU, yy, Z * LDU, 0 if X < 0 else 180, cells, yy, yy + 240))
         if k < 2:
             yy -= PH
-            plates("08_traverse", {c: DBG for c in base}, yy, 1)
+            plates("08_traverse", {c: TRUSS_COL for c in base}, yy, 1)
 assert yy == TRUSS_Y
 RING = {(i, k) for i in range(XMIN, XMAX + 1) for k in (-16, -15, 14, 15)} | \
        {(i, k) for i in (-32, -31, 29, 30, 31) for k in range(ZMIN, ZMAX + 1)}
 # Verbindung Screen-Oberkante -> hintere Traverse (haelt den Screen oben): Steine + Platten auf der Rueckwand
-TIE = [(29, z) for z in DISC_ROWS[DISC_TOP] if -1 <= z <= 0]
-gap = -BH * (DISC_TOP + 1) - TRUSS_Y
-yy = -BH * (DISC_TOP + 1)
-while gap >= BH:
-    pack("07_screen", {c: BLACK for c in TIE}, BRICK, yy - BH, BH, 0); yy -= BH; gap -= BH
-while gap >= PH:
-    plates("07_screen", {c: BLACK for c in TIE}, yy - PH, 0); yy -= PH; gap -= PH
-assert yy == TRUSS_Y and gap == 0
+TIE = sorted(TIE_CELLS)
+for tcells in TIES:
+    rt = top_row(tcells[0][1])
+    gap = -BH * (rt + 1) - TRUSS_Y
+    yy = -BH * (rt + 1)
+    while gap >= BH:
+        pack("07_screen", {c: BLACK for c in tcells}, BRICK, yy - BH, BH, 0); yy -= BH; gap -= BH
+    while gap >= PH:
+        plates("07_screen", {c: BLACK for c in tcells}, yy - PH, 0); yy -= PH; gap -= PH
+    assert yy == TRUSS_Y and gap == 0
 y = TRUSS_Y - PH
-t1 = plates("08_traverse", {c: DBG for c in RING}, y, 0)
+t1 = plates("08_traverse", {c: TRUSS_COL for c in RING}, y, 0)
 for p in t1:
     if not (p.cells & (RESERVED | set(TIE))): p.hang = True
-t2, nc = bond_layer("08_traverse", RING, t1, y - PH, DBG)
+t2, nc = bond_layer("08_traverse", RING, t1, y - PH, TRUSS_COL)
 assert nc == 1
 y -= PH
 POSTS = set()
@@ -855,10 +915,10 @@ POSTS |= {(XMIN, ZMIN), (XMIN, ZMAX), (XMAX, ZMIN), (XMAX, ZMAX)}
 for L in range(2):
     yt = y - BH * (L + 1)
     for c in POSTS:
-        add(Part("08_traverse", "3062b", DBG, ctr(c[0]), yt, ctr(c[1]), 0, {c}, yt, yt + BH))
+        add(Part("08_traverse", "3062b", TRUSS_COL, ctr(c[0]), yt, ctr(c[1]), 0, {c}, yt, yt + BH))
 y -= 2 * BH
-t3 = plates("08_traverse", {c: DBG for c in RING}, y - PH, 1)
-t4, nc = bond_layer("08_traverse", RING, t3, y - 2 * PH, DBG)
+t3 = plates("08_traverse", {c: TRUSS_COL for c in RING}, y - PH, 1)
+t4, nc = bond_layer("08_traverse", RING, t3, y - 2 * PH, TRUSS_COL)
 TRUSS_TOP = y - 2 * PH
 
 
@@ -880,7 +940,7 @@ for ax, az in ARRAYS:
         if ok: break
         J_OFF = J_OFF[:3] + J_OFF[4:]
     yy = TRUSS_Y
-    add(Part("09_line_arrays", "3022", DBG, ax * LDU, yy, az * LDU, 0, {(ax + a, az + b) for a in (-1, 0) for b in (-1, 0)},
+    add(Part("09_line_arrays", "3020", DBG, ax * LDU, yy, az * LDU, 0, {(ax + a, az + b) for a in (-2, -1, 0, 1) for b in (-1, 0)},
              yy, yy + PH, hang=True))
     yy += PH
     for k, off in enumerate(J_OFF):
@@ -912,16 +972,42 @@ for hx, hz in HEADS:
         add(Part("10_licht", name, col, (hx + 1) * LDU, yy, (hz + 1) * LDU, 0, cells, yy, yy + h, hang=True))
         yy += h
 
+# ---------------- Figuren (Baugruppe 11_figuren, laesst sich weglassen) ----------------
+# Aus offiziellen Teilen, rein unbunt: Kanye ganz in Schwarz mit Kopf in Flat Silver als Kristallmaske,
+# Taenzerinnen ganz in Weiss mit Kapuze als Schleier, Jesus im weissen Gewand wie eine Marmorstatue.
+# Standard-Minifig-Masse (Ursprung = Standflaeche, Blick nach -z): Beine y -40, Torso -72, Kopf/Haare -96.
+FLAT_SILVER, LBG_ = 179, LBG
+FIGURES = {
+    "kanye": [("73200b-f1", BLACK, -40), ("76382", BLACK, -72), ("3626c", FLAT_SILVER, -96)],
+    "taenzerin": [("73200b-f1", WHITE, -40), ("76382", WHITE, -72), ("3626c", WHITE, -96), ("30381", WHITE, -96)],
+    "jesus": [("73200b-f1", WHITE, -40), ("76382", WHITE, -72), ("15501", LBG_, -72), ("3626c", WHITE, -96),
+              ("20595", LBG_, -96)],
+}
+FIG_H = 112                                                     # Hoehe bis Haar-/Kapuzenoberkante (LDU)
+N_FIGS = Counter()
+for kind, a, b, out in FIG_STANDS:
+    assert STAND_Y.get(a) is not None and STAND_Y.get(a) == STAND_Y.get(b), (kind, a, b)
+    ys = STAND_Y[a]; rot = ROT_OUT[out]; R = RM[rot]
+    X, Z = (ctr(a[0]) + ctr(b[0])) / 2, (ctr(a[1]) + ctr(b[1])) / 2
+    for name, col, oy in FIGURES[kind]:
+        wx, wy, wz = X + R[0][1] * oy, ys + R[1][1] * oy, Z + R[2][1] * oy
+        if name.startswith("73200"):                          # Beine tragen die Figur: Kollisions-/Verbindungsproxy
+            add(Part("11_figuren", name, col, wx, wy, wz, rot, {a, b}, ys - FIG_H, ys, studs=False))
+        else:
+            add(Part("11_figuren", name, col, wx, wy, wz, rot, set(), wy, wy, studs=False))
+    N_FIGS[kind] += 1
+print("Figuren:", dict(N_FIGS))
+
 # Grundplatten
 for sx in (-1, 1):
     cells = {(i, k) for i in (range(0, 32) if sx > 0 else range(-32, 0)) for k in range(-16, 16)}
     add(Part("01_baseplates", "3811", BLACK, sx * 320, 0, 0, 0, cells, 0, 4, True))
 
 TITLES = {"01_baseplates": "Grundplatten (2x 32x32)", "02_podest": "Buehnenpodest", "03_berg": "Mount Yeezus",
-          "04_laufsteg": "Laufsteg mit Rampe", "05_lower_stage": "Lower Stage (Felsplateau)",
+          "04_laufsteg": "Laufsteg mit Rampe", "05_lower_stage": "Center Stage (Keil)",
           "06_wendelweg": "Wendelweg (Spiralpfad zum Gipfel)",
           "07_screen": "Runder Screen (hinter dem Berg)", "08_traverse": "Ecktuerme und Traversen-Rechteck", "09_line_arrays": "Line-Arrays",
-          "10_licht": "Moving Heads"}
+          "10_licht": "Moving Heads", "11_figuren": "Figuren (Kanye, Taenzerinnen, Jesus)"}
 
 
 # ---------------- Checks ----------------

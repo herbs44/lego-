@@ -1,7 +1,9 @@
 """
 Travis Scott – Circus Maximus Tour (UTOPIA) – LEGO MOC Generator
-Arena-lange Buehne als schwarze Fels-Spalte durch die Halle (in-the-round), Plattformen und Boegen,
-ovaler 360-Grad-Videoring, fliegende Koepfe, PA-Haenge, Traversen-Raster. Massstab: 2 Baseplates 32x32.
+Langer, flacher Fels-Pfad durch die Arena (in-the-round) nach den Buehnenentwuerfen von Elsa Hanneke: grauer
+Stein mit Felsgraten, runde Steinkoepfe mit Cartoon-Gesichtern (Kulleraugen, Nase, Grinsen, Ohren) zum Publikum,
+hoher Felsblock mit Durchgang und Gesicht, Pyro, hoher ovaler 360-Grad-Videoring mit Feuerwand und Lampenreihe,
+PA-Haenge, Traversen-Raster. Massstab: Minifig, 2 Baseplates 48x48.
 Pipeline: Hoehenfeld -> Schale + Stuetz-Propagation -> Slopes an Stufenkanten -> Packing -> Checks -> MPD/BOM/XML
 """
 import math, random, os, sys
@@ -251,7 +253,11 @@ BLOCK_X = (-42, -32)                       # hoher Felsblock
 BLOCK_H = 18
 BLOCK_CX = (BLOCK_X[0] + BLOCK_X[1] + 1) / 2
 WALK_HW = 2.6                              # halbe Wegbreite (6 Zellen)
-BOULDERS = [(float(x), 1 if i % 2 else -1) for i, x in enumerate(range(-27, 40, 5))]   # Steinkoepfe (x, Seite), wie Skizze
+BOULDERS = []                              # alte Squircle-Findlinge -> ersetzt durch runde Steinkoepfe
+HEAD_X = [(x, 1 if i % 2 else -1) for i, x in enumerate(range(-28, 40, 6))]   # runde Koepfe: (x links, Seite), Grundriss-Skizze
+PED_H = DECK + 1                           # Sockel der Koepfe: 1 Stein ueber dem Weg
+# Felsgrate ("faux-volcanic ridges"): hoehere Kaemme zwischen den Koepfen, Aussichtspunkte fuer den Performer
+RIDGES = [(-20, -1, 2.6, 4.5), (4, -1, 2.6, 5.5), (28, -1, 2.4, 4.0), (-14, 1, 2.6, 4.0), (10, 1, 2.6, 5.0), (34, 1, 2.2, 3.5)]
 
 
 def zc(x):
@@ -290,6 +296,10 @@ def stage_f(p):
         dn = d / W
         return BLOCK_H - (0.0 if dn < 0.45 else 30.0 * (dn - 0.45) ** 2) + 1.2 * (vnoise(x, z, 2.0, 5) - 0.5)
     h = DECK + 0.6 + 2.2 * vnoise(x, z, 3.9, 3) + 1.0 * vnoise(x, z, 1.9, 4)
+    for rx, side, ln, hh in RIDGES:
+        rz = zc(rx) + side * (WALK_HW + 2.8)
+        e = ((x - rx) / ln) ** 2 + ((z - rz) / 1.9) ** 2
+        if e < 1: h = max(h, DECK + 1 + hh * math.sqrt(1 - e) + 0.6 * (vnoise(x, z, 1.3, 6) - 0.5))
     return max(h, b)
 
 
@@ -311,6 +321,50 @@ for k in range(1, DECK):                                           # Treppen zum
 # Oberseite des Blocks flach (Performer-Plattform wie auf dem Stadionfoto)
 PLAT_CELLS = {c for c in HF if MAT[c] == "fels" and in_block(c[0] + 0.5) and abs(c[1] + 0.5 - zc(c[0] + 0.5)) < 4.2}
 for c in PLAT_CELLS: HF[c] = BLOCK_H
+# ---------------- Sockel fuer die runden Steinkoepfe ----------------
+HEADS_R, HEAD_CELLS, HEAD_NEAR, HEAD_FRONT = [], set(), set(), set()   # (x links, z kleinste Reihe, Blickrichtung)
+for hx, side in HEAD_X:
+    zi = int(math.floor(zc(hx + 2.0) + side * (WALK_HW + 0.9)))
+    rows = [zi + side * k for k in range(4)]
+    cells = {(x, z) for x in range(hx, hx + 4) for z in rows}
+    while any(MAT.get(c) == "weg" for c in cells):
+        rows = [r + side for r in rows]; cells = {(x, z) for x in range(hx, hx + 4) for z in rows}
+    if any(c in RESERVED or not (XMIN <= c[0] <= XMAX and ZMIN + 1 <= c[1] <= ZMAX - 1) for c in cells): continue
+    for c in cells: HF[c], MAT[c] = PED_H, "fels"
+    front = rows[-1]
+    for x in range(hx - 1, hx + 5):                    # vor dem Gesicht: Fels unter Sockelhoehe
+        for k in range(1, 7):
+            c = (x, front + side * k)
+            if MAT.get(c) == "fels": HF[c] = min(HF[c], PED_H - 1)
+    for z in rows:                                     # neben den Ohren: Fels darunter, Slopes laufen nicht hinein
+        for x, cap in ((hx - 1, PED_H - 1), (hx + 4, PED_H - 1), (hx - 2, PED_H), (hx + 5, PED_H)):
+            if MAT.get((x, z)) == "fels": HF[(x, z)] = min(HF[(x, z)], cap)
+    z0 = min(rows)
+    HEADS_R.append((hx, z0, (0, side)))
+    HEAD_CELLS |= cells
+    HEAD_NEAR |= {(x, z) for x in range(hx - 1, hx + 5) for z in range(z0 - 1, z0 + 5)}
+    HEAD_FRONT |= {(x, front + side * k) for x in range(hx - 1, hx + 5) for k in range(1, 4)}
+LIFT = None
+for x0 in (6, 7, 8, 5, 9, 4, 10, 11, 3):
+    z0 = int(round(zc(x0 + 1.0) - 1.0))
+    cs = {(x0 + a, z0 + b) for a in (0, 1) for b in (0, 1)}
+    ring = {(x0 + a, z0 + b) for a in range(-1, 3) for b in range(-1, 3)} - cs
+    if all(MAT.get(c) == "weg" and HF[c] == DECK for c in cs) and all(MAT.get(c) == "weg" for c in ring):
+        LIFT = (x0, z0); break
+assert LIFT, "kein Platz fuer den Lift"
+LIFT_CELLS = {(LIFT[0] + a, LIFT[1] + b) for a in (0, 1) for b in (0, 1)}
+for c in LIFT_CELLS: del HF[c], MAT[c]
+STAIR_CELLS = set()
+for rx, side, ln, hh in RIDGES:
+    for x in (int(math.floor(rx)) - 1, int(math.floor(rx))):
+        z = int(math.floor(zc(x + 0.5)))
+        while MAT.get((x, z)) == "weg": z += side
+        for k in range(12):
+            c = (x, z + side * k)
+            if MAT.get(c) != "fels" or c in HEAD_NEAR: break
+            target = DECK + 1 + k
+            if HF[c] <= target: break
+            HF[c] = target; STAIR_CELLS.add(c)
 TUNNEL = sorted(c for c in HF if MAT[c] == "weg" and in_block(c[0] + 0.5))
 GMAX = max(HF.values())
 S = [{c for c, h in HF.items() if h > g} for g in range(GMAX + 1)]
@@ -319,12 +373,12 @@ S = [{c for c, h in HF.items() if h > g} for g in range(GMAX + 1)]
 LIPS, _used = [], set()
 for c in sorted(HF):
     if MAT[c] != "fels" or HF[c] < 3 or c in PLAT_CELLS: continue
-    if in_block(c[0] + 0.5) or boulder(c[0] + 0.5, c[1] + 0.5) > 0: continue       # Gesichter frei halten
+    if in_block(c[0] + 0.5) or boulder(c[0] + 0.5, c[1] + 0.5) > 0 or c in HEAD_NEAR or c in STAIR_CELLS: continue
     g = HF[c] - 1
     if c not in S[g - 1] or vnoise(c[0] + 0.5, c[1] + 0.5, 2.2, 9) < 0.55: continue
     for d in DIRS:
         o = (c[0] + d[0], c[1] + d[1])
-        if o in HF or o in RESERVED or o in _used or not (XMIN <= o[0] <= XMAX and ZMIN <= o[1] <= ZMAX): continue
+        if o in HF or o in RESERVED or o in _used or o in HEAD_NEAR or not (XMIN <= o[0] <= XMAX and ZMIN <= o[1] <= ZMAX): continue
         if any((o[0] + a, o[1] + b) in HF and MAT[(o[0] + a, o[1] + b)] == "weg" for a, b in N8): continue
         LIPS.append((c, o, d, g)); _used.add(o); break
 for (c, o, d, g) in LIPS:
@@ -348,13 +402,13 @@ def rock_color(c, top=False, g=None):
     p = (c[0] + 0.5, c[1] + 0.5)
     if top:
         v = vnoise(p[0], p[1], 2.4, 1)
-        return LBG if v > 0.86 else DBG if v > 0.42 else BLACK
+        return LBG if v > 0.7 else DBG if v > 0.22 else BLACK
     gx = stage_f((p[0] + 0.5, p[1])) - stage_f((p[0] - 0.5, p[1])); gz = stage_f((p[0], p[1] + 0.5)) - stage_f((p[0], p[1] - 0.5))
     gx, gz = max(-2.0, min(2.0, gx)), max(-2.0, min(2.0, gz))    # senkrechte Waende nicht ins Schwarze kippen
     n = (-gx, 1.0, -gz); L = math.sqrt(sum(v * v for v in n))
     shade = sum(a * b for a, b in zip(n, SUN)) / L
-    shade += 0.35 * (vnoise(p[0], p[1] + (g or 0) * 0.7, 1.8, 7) - 0.5)
-    return LBG if shade > 0.82 else DBG if shade > 0.08 else BLACK
+    shade += 0.4 * (vnoise(p[0] * 1.3, p[1] * 1.3 + (g or 0) * 0.12, 1.4, 7) - 0.5)   # senkrechte Streifen (Saeulen)
+    return LBG if shade > 0.9 else DBG if shade > -0.1 else BLACK
 
 
 ROCK = ("fels",)
@@ -445,22 +499,29 @@ for side in (-1, 1):
     eyes = [outer_cell(x, side) for x in (-39, -35)]
     mouth = [outer_cell(x, side) for x in (-38, -37)]
     if None in eyes + mouth or len({c[1] for c in eyes + mouth}) != 1: continue
-    if all(free_face(c, 13, d) for c in eyes) and all(free_face(c, 9, d) for c in mouth):
-        for c in eyes: EYES.append((c, 13, d, LBG)); replaced.add((c, 13))
-        MOUTHS.append((tuple(mouth), 9, d)); replaced |= {(c, 9) for c in mouth}
-# Findlinge: zwei Augen zur Hallenseite
-SMOUTHS = []                              # Findlings-Muender 1x1: Stein mit Seitennoppe + schwarze Fliese
-for bx, side in BOULDERS:
-    d = (0, side)
-    xm = int(math.floor(bx))
-    cand = [outer_cell(x, side) for x in (xm - 1, xm + 1)]
-    mid = outer_cell(xm, side)
-    if None in cand or mid is None: continue
-    g = min(HF[c] for c in cand + [mid]) - 3
-    if g >= DECK + 2 and all(free_face(c, g, d) for c in cand):
-        for c in cand: EYES.append((c, g, d, LBG)); replaced.add((c, g))
-        if cand[0][1] == cand[1][1] == mid[1] and free_face(mid, g - 2, d):
-            SMOUTHS.append((mid, g - 2, d)); replaced.add((mid, g - 2))
+    ge = min(HF[c] for c in eyes) - 3; gm = ge - 4             # Lagen relativ zur Blockkante
+    if all(free_face(c, ge, d) for c in eyes) and all(free_face(c, gm, d) for c in mouth):
+        for c in eyes: EYES.append((c, ge, d, LBG)); replaced.add((c, ge))
+        MOUTHS.append((tuple(mouth), gm, d)); replaced |= {(c, gm) for c in mouth}
+# Reliefgesichter in den Aussenwaenden ("faces cut into stone"): Augen = Headlight-Steine (gemeisselte Hoehlen
+# mit Noppe als Pupille), Nase = 45-Grad-Slope, Mund = schwarze Fliese auf Stein mit Seitennoppe
+SMOUTHS, RELIEF = [], []
+for side in (-1, 1):
+    d = (0, side); last = -99
+    for x0 in range(SX0 + 10, SX1 - 3):
+        if x0 - last < 6: continue
+        cs = [outer_cell(x0 + k, side) for k in range(3)]
+        if None in cs or len({c[1] for c in cs}) != 1: continue
+        if any(c in HEAD_NEAR or in_block(c[0] + 0.5) for c in cs): continue
+        g = min(HF[c] for c in cs) - 1
+        if g < 3: continue
+        e1, m, e2 = cs
+        n = (m[0] + d[0], m[1] + d[1])
+        if not (free_face(e1, g, d) and free_face(e2, g, d) and free_face(m, g - 2, d)): continue
+        if not (m in S[g - 1] and (m, g - 1) not in replaced and n not in HF and n not in RESERVED): continue
+        EYES.append((e1, g, d, None)); EYES.append((e2, g, d, None)); replaced |= {(e1, g), (e2, g)}
+        SMOUTHS.append((m, g - 2, d)); replaced.add((m, g - 2))
+        RELIEF.append((x0, side)); last = x0
 # Nasen (Osterinsel-Koepfe): 45-Grad-Slope mittig unter den Augen, kragt 1 Noppe aus der Wand
 NOSES = []
 for i in range(0, len(EYES) - 1, 2):
@@ -480,16 +541,17 @@ for (c, o, d, g) in LIPS:
 for g in range(0, GMAX + 1):
     for c in sorted(S[g]):
         if MAT[c] not in SLOPE_OK or (c, g) in replaced or c not in solid[g] or c in PLAT_CELLS \
-                or c in PILLAR_CELLS: continue
+                or c in PILLAR_CELLS or c in HEAD_CELLS or c in STAIR_CELLS: continue
         for d in grad_dirs(c):
             n = (c[0] + d[0], c[1] + d[1])
             if n in S[g]: continue
             below = S[g - 1] if g > 0 else set(GRID)
-            if n not in below or (n, g) in covered or MAT.get(n) == "weg" or n in PILLAR_CELLS or n in LIP_O: continue
+            if n not in below or (n, g) in covered or MAT.get(n) == "weg" or n in PILLAR_CELLS or n in LIP_O or n in HEAD_CELLS or n in STAIR_CELLS: continue
             if any((q, L) in replaced for q in (c, n) for L in range(g, g + 3)): continue
             run, q = [], n
             while q in below and q not in S[g] and (q, g) not in covered and len(run) < 3 and q not in RESERVED \
-                    and MAT.get(q) != "weg" and q not in PILLAR_CELLS and q not in LIP_O and XMIN <= q[0] <= XMAX and ZMIN <= q[1] <= ZMAX:
+                    and MAT.get(q) != "weg" and q not in PILLAR_CELLS and q not in LIP_O and q not in HEAD_CELLS and q not in STAIR_CELLS \
+                    and XMIN <= q[0] <= XMAX and ZMIN <= q[1] <= ZMAX:
                 run.append(q); q = (q[0] + d[0], q[1] + d[1])
             if not run: continue
             if g == 0: run = run[:1]
@@ -542,10 +604,20 @@ for (name, c, d, g, h, cells) in SLOPES:
     add(Part("02_felsen", name, rock_color(c, g=g), ctr(c[0]), y, ctr(c[1]), ROT_OUT[d], cells, y, y + BH * h,
              studs=True, studcells={c}))
 
+# Textur: senkrechte Rillen wie gebrochene Basaltsaeulen - sichtbare Steine 1x2 werden stellenweise zu 2877
+TEX = 0
+for p_ in parts:
+    if p_.sub not in ("02_felsen", "05_block") or p_.name != "3004" or p_.color not in (DBG, LBG): continue
+    g_ = int(round(-p_.ytop / BH)) - 1
+    xs_ = {c[0] for c in p_.cells}
+    dirs_ = [(0, 1), (0, -1)] if len(xs_) == 2 else [(1, 0), (-1, 0)]
+    if not any(all((c[0] + d[0], c[1] + d[1]) not in S[g_] for c in p_.cells) for d in dirs_): continue
+    if vnoise(p_.x / LDU, p_.z / LDU + g_ * 0.7, 1.6, 21) > 0.55: p_.name = "2877"; TEX += 1
+
 # Pyro-Punkte: alle 5 Noppen abwechselnd links/rechts auf der Felskante am Weg, dazu vorne auf dem Block
 PYRO = []
 def pyro_ok(c):
-    if MAT.get(c) != "fels" or c in PLAT_CELLS or c in LIP_O: return None
+    if MAT.get(c) != "fels" or c in PLAT_CELLS or c in LIP_O or c in HEAD_NEAR or c in STAIR_CELLS: return None
     g = HF[c] - 1
     if (c, g) in replaced or (c, g + 1) in covered or c not in solid[g]: return None
     if g + 1 <= GMAX and c in S[g + 1]: return None
@@ -553,14 +625,15 @@ def pyro_ok(c):
     return g
 
 
-for i, x0 in enumerate(range(SX0 + 14, SX1 - 1, 9)):
-    side = 1 if i % 2 else -1
+for i, x0 in enumerate(range(SX0 + 13, SX1 - 1, 5)):
     done_ = False
-    for x in (x0, x0 + 1, x0 - 1):
-        for dz in (3, 4, 5, 6, 7, 8):
-            c = (x, int(math.floor(zc(x + 0.5) + side * dz)))
-            g = pyro_ok(c)
-            if g is not None: PYRO.append((c, g)); done_ = True; break
+    for side in ((1, -1) if i % 2 else (-1, 1)):
+        for x in (x0, x0 + 1, x0 - 1, x0 + 2, x0 - 2):
+            for dz in (3, 4, 5, 6, 7, 8, 9):
+                c = (x, int(math.floor(zc(x + 0.5) + side * dz)))
+                g = pyro_ok(c)
+                if g is not None: PYRO.append((c, g)); done_ = True; break
+            if done_: break
         if done_: break
 _pz = sorted(PLAT_CELLS)
 for c in [min((q for q in _pz if q[0] == BLOCK_X[0]), key=lambda q: q[1]), max((q for q in _pz if q[0] == BLOCK_X[0]), key=lambda q: q[1])]:
@@ -582,18 +655,40 @@ MON_CELLS = {q for cc, _ in MONITORS for q in cc}
 # Laufweg als Dielen im Verband
 caps = defaultdict(dict)
 PLANKS = defaultdict(set)
+BOULDERS2, SPIRES, EMBERS, ROCKSPOTS = [], [], [], []
 for g in range(GMAX + 1):
     Sa = S[g + 1] if g + 1 <= GMAX else set()
     y = -BH * (g + 1)
     open_ = sorted(c for c in S[g] - Sa if (c, g + 1) not in covered and (c, g) not in replaced and c not in PILLAR_CELLS
-                   and c not in PYRO_CELLS)
+                   and c not in PYRO_CELLS and c not in HEAD_CELLS)
     openset, done = set(open_), set()
+    # Felskugeln: runde Steine 2x2 mit Kuppel auf freien 2x2-Flaechen (Echo der Koepfe)
     for c in open_:
-        if MAT[c] != "fels" or c in PLAT_CELLS or c in done: continue
+        if g < DECK - 1 or MAT[c] != "fels" or c in PLAT_CELLS or c in HEAD_NEAR or c in HEAD_FRONT or c in done \
+                or c in STAIR_CELLS: continue
+        sq = [(c[0] + a, c[1] + b) for a in (0, 1) for b in (0, 1)]
+        if not all(q in openset and q not in done and MAT.get(q) == "fels" and q not in PLAT_CELLS and q not in HEAD_NEAR
+                   and q not in HEAD_FRONT and q not in STAIR_CELLS for q in sq): continue
+        if vnoise(c[0] + 0.5, c[1] + 0.5, 1.3, 35) < 0.5: continue
+        tall = vnoise(c[0], c[1], 2.0, 36) > 0.5
+        add(Part("02_felsen", "30151b" if tall else "30367c", rock_color(c, top=True) if rock_color(c, top=True) != BLACK else DBG,
+                 (c[0] + 1) * LDU, y - (40 if tall else BH), (c[1] + 1) * LDU, 0, set(sq), y - (40 if tall else BH), y, studs=False))
+        BOULDERS2.append(c); done |= set(sq)
+    for c in open_:                                     # Felsspitzen und Glut zuerst verteilen
+        if g < DECK - 1 or MAT[c] != "fels" or c in PLAT_CELLS or c in HEAD_NEAR or c in HEAD_FRONT or c in done \
+                or c in STAIR_CELLS: continue
+        if any(abs(c[0] - q[0]) + abs(c[1] - q[1]) < 3 for q, _ in SPIRES[-8:]): continue
+        if any(MAT.get((c[0] + a, c[1] + b)) == "weg" for a, b in DIRS) and vnoise(c[0] + 0.5, c[1] + 0.5, 1.0, 47) > 0.45\
+                and not any(abs(c[0] - q[0]) + abs(c[1] - q[1]) < 4 for q, _ in ROCKSPOTS):
+            ROCKSPOTS.append((c, g)); done.add(c); continue
+        if vnoise(c[0] + 0.5, c[1] + 0.5, 1.1, 37) > 0.62: SPIRES.append((c, g)); done.add(c); continue
+        if vnoise(c[0] + 0.5, c[1] + 0.5, 0.9, 41) > 0.76: EMBERS.append((c, g)); done.add(c)
+    for c in open_:
+        if MAT[c] != "fels" or c in PLAT_CELLS or c in done or c in STAIR_CELLS: continue
         drop = [d for d in grad_dirs(c) if (c[0] + d[0], c[1] + d[1]) not in S[g]]
         if not drop or vnoise(c[0] + 0.5, c[1] + 0.5, 2.3, 11) < 0.5: continue
         d = drop[0]; i = (c[0] - d[0], c[1] - d[1])
-        if i not in openset or i in done or MAT.get(i) != "fels" or i in PLAT_CELLS: continue
+        if i not in openset or i in done or MAT.get(i) != "fels" or i in PLAT_CELLS or i in STAIR_CELLS: continue
         add(Part("02_felsen", "11477", rock_color(c, top=True), (ctr(c[0]) + ctr(i[0])) / 2, y,
                  (ctr(c[1]) + ctr(i[1])) / 2, ROT_OUT[d], {c, i}, y - 16, y, studs=False))
         done |= {c, i}
@@ -602,6 +697,8 @@ for g in range(GMAX + 1):
         if MAT[c] == "weg":
             if c not in MON_CELLS: PLANKS[g].add(c)
             continue
+        if c in STAIR_CELLS:                                 # Stufen: glatte Fliesen wie der Weg
+            caps[(g, "03_laufweg")][c] = DBG; continue
         if c in PLAT_CELLS:
             edge = any((c[0] + a, c[1] + b) not in PLAT_CELLS for a, b in DIRS)
             caps[(g, "04_plattformen")][c] = LBG if edge else DBG; continue
@@ -611,6 +708,21 @@ for g in range(GMAX + 1):
                      {c}, y - 16, y, studs=False))
             continue
         caps[(g, "02_felsen")][c] = rock_color(c, top=True)
+for c, g in SPIRES:
+    y = -BH * (g + 1)
+    n2 = 2 if vnoise(c[0], c[1], 1.7, 38) > 0.55 else 1
+    for k in range(n2):
+        add(Part("02_felsen", "3062b", DBG if k == 0 else rock_color(c, top=True), ctr(c[0]), y - BH * (k + 1), ctr(c[1]), 0,
+                 {c}, y - BH * (k + 1), y - BH * k))
+    add(Part("02_felsen", "4589", DBG, ctr(c[0]), y - BH * (n2 + 1), ctr(c[1]), 0, {c}, y - BH * (n2 + 1), y - BH * n2,
+             studs=False))
+for c, g in ROCKSPOTS:
+    y = -BH * (g + 1)
+    add(Part("02_felsen", "3062b", BLACK, ctr(c[0]), y - BH, ctr(c[1]), 0, {c}, y - BH, y))
+    add(Part("02_felsen", "6141", TCLEAR, ctr(c[0]), y - BH - PH, ctr(c[1]), 0, {c}, y - BH - PH, y - BH))
+for c, g in EMBERS:
+    y = -BH * (g + 1)
+    add(Part("02_felsen", "98138", TORANGE, ctr(c[0]), y - PH, ctr(c[1]), 0, {c}, y - PH, y, studs=False))
 for (g, sb), cc in caps.items():
     plates(sb, cc, -BH * (g + 1) - PH, g % 2, table=TILE, studs=False)
 TILE_LEN = {1: "3070b", 2: "3069b", 3: "63864", 4: "2431", 6: "6636", 8: "4162"}
@@ -629,7 +741,9 @@ for g, cells in PLANKS.items():
                 n = min(first, len(run) - pos) if pos == 0 else min(4, len(run) - pos)
                 while n not in TILE_LEN: n -= 1
                 seg = run[pos:pos + n]; pos += n
-                add(Part("03_laufweg", TILE_LEN[n], BLACK, sum(ctr(x) for x in seg) / n, y, ctr(z), 0,
+                vv = vnoise(seg[0] + 0.5 + n * 0.3, z + 0.5, 1.2, 43)
+                pc = LBG if vv > 0.74 else BLACK if vv < 0.22 else DBG
+                add(Part("03_laufweg", TILE_LEN[n], pc, sum(ctr(x) for x in seg) / n, y, ctr(z), 0,
                          {(x, z) for x in seg}, y, y + PH, studs=False))
 
 for cc, side in MONITORS:
@@ -649,11 +763,16 @@ plates("04_plattformen", {c: DBG for c in BRIDGE}, -BH * BLOCK_H - PH, 1, table=
 # Augen und Muender
 for c, g, d, col in EYES:
     y = -BH * (g + 1); rot = ROT_OUT[d]
-    hl = add(Part("06_gesichter", "4070", rock_color(c, g=g), ctr(c[0]), y, ctr(c[1]), rot, {c}, y, y + BH))
-    tx, tz = ctr(c[0]) + d[0] * 14, ctr(c[1]) + d[1] * 14
-    o = (c[0] + d[0], c[1] + d[1])
-    tile = add(Part("06_gesichter", "98138", col, tx, y + 10, tz, 0, {o}, y, y + 20, studs=False, hang=True,
-                    extra=[f"1 {col} {fmt(tx)} {fmt(y + 10)} {fmt(tz)} {mat_str(rot)} 98138.dat"]))
+    if col is None:                       # Reliefgesicht: gemeisselte Augenhoehle
+        add(Part("06_gesichter", "4070", rock_color(c, g=g), ctr(c[0]), y, ctr(c[1]), rot, {c}, y, y + BH))
+        continue
+    # Block: grosse, flache Augenscheiben (Rundfliese 2x2 dunkelgrau) mittig auf der Seitennoppe eines Steins 1x1
+    hl = add(Part("06_gesichter", "87087", rock_color(c, g=g), ctr(c[0]), y, ctr(c[1]), rot, {c}, y, y + BH))
+    tx, tz = ctr(c[0]) + d[0] * 18, ctr(c[1]) + d[1] * 18
+    t_ = (abs(d[1]), abs(d[0]))
+    oc = {(c[0] + d[0] + k * t_[0], c[1] + d[1] + k * t_[1]) for k in (-1, 0, 1)}
+    tile = add(Part("06_gesichter", "14769", BLACK, tx, y + 10, tz, 0, oc, y - 10, y + 30, studs=False, hang=True,
+                    extra=[f"1 {BLACK} {fmt(tx)} {fmt(y + 10)} {fmt(tz)} {mat_str(rot)} 14769.dat"]))
     SNOT_LINKS.append((tile, hl))
 for c, g, d in NOSES:
     y = -BH * (g + 1); n = (c[0] + d[0], c[1] + d[1])
@@ -675,6 +794,79 @@ for cells, g, d in MOUTHS:
     grille = add(Part("06_gesichter", "2412b", BLACK, gx, y + 10, gz, 0, {(c[0] + d[0], c[1] + d[1]) for c in cells},
                       y, y + 20, studs=False, hang=True, extra=[f"1 {BLACK} {fmt(gx)} {fmt(y + 10)} {fmt(gz)} {mat_str(rot)} 2412b.dat"]))
     SNOT_LINKS.append((grille, front))
+
+# ---------------- Runde Steinkoepfe (Osterinsel trifft Cartoon) ----------------
+# 4x4 Noppen, 3 Steine + Platte + Kuppel (120 LDU): runde Ecken (Rundstein 1x1), vorne SNOT-Gesicht:
+# Mund = schwarze Fliese 1x2, Nase = Cheese-Slope 1x2 (kragt nach unten aus), Augen = runde Fliesen 1x1 schwarz,
+# Ohren = Rundplatten 2x2 auf Steinen mit Seitennoppe, oben Kuppel 4x4.
+def m_nose(d):
+    dx, dz = d
+    return [[dz, -dx, 0], [0, 0, 1], [-dx, -dz, 0]]
+
+
+def snot(sub, name, col, x, y, z, M, cells, ytop, ybot, holder):
+    e = add(Part(sub, name, col, x, y, z, 0, cells, ytop, ybot, studs=False, hang=True,
+                 extra=[f"1 {col} {fmt(x)} {fmt(y)} {fmt(z)} " + " ".join(fmt(round(M[i][j], 4)) for i in range(3) for j in range(3)) + f" {name}.dat"]))
+    SNOT_LINKS.append((e, holder))
+    return e
+
+
+def front_mat(d):
+    R = RM[ROT_OUT[d]]
+    return [[sum(R[i][k] * M_FRONT[k][j] for k in range(3)) for j in range(3)] for i in range(3)]
+
+
+HEADCOL = LBG
+for hx, z0, d in HEADS_R:
+    def cell(u, v, hx=hx, z0=z0, d=d):
+        return (hx + u, z0 + v) if d[1] < 0 else (hx + 3 - u, z0 + 3 - v)
+    udir = (1, 0) if d[1] < 0 else (-1, 0)
+    yb = -BH * PED_H
+    def brick(name, uv, ytop, rot=None, col=HEADCOL):
+        cs = [cell(u, v) for u, v in uv]
+        cx = sum(ctr(c[0]) for c in cs) / len(cs); cz = sum(ctr(c[1]) for c in cs) / len(cs)
+        if rot is None: rot = 0 if len({c[0] for c in cs}) >= len({c[1] for c in cs}) else 90
+        return add(Part("09_koepfe", name, col, cx, ytop, cz, rot, set(cs), ytop, ytop + BH))
+    def mid(cs): return (sum(ctr(c[0]) for c in cs) / len(cs), sum(ctr(c[1]) for c in cs) / len(cs))
+    fr = [cell(1, 0), cell(2, 0)]
+    fo = {(c[0] + d[0], c[1] + d[1]) for c in fr}
+    for L in range(3):
+        yt = yb - BH * (L + 1)
+        for uv in ((0, 3), (3, 3)): brick("3062b", [uv], yt)
+        brick("3004", [(1, 3), (2, 3)], yt)
+        if L == 1:                                        # Ohren-Lage
+            brick("3003", [(1, 1), (2, 1), (1, 2), (2, 2)], yt)
+            brick("3005", [(0, 2)], yt); brick("3005", [(3, 2)], yt)
+            for u, sgn in ((0, -1), (3, 1)):
+                sd = (udir[0] * sgn, udir[1] * sgn)
+                h = brick("87087", [(u, 1)], yt, rot=ROT_OUT[sd])
+                c = cell(u, 1)
+                ex, ez = ctr(c[0]) + sd[0] * 18, ctr(c[1]) + sd[1] * 18
+                oc = {(cell(u, v)[0] + sd[0], cell(u, v)[1] + sd[1]) for v in (0, 1, 2)}
+                snot("09_koepfe", "14769", HEADCOL, ex, yt + 10, ez, front_mat(sd), oc, yt - 10, yt + 30, h)
+        else:
+            brick("3001", [(u, v) for u in range(4) for v in (1, 2)], yt)
+        if L == 0:                                        # breites Grinsen: Fliese 1x4 schwarz
+            row = [cell(u, 0) for u in range(4)]
+            h = brick("30414", [(u, 0) for u in range(4)], yt, rot=ROT_OUT[d])
+            mx, mz = mid(row)
+            snot("09_koepfe", "2431", DBG, mx + d[0] * 18, yt + 10, mz + d[1] * 18, front_mat(d),
+                 {(c[0] + d[0], c[1] + d[1]) for c in row}, yt, yt + 20, h)
+        else:                                             # runde Ecken, Mitte: Nase / Augen
+            brick("3005", [(0, 0)], yt); brick("3005", [(3, 0)], yt)
+            h = brick("11211", [(1, 0), (2, 0)], yt, rot=ROT_OUT[d])
+            mx, mz = mid(fr)
+            if L == 1:
+                snot("09_koepfe", "85984", HEADCOL, mx + d[0] * 10, yt + 10, mz + d[1] * 10, m_nose(d), fo, yt, yt + 20, h)
+            else:                                         # Augen: Headlight-Steine = gemeisselte Hoehlen
+                parts.remove(h)
+                for uv in ((1, 0), (2, 0)): brick("4070", [uv], yt, rot=ROT_OUT[d])
+    yt = yb - 3 * BH - PH
+    allc = {cell(u, v) for u in range(4) for v in range(4)}
+    cx, cz = mid(list(allc))
+    add(Part("09_koepfe", "3031", HEADCOL, cx, yt, cz, 0, allc, yt, yt + PH))
+    dome = "30208" if len(HEADS_R) and (hx // 6) % 3 == 0 else "86500"   # jede dritte Kuppel facettiert (Risse)
+    add(Part("09_koepfe", dome, HEADCOL, cx, yt, cz, ROT_OUT[d], allc, yt - 40, yt, studs=False))
 
 # ---------------- Pyro-Flammen ----------------
 # Pyro-Einheit: runder Stein 1x1 schwarz (Duese), darin steckt die Flamme 7L mit Stange (85959) in der
@@ -721,7 +913,7 @@ for x in range(SX0 + 5, SX1 - 3, 9):
 
 # ---------------- Uplights: rote Bodenstrahler am Felsfuss ----------------
 UPLIGHTS = []
-for i, x in enumerate(range(SX0 + 2, SX1, 4)):
+for i, x in enumerate(range(SX0 + 2, SX1, 3)):
     side = 1 if i % 2 else -1
     for dz in range(3, 14):
         c = (x, int(math.floor(zc(x + 0.5) + side * dz)))
@@ -729,9 +921,34 @@ for i, x in enumerate(range(SX0 + 2, SX1, 4)):
         if c in RESERVED or c in FLOOR_USED or any((c, L) in covered for L in range(4)) \
                 or not (XMIN <= c[0] <= XMAX and ZMIN <= c[1] <= ZMAX): continue
         add(Part("13_boden", "6141", BLACK, ctr(c[0]), -PH, ctr(c[1]), 0, {c}, -PH, 0))
-        add(Part("13_boden", "98138", TRED, ctr(c[0]), -2 * PH, ctr(c[1]), 0, {c}, -2 * PH, -PH, studs=False))
+        add(Part("13_boden", "98138", TCLEAR, ctr(c[0]), -2 * PH, ctr(c[1]), 0, {c}, -2 * PH, -PH, studs=False))
         FLOOR_USED.add(c); UPLIGHTS.append(c)
         break
+
+# ---------------- Lift: Hubsaeule im Schacht, oben eine schwarze Klappe buendig mit dem Weg ----------------
+SUB_NOTES = defaultdict(list)
+for g in range(DECK):
+    add(Part("16_lift", "3003", BLACK, (LIFT[0] + 1) * LDU, -BH * (g + 1), (LIFT[1] + 1) * LDU, 0, LIFT_CELLS,
+             -BH * (g + 1), -BH * g))
+add(Part("16_lift", "3068b", BLACK, (LIFT[0] + 1) * LDU, -BH * DECK - PH, (LIFT[1] + 1) * LDU, 0, LIFT_CELLS,
+         -BH * DECK - PH, -BH * DECK, studs=False))
+SUB_NOTES["16_lift"].append(f"0 // LIFT {fmt((LIFT[0] + 1) * LDU)} {fmt(-BH * DECK - PH)} {fmt((LIFT[1] + 1) * LDU)}")
+
+# ---------------- Geroell am Felsfuss ----------------
+RUBBLE = []
+for c in sorted(GRID):
+    if c in HF or c in RESERVED or c in FLOOR_USED or any((c, L) in covered for L in range(3)): continue
+    nb = [(c[0] + a, c[1] + b) for a, b in N8]
+    if not any(q in HF and MAT[q] == "fels" for q in nb) or any(MAT.get(q) == "weg" for q in nb): continue
+    v = vnoise(c[0] + 0.5, c[1] + 0.5, 0.8, 49)
+    if v < 0.55: continue
+    col = DBG if v < 0.8 else (LBG if v < 0.9 else BLACK)
+    if v > 0.7:
+        d = next((dd for dd in DIRS if (c[0] - dd[0], c[1] - dd[1]) in HF), DIRS[0])
+        add(Part("13_boden", "54200", col, ctr(c[0]), 0, ctr(c[1]), ROT_OUT[d], {c}, -16, 0, studs=False))
+    else:
+        add(Part("13_boden", "6141", col, ctr(c[0]), -PH, ctr(c[1]), 0, {c}, -PH, 0))
+    RUBBLE.append(c)
 
 # ---------------- Tuerme und Traversen-Raster ----------------
 TRUSS_Y = -BH * 3 - 4 * 240 - 3 * PH       # Unterkante Traverse (= Oberkante Tuerme)
@@ -742,10 +959,10 @@ for X, Z in TOWERS:
     yy = -BH * 3
     for k in range(4):
         yy -= 240
-        add(Part("08_traverse", "95347", DBG, X * LDU, yy, Z * LDU, 0 if Z < 0 else 180, base, yy, yy + 240))
+        add(Part("08_traverse", "95347", BLACK, X * LDU, yy, Z * LDU, 0 if Z < 0 else 180, base, yy, yy + 240))
         if k < 3:
             yy -= PH
-            plates("08_traverse", {c: DBG for c in base}, yy, 1)
+            plates("08_traverse", {c: BLACK for c in base}, yy, 1)
 assert yy == TRUSS_Y
 CROSS = [(-33, -32), (-17, -16), (-1, 0), (15, 16), (31, 32)]           # Quertraversen (x-Baender)
 RING = {(i, k) for i in range(XMIN, XMAX + 1) for k in (-24, -23, 22, 23)} | \
@@ -754,7 +971,7 @@ RING = {(i, k) for i in range(XMIN, XMAX + 1) for k in (-24, -23, 22, 23)} | \
 
 # ---------------- Ovaler Videoring (360 Grad) ----------------
 RA, RB = 40.5, 19.0                          # Halbachsen (Noppen)
-RING_BOT, RING_H = 32, 5                     # Unterkante (Steine), Hoehe
+RING_BOT, RING_H = 31, 8                     # Unterkante (Steine), Hoehe: hohes Band wie auf den Fotos
 _ell = {c for c in GRID if ((c[0] + 0.5) / RA) ** 2 + ((c[1] + 0.5) / RB) ** 2 <= 1.0}
 _outer = boundary8(_ell)
 SCREEN = _outer | boundary8(_ell - _outer)   # Ring 2 Noppen dick (Verband ueber die Treppenecken)
@@ -768,9 +985,11 @@ for _ in range(3):                           # nur diagonal verbundene Stellen m
 
 def screen_color(c, r):
     """Bildinhalt: Feuerwand (UTOPIA-Visuals) - unten gelb/orange, nach oben rot bis schwarz; Rahmen dunkelgrau"""
-    if r in (0, RING_H - 1): return DBG
+    if r in (0, RING_H - 1): return BLACK
     a = math.atan2((c[1] + 0.5) / RB, (c[0] + 0.5) / RA)
-    heat = vnoise(a * 14.0, 0.5, 1.0, 12) * 1.1 - (r - 1) * 0.28 + 0.15
+    t = (r - 1) / (RING_H - 3)                                   # 0 unten .. 1 oben
+    flame = 0.6 * vnoise(a * 16.0, 0.5, 1.0, 12) + 0.4 * vnoise(a * 41.0, 2.5, 1.0, 13)   # Flammenzungen
+    heat = 1.25 * flame - 1.05 * t + 0.3
     return YELLOW if heat > 0.85 else BLORANGE if heat > 0.65 else ORANGE if heat > 0.45 else RED if heat > 0.25 \
         else DKRED if heat > 0.08 else BLACK
 
@@ -788,6 +1007,14 @@ for r in range(RING_H):
         for p in bl: p.hang = True
         yy -= PH
 RING_TOP_Y = yy
+# Lampenreihe unter dem Ring (Spots wie auf den Fotos): jede dritte Zelle der Innenseite
+RING_LAMPS = []
+for i, c in enumerate(sorted(SCREEN - _outer, key=lambda c: math.atan2((c[1] + 0.5) / RB, (c[0] + 0.5) / RA))):
+    if i % 3: continue
+    yl = -BH * RING_BOT
+    add(Part("07_videoring", "3062b", BLACK, ctr(c[0]), yl, ctr(c[1]), 0, {c}, yl, yl + BH, hang=True))
+    add(Part("07_videoring", "6141", TCLEAR, ctr(c[0]), yl + BH, ctr(c[1]), 0, {c}, yl + BH, yl + BH + PH, hang=True))
+    RING_LAMPS.append(c)
 # Aufhaengung: je Quertraverse und Seite zwei duenne Seile aus runden Steinen/Platten auf den aeusseren Ringzellen
 HANGERS = []
 for xs in CROSS:
@@ -807,10 +1034,10 @@ for c in HANGERS:
     assert yy == TRUSS_Y and gap == 0
 
 y = TRUSS_Y - PH
-t1 = plates("08_traverse", {c: DBG for c in RING}, y, 0)
+t1 = plates("08_traverse", {c: BLACK for c in RING}, y, 0)
 for p in t1:
     if not (p.cells & RESERVED): p.hang = True
-t2, nc = bond_layer("08_traverse", RING, t1, y - PH, DBG)
+t2, nc = bond_layer("08_traverse", RING, t1, y - PH, BLACK)
 assert nc == 1, nc
 y -= PH
 POSTS = set()
@@ -823,10 +1050,10 @@ POSTS |= {(XMIN, ZMIN), (XMIN, ZMAX), (XMAX, ZMIN), (XMAX, ZMAX)}
 for L in range(2):
     yt = y - BH * (L + 1)
     for c in POSTS:
-        add(Part("08_traverse", "3062b", DBG, ctr(c[0]), yt, ctr(c[1]), 0, {c}, yt, yt + BH))
+        add(Part("08_traverse", "3062b", BLACK, ctr(c[0]), yt, ctr(c[1]), 0, {c}, yt, yt + BH))
 y -= 2 * BH
-t3 = plates("08_traverse", {c: DBG for c in RING}, y - PH, 1)
-t4, nc = bond_layer("08_traverse", RING, t3, y - 2 * PH, DBG)
+t3 = plates("08_traverse", {c: BLACK for c in RING}, y - PH, 1)
+t4, nc = bond_layer("08_traverse", RING, t3, y - 2 * PH, BLACK)
 TRUSS_TOP = y - 2 * PH
 
 
@@ -925,7 +1152,7 @@ for ax, az in PA:
     fz = az if out < 0 else az + 1                                # aeussere Spalte
     bz = fz - out                                                 # innere Spalte
     yy = TRUSS_Y
-    add(Part("10_pa", "3022", DBG, ax * LDU, yy, (az + 1) * LDU, 0, {(ax + a, az + b) for a in (-1, 0) for b in (0, 1)},
+    add(Part("10_pa", "3022", BLACK, ax * LDU, yy, (az + 1) * LDU, 0, {(ax + a, az + b) for a in (-1, 0) for b in (0, 1)},
              yy, yy + PH, hang=True))
     yy += PH
     for k in range(10):
@@ -940,7 +1167,7 @@ for ax, az in PA:
         SNOT_LINKS.append((grille, front))
         yy += BH
         if k < 9:
-            add(Part("10_pa", "3022", DBG, ax * LDU, yy, (az + 1) * LDU, 0,
+            add(Part("10_pa", "3022", BLACK, ax * LDU, yy, (az + 1) * LDU, 0,
                      {(ax + a, az + b) for a in (-1, 0) for b in (0, 1)}, yy, yy + PH, hang=True))
             yy += PH
 
@@ -958,13 +1185,19 @@ def rx(deg):
 I3 = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
 
 
-def minifig(sub, cells, surf_y, rot, torso, legs, hair=None, arms=(0, 0)):
+COLORS.update({78: ("Light Nougat", 90), 84: ("Medium Nougat", 150), 92: ("Nougat", 28)})
+BL_ID.update({"73200b-f1": "970c00", "98138p07": "98138pb007"})
+NAME_OVERRIDE.update({"25412": "Minifig Hair Tousled and Sticking Out on Both Sides"})
+SKIN = (78, 84, 92, 70, 308)
+
+
+def minifig(sub, cells, surf_y, rot, torso, legs, hair=None, arms=(0, 0), head=BLACK, hairpart="3901", mic=False):
     """Minifigur auf den Noppen 'cells' (2 Zellen), Blick nach -z (lokal), arms = Hebewinkel links/rechts"""
     M = RM[rot]
     cx = sum(ctr(c[0]) for c in cells) / 2; cz = sum(ctr(c[1]) for c in cells) / 2
     P = [cx, surf_y - 72, cz]
-    comps = [("3626bp01", BLACK, (0, -24, 0), I3), ("973", torso, (0, 0, 0), I3),
-             ("3815c01", legs, (0, 32, 0), I3)]
+    comps = [("3626c", head, (0, -24, 0), I3), ("973", torso, (0, 0, 0), I3),
+             ("73200b-f1", legs, (0, 32, 0), I3)]
     for sgn, arm, a in ((-1, "3818", arms[0]), (1, "3819", arms[1])):
         A0 = [[0.985, -sgn * 0.174, 0], [sgn * 0.174, 0.985, 0], [0, 0, 1]]
         H0 = [[0.985, -sgn * 0.174, 0], [-sgn * -0.133, 0.754, -0.643], [-sgn * -0.112, 0.633, 0.766]]
@@ -972,11 +1205,15 @@ def minifig(sub, cells, surf_y, rot, torso, legs, hair=None, arms=(0, 0)):
         R = rx(a)
         rel = mv(R, [hand[i] - piv[i] for i in range(3)])
         comps.append((arm, torso, piv, mm(R, A0)))
-        comps.append(("3820", BLACK, tuple(piv[i] + rel[i] for i in range(3)), mm(R, H0)))
-    if hair is not None: comps.append(("3901", hair, (0, -24, 0), I3))
+        hp = tuple(piv[i] + rel[i] for i in range(3)); HR = mm(R, H0)
+        comps.append(("3820", head, hp, HR))
+        if mic and sgn == -1:                                    # Mikrofon im Griffloch der rechten Hand
+            o = mv(HR, (0, -6, -10))
+            comps.append(("90370", BLACK, tuple(hp[i] + o[i] for i in range(3)), HR))
+    if hair is not None: comps.append((hairpart, hair, (0, -24, 0), I3))
     for nm, col, off, Mi in comps:
         w = mv(M, off); pos = [P[0] + w[0], P[1] + w[1], P[2] + w[2]]
-        leg = nm == "3815c01"
+        leg = nm == "73200b-f1"
         add(Part(sub, nm, col, pos[0], pos[1], pos[2], rot, set(cells) if leg else set(), surf_y - 96 if leg else 0,
                  surf_y if leg else 0, studs=False,
                  extra=[f"1 {col} {fmt(pos[0])} {fmt(pos[1])} {fmt(pos[2])} {mstr(mm(M, Mi))} {nm}.dat"]))
@@ -991,16 +1228,19 @@ def remove_tiles(cells):
 
 
 # Performer oben auf dem Block, Blick den Weg entlang (+x), beide Arme oben
-pc = (int(math.floor(BLOCK_CX)) + 1, int(math.floor(zc(BLOCK_CX))))
+pc = (BLOCK_X[1] - 1, int(math.floor(zc(BLOCK_CX))))                        # vorne an der Blockkante zum Weg
 pcells = {pc, (pc[0], pc[1] + 1)}
 assert pcells <= (PLAT_CELLS | BRIDGE) and not pcells & PYRO_CELLS, pcells
 remove_tiles(pcells)
-minifig("15_performer", sorted(pcells), -BH * BLOCK_H, 90, BLACK, BLACK, hair=BLACK, arms=(-160, -160))
+SUB_NOTES["15_performer"].append(f"0 // FIGUR {fmt(sum(ctr(c[0]) for c in pcells) / 2)} {fmt(-BH * BLOCK_H)} "
+                                 f"{fmt(sum(ctr(c[1]) for c in pcells) / 2)} 90")
+minifig("15_performer", sorted(pcells), -BH * BLOCK_H, 90, BLACK, DTAN, hair=BLACK, arms=(-115, -160), head=70,
+        hairpart="25412", mic=True)        # schwarzes Shirt, helle Cargo-Shorts, wilde Haare
 
 # Fans im Innenraum rundherum, Blick zur Buehne; viele mit erhobenen Armen
-TORSOS = [BLACK]                                                  # alle Figuren komplett schwarz
-LEGS = [BLACK]
-HAIRS = [BLACK, BLACK, None]
+TORSOS = [BLACK, BLACK, BLACK, DBG, BLACK, WHITE, BLACK, 288, DBG, BLACK, 308]   # dunkle Konzert-Kleidung
+LEGS = [BLACK, BLACK, 272, DBG, BLACK, 272, BLACK]
+HAIRS = [BLACK, 308, BLACK, 70, BLACK, None]
 FANS = []
 fan_used = set()
 
@@ -1029,8 +1269,9 @@ for x in range(XMIN + 1, XMAX - 1, 3):
         if not crowd_ok(cells): continue
         u = (math.sin(x0 * 3.1 + z0 * 7.7) * 9173.3) % 1.0
         arms = (-165, -165) if u < 0.35 else ((-150, 0) if u < 0.6 else ((0, -140) if u < 0.75 else (0, 0)))
-        minifig("14_fans", cells, 0, rot, TORSOS[k % len(TORSOS)], LEGS[(k * 7) % len(LEGS)],
-                hair=HAIRS[(k * 5) % len(HAIRS)], arms=arms)
+        hsel = int(u * 1000)
+        minifig("14_fans", cells, 0, rot, TORSOS[hsel % len(TORSOS)], LEGS[(hsel // 7) % len(LEGS)],
+                hair=HAIRS[(hsel // 3) % len(HAIRS)], arms=arms, head=SKIN[(hsel // 11) % len(SKIN)])
         fan_used |= set(cells); FANS.append(cells); k += 1
 
 # Grundplatten
@@ -1038,14 +1279,15 @@ for sx in (-1, 1):
     cells = {(i, k) for i in (range(0, 48) if sx > 0 else range(-48, 0)) for k in range(-24, 24)}
     add(Part("01_baseplates", "4186", BLACK, sx * 480, 0, 0, 0, cells, 0, 4, True))
 
-TITLES = {"01_baseplates": "Grundplatten (2x 48x48)", "02_felsen": "Felswaende und Findlinge",
+TITLES = {"01_baseplates": "Grundplatten (2x 48x48)", "02_felsen": "Felswaende und Felsgrate",
           "03_laufweg": "Gewundener Laufweg", "04_plattformen": "Plattform auf dem Block",
           "05_block": "Hoher Felsblock mit Durchgang", "06_gesichter": "Gesichter (SNOT-Augen und -Muender)",
           "07_videoring": "Ovaler Videoring (360 Grad)", "08_traverse": "Tuerme und Traversen-Raster",
-          "09_koepfe": "Fliegende Koepfe", "10_pa": "PA-Haenge", "11_licht": "Moving Heads",
+          "09_koepfe": "Runde Steinkoepfe mit Gesichtern", "10_pa": "PA-Haenge", "11_licht": "Moving Heads",
           "12_pyro": "Pyro-Flammen und CO2", "13_boden": "Bodenlautsprecher, Uplights, Faesser",
-          "14_fans": "Fans (Minifiguren)", "15_performer": "Performer"}
-print("Buehne:", len(MAT), "Zellen | Ueberhaenge", len(LIPS), "| Augen", len(EYES), "Nasen", len(NOSES), "Muender", len(MOUTHS) + len(SMOUTHS),
+          "14_fans": "Fans (Minifiguren)", "15_performer": "Performer", "16_lift": "Lift im Laufweg (Hubsaeule mit Klappe)"}
+print("Buehne:", len(MAT), "Zellen | Koepfe", len(HEADS_R), "| Reliefgesichter", len(RELIEF), "| Felskugeln", len(BOULDERS2),
+      "| Spitzen", len(SPIRES), "| Glut", len(EMBERS), "| Felsspots", len(ROCKSPOTS), "| Geroell", len(RUBBLE), "| Treppenstufen", len(STAIR_CELLS), "| Lift bei", LIFT, "| Rillensteine", TEX, "| Ueberhaenge", len(LIPS), "| Augen", len(EYES), "Nasen", len(NOSES), "Muender", len(MOUTHS) + len(SMOUTHS),
       "| Videoring", len(SCREEN), "Zellen,", len(HANGERS), "Seile | Scheinwerfer", len(LIGHTS),
       "| Pyro", len(PYRO), "| Subs", len(SUBS), "| Uplights", len(UPLIGHTS), "| Monitore", len(MONITORS), "| Fans", len(FANS))
 
@@ -1121,6 +1363,7 @@ def export():
             except Exception: names[nm] = nm
     except Exception:
         pass
+    names.update(NAME_OVERRIDE)
     order = sorted({p.sub for p in parts})
     bysub = defaultdict(list)
     for p in parts: bysub[p.sub] += p.lines()
@@ -1129,7 +1372,7 @@ def export():
     for s in order: out += [f"0 // {TITLES.get(s, s)}", f"1 16 0 0 0 {ROT[0]} {s}.ldr"]
     out += ["0 NOFILE"]
     for s in order:
-        out += [f"0 FILE {s}.ldr", f"0 {TITLES.get(s, s)}", f"0 Name: {s}.ldr"] + bysub[s] + ["0 NOFILE"]
+        out += [f"0 FILE {s}.ldr", f"0 {TITLES.get(s, s)}", f"0 Name: {s}.ldr"] + SUB_NOTES.get(s, []) + bysub[s] + ["0 NOFILE"]
     os.makedirs(OUT, exist_ok=True)
     open(os.path.join(OUT, f"{NAME}.mpd"), "w").write("\n".join(out) + "\n")
     bom = Counter((p.name, p.color) for p in parts)

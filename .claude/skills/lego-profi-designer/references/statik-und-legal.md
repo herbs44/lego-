@@ -20,6 +20,26 @@ Legal und bewährt:
 - Platte diagonal nur auf den End-Noppen (Pythagoras-Tripel).
 - SNOT über Stud-Bricks, Headlights, Brackets.
 
+LEGO veröffentlicht keine vollständige Liste der internen Regeln; bestätigt ist nur, dass es sie gibt und
+dass Studio solche Verbindungen bei ausgeschaltetem Einrasten zulässt. Grenzwerte in dieser Datei sind
+deshalb konservative Generator-Regeln, keine offiziellen LEGO-Werte.
+
+**Clips**: Ein Clip darf beim Einsetzen kurz aufgehen, muss aber in seine Ausgangsform zurückkehren –
+dauerhaft aufgeweitet ist Spannung. Neuere Clip-Formen machen manche alte Problemverbindung legal: die
+konkrete Formvariante prüfen, nicht nur die Teilenummer. Stange + Clip: neutral = in Ordnung,
+kontrolliert gebogen = Näherung, erzwungen gebogen = vermeiden.
+
+**Spannungsklassen** für Verbindungen im Generator (ab 3 ist ein echter Test mit Steinen nötig):
+
+| Klasse | Bedeutung |
+|---|---|
+| 0 | keine relevante Spannung |
+| 1 | normale Kupplung (Noppe, Pin, Scharnier) |
+| 2 | Reibsitz (Stange in Clip/Hohlnoppe, Drehteller) |
+| 3 | elastisches Element beteiligt (Clip unter Last, Beinahe-Tripel am Scharnier) |
+| 4 | starke Dauerverformung |
+| 5 | vermeiden |
+
 ## Stabilität
 
 - **Verband**: Fugen nie über mehrere Lagen übereinander; Packachse pro Lage wechseln.
@@ -35,8 +55,26 @@ Legal und bewährt:
   Einzelplatten hängen durch.
 - **Aufhängen**: Hängende Teile müssen von oben mit Noppen-Clutch halten; Seile (63142) tragen nur Zug.
   Last pro Noppe klein halten, mehrere Hänger verteilen.
+  Besser als Zug an Noppen: **Seil im J-Bogen** – der untere Knopf steckt von unten in einer Noppenaufnahme
+  (z. B. Endblock von 30518), die Last liegt auf dem Knopf auf (Saint Pablo). Der Abstand der Endnoppen folgt
+  aus der festen Schnurlänge (63142: 576 LDU Schnur), nicht umgekehrt.
+- **Große Raster/Decken**: zwei Plattenlagen im Verband hängen über 40+ Noppen durch; eine Steinlage obenauf
+  (Balken 40 LDU hoch) oder darunter gehängte Gitterträger 30518 machen sie steif.
 - **Türme/Stützen**: Gitterträger 95347 gestapelt, Verbindungsplatten dazwischen; bei langen
   Traversen mehrere Stützen, im Check Tragkette bis zur Grundplatte.
+
+Konservative Grenzwerte (Heuristik für Display-Modelle, nicht von LEGO):
+- **Senkrechte Fugen** nicht über mehr als 2 Steinhöhen ungekreuzt durchlaufen lassen.
+- **Schale**: Außenhaut 1–2 Studs, Rippen/Pfeiler im Abstand 8–12 Studs (kleine Modelle) bzw. 6–8 Studs
+  (große, schwere Modelle), dazwischen hohl.
+- **Auskragung gesamt**: nur Platten bis 4 Studs, massiv aus Steinen bis 6 Studs, Truss bis 8 Studs ohne
+  zweite Lastlinie. Überhang bis 2 Studs normal, 3–4 Studs mit Gegenanker, darüber Kern/Technic/Truss.
+- **Hängendes** (Screens, Arrays, Truss): 1 Aufhängepunkt nicht akzeptieren, 2 mittel, ab 3 gut. Eine
+  sichtbare Deko-Verbindung darf nie der einzige Lastpfad sein.
+- **Große Basen**: nicht nur große Platten aneinander – untere Plattenlage, Steinkern, obere Plattenlage,
+  Fugen nicht auf einer Achse (2x6/2x8-Platten 3795/3034, Technic-Platten 3709b).
+- **Transport**: Module höchstens 32×32 Studs (bei schweren Bühnen 16×16 bis 32×32), an den Rändern mit
+  Technic-Pins (2780) verbinden und erst vor Ort zusammensetzen.
 
 ## Automatische Prüfung (Generator)
 

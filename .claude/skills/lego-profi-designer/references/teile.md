@@ -37,11 +37,15 @@ ergänzen.
 | 61678 / 50950 | Curved 4x1 / 3x1 | lange Kurven (Nutzer mag keine langen Slopes an Rundungen) |
 | 6091 | Brick 2x1x1⅓ mit Rundung | Bögen, Kanten |
 | 92946 | Slope-Platte 45° 2x1 | flache Schrägen, Kotflügel |
+| 24309 | Curved 3x2 | Kuppeln, Screen-Ringe (8 Stück ≈ Kreis mit 8⅓ Studs) |
+| 5093 | Curved 2x2x0.667 mit Noppen-Kerbe rechts | Kuppel-Übergänge |
+| 80177 / 80178 | Curved 3x2 mit Aussparung links / rechts | moderne organische Außenhaut |
 
 ## Keile und Kurvenplatten
 
 | LDraw | Name |
 |---|---|
+| 54383 / 54384 | Wedge-Platte 3x6 rechts/links (LDraw-Name „Wing 3 x 6“) – 3-4-5-Schrägen |
 | 43722 / 43723 | Wedge 2x3 rechts/links |
 | 41769 / 41770 | Wedge 2x4 rechts/links |
 | 51739 | Wedge 2x4 (Spitze) |
@@ -64,6 +68,12 @@ ergänzen.
 | 3960 | | Schüssel 4x4 |
 | 15470 | | Plate 1x1 rund mit Wirbel |
 | 35480 | | Plate 1x2 mit runden Enden |
+| 85861 | | Plate 1x1 rund mit offener Noppe (nicht gleichwertig zu 6141: Stange passt oben hinein) |
+| 18674 | | Plate 2x2 rund mit 1 Mittelnoppe (Jumper) |
+| 60474 / 11213 / 74611 | | Plate 4x4 / 6x6 / 8x8 rund mit Loch und Snapstud – Kreise, kleine Screens |
+| 11833 | | Plate 4x4 rund mit 2x2-Loch – Ringe |
+| 32828 | | Plate 1x1 rund mit Stange – Lampenköpfe, Truss, Kabel |
+| 61485 | | Drehteller flach 4x4 (Basis) |
 
 ## SNOT und Versatz
 
@@ -74,6 +84,11 @@ ergänzen.
 | 30414 | Brick 1x4 Studs an der Seite | lange Fronten |
 | 32952 | Brick 1x1x1⅔ Studs an 1 Seite | 5 Platten hoch = 2 Studs |
 | 4733 / 47905 | Brick 1x1 Studs an 4 / 2 Seiten | SNOT-Kerne |
+| 26604 | Brick 1x1 Studs an 2 benachbarten Seiten | Ecken |
+| 52107 | Brick 1x2 Studs an beiden Seiten | Rahmen, Ecken |
+| 99206 | Plate 2x2x0.667, 2 Seitennoppen + 2 erhöhte | dichte SNOT-Knoten |
+| 3386 | Plate 1x1x0.667 Halbrund mit offener Seitennoppe | organische Anbauten |
+| 2436a | Bracket 1x2-1x4 eckig (2436b = abgerundet) | BL-ID beim ersten Upload prüfen |
 | 4070 | Brick 1x1 Headlight | ½ Platte zurückgesetzt |
 | 99780 / 99781 | Bracket 1x2-1x2 up / down | |
 | 99207 / 44728 | Bracket 1x2-2x2 up / down | |
@@ -98,6 +113,14 @@ ergänzen.
 | 14417 / 14418 / 14419 | Kugelgelenk-Platten |
 | 3700 / 2780 / 4274 | Technic-Stein 1x2, Pin mit Reibung, Halbpin |
 | 18677 | Plate 1x2 mit Pinloch unten |
+| 3709b | Technic-Platte 2x4 mit Löchern (BL 3709) – Basis-Kern, Modulverbinder |
+| 3937 / 6134 | Scharnier 1x2 Basis / 2x2 Oberteil – Winkel, Scharnier-Ringe |
+| 4275b | Scharnierplatte 1x2 mit 3 Fingern, Hohlnoppen (BL 4275) |
+| 48729a | Stange 1,5L mit Clip (BL 48729) – Truss, Kabel |
+
+**Achtung, in externen Quellen falsch zugeordnet** (gegen LDraw geprüft): 32059 ist *Plate 4x6 ohne Ecken*
+und 32060 ein *Technic-Zahnrad* – keine Keilplatten 3x6 (richtig: 54383/54384). „8083“ als Ringplatte 8x8
+existiert in LDraw nicht. 3794 und 3023 sind nur Umleitungen (→ 3794a/3794b bzw. 3023b).
 
 ## Textur und Details
 
@@ -120,6 +143,9 @@ ergänzen.
 | 3659 / 4490 / 3455 / 92950 | | Bogen 1x4 / 1x3 / 1x6 / 1x6 erhöht |
 | 3307 / 6005 | | Bogen 1x6x2 / 1x3x2 gekrümmt |
 | 95347 | | Stütze 2x2x10 Gitterträger (in DBG seltener) |
+| 30518 | | Gitterträger 2x16x2 dreieckig: hängt mit 32 Noppen unter Decks, Endblöcke nehmen Noppen von unten auf |
+| 15332 | | Zaun 1x4x2 gedrechselt mit 4 Noppen (Geländer, hängende Brüstung) |
+| 90370 | | Minifig-Mikrofon |
 | 63142 | x127c30pb01 | Schnur mit Endnoppen |
 | 2423 / 32607 / 33291 | | Blätter 4x3 / Rundplatte mit 3 Blättern / Rundplatte mit Laschen (Blüte) |
 
