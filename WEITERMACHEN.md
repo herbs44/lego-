@@ -17,6 +17,7 @@ mit der Circus-Maximus-Bühne weiter."*
 | `globe-stage/` | fertig inkl. PDF-Bauanleitung, Bully-Mosaik auf dem Dach | `generate_globe_stage.py` | 10.876 |
 | `yeezus-stage/` | Mount Yeezus mit Wendelweg, rein unbunt | `generate_yeezus_stage.py` | 2.301 |
 | `circus-maximus/` | Travis Scott UTOPIA, 2×48×48, schwarze Fans, Pyro/CO2 | `generate_circus_maximus.py` | 7.062 |
+| `circus-maximus-metlife/` | MetLife 09.10.2024, 128×64, V1 aus Textquellen (Fotos gesperrt) – README mit 21 Abschnitten, Blueprint, Ansichten | `generate_metlife_stage.py` + `blueprint.py` | 13.613 |
 | `mbdtf-relief/` | *MBDTF* als 128×128-3D-Relief wie gemalt (Pinselstriche, Licht/Schatten, Goldrahmen, Weinglas) | `tools/relief/make_relief.py` + `zonen.json`, Optionen `--licht 1 --formfolge` | 40.417 |
 | `mbdtf-diorama/` | MBDTF-Szene „Runaway“: Reliefwand (48×48, SNOT), Kanye am Flügel, 21 Ballerinen, Dinnertafel, Phoenix | `generate_mbdtf_diorama.py` + `wand_relief.mpd` | 7.813 |
 | `utopia-relief/` | Travis Scott *UTOPIA* als 96×96-Relief (+ 64×64), Höhe nach Helligkeit | `vorbereiten.py` + `make_relief.py --hell-hoehe 16` (Aufruf im README) | 10.993 |
